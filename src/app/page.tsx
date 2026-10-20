@@ -1,8 +1,11 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import type { Tradition } from '@/types'
 import { usePreferences } from '@/hooks/usePreferences'
+import { useUser } from '@/hooks/useUser'
+import { createClient } from '@/lib/supabase/client'
+import { updateTradition } from '@/lib/actions'
 import OnboardingModal from '@/components/onboarding/OnboardingModal'
 import Navbar from '@/components/layout/Navbar'
 import Footer from '@/components/layout/Footer'
@@ -14,19 +17,40 @@ import ContinueLearning from '@/components/home/ContinueLearning'
 
 export default function HomePage() {
   const { prefs, update, ready } = usePreferences()
+  const { user, loading: userLoading } = useUser()
   const [showOnboarding, setShowOnboarding] = useState(false)
 
-  // Show onboarding on first visit once client is ready
-  // We use a derived flag so it only fires once the prefs are loaded from localStorage
-  const shouldOnboard = ready && !prefs.onboardingCompleted
+  // When user logs in, load their saved profile preference
+  useEffect(() => {
+    if (!user || !ready) return
+    const supabase = createClient()
+    supabase
+      .from('profiles')
+      .select('religion_preference, onboarding_completed')
+      .eq('id', user.id)
+      .single()
+      .then(({ data }) => {
+        if (!data) return
+        if (data.religion_preference) {
+          update({
+            tradition: data.religion_preference as Tradition,
+            onboardingCompleted: data.onboarding_completed,
+          })
+        }
+      })
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [user?.id])
 
-  function handleOnboardingComplete(tradition: Tradition | null) {
+  const shouldOnboard = ready && !userLoading && !prefs.onboardingCompleted
+
+  async function handleOnboardingComplete(tradition: Tradition | null) {
     update({ tradition, onboardingCompleted: true })
     setShowOnboarding(false)
+    // Persist to DB if logged in
+    if (user) await updateTradition(tradition)
   }
 
-  if (!ready) {
-    // Skeleton — prevents layout shift while reading localStorage
+  if (!ready || userLoading) {
     return (
       <div className="min-h-screen bg-white">
         <div className="h-14 border-b border-stone-200 bg-white/80" />
@@ -42,17 +66,13 @@ export default function HomePage() {
       {(shouldOnboard || showOnboarding) && (
         <OnboardingModal onComplete={handleOnboardingComplete} />
       )}
-
       <div className="flex min-h-screen flex-col bg-white">
         <Navbar
           tradition={prefs.tradition}
           onChangeTradition={() => setShowOnboarding(true)}
         />
         <main className="flex-1">
-          <Hero
-            tradition={prefs.tradition}
-            onChangeTradition={() => setShowOnboarding(true)}
-          />
+          <Hero tradition={prefs.tradition} onChangeTradition={() => setShowOnboarding(true)} />
           <RecommendedForYou tradition={prefs.tradition} />
           <FeaturedTopics />
           <ContinueLearning />

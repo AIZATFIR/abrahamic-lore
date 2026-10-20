@@ -3,6 +3,8 @@
 import Link from 'next/link'
 import { useState } from 'react'
 import { TRADITION_LABELS } from '@/lib/content'
+import { logout } from '@/lib/actions'
+import { useUser } from '@/hooks/useUser'
 import type { Tradition } from '@/types'
 
 interface NavbarProps {
@@ -12,6 +14,7 @@ interface NavbarProps {
 
 export default function Navbar({ tradition, onChangeTradition }: NavbarProps) {
   const [menuOpen, setMenuOpen] = useState(false)
+  const { user } = useUser()
 
   return (
     <header className="sticky top-0 z-50 border-b border-stone-200/60 bg-white/80 backdrop-blur-xl">
@@ -41,12 +44,30 @@ export default function Navbar({ tradition, onChangeTradition }: NavbarProps) {
               {TRADITION_LABELS[tradition]}
             </button>
           )}
-          <Link
-            href="/login"
-            className="rounded-full bg-stone-900 px-4 py-1.5 text-sm text-white hover:bg-stone-700 transition-colors"
-          >
-            Sign In
-          </Link>
+
+          {user ? (
+            <div className="flex items-center gap-2">
+              <span className="hidden text-xs text-stone-500 sm:block truncate max-w-[140px]">
+                {user.email}
+              </span>
+              <form action={logout}>
+                <button
+                  type="submit"
+                  className="rounded-full border border-stone-200 px-4 py-1.5 text-sm text-stone-700 hover:bg-stone-50 transition-colors"
+                >
+                  Sign Out
+                </button>
+              </form>
+            </div>
+          ) : (
+            <Link
+              href="/login"
+              className="rounded-full bg-stone-900 px-4 py-1.5 text-sm text-white hover:bg-stone-700 transition-colors"
+            >
+              Sign In
+            </Link>
+          )}
+
           {/* Mobile menu button */}
           <button
             className="sm:hidden p-1.5 text-stone-600"
@@ -76,6 +97,13 @@ export default function Navbar({ tradition, onChangeTradition }: NavbarProps) {
               <button onClick={() => { setMenuOpen(false); onChangeTradition?.() }} className="text-left text-stone-500">
                 Perspective: {TRADITION_LABELS[tradition]}
               </button>
+            )}
+            {user ? (
+              <form action={logout}>
+                <button type="submit" className="text-left text-stone-500">Sign Out</button>
+              </form>
+            ) : (
+              <Link href="/login" onClick={() => setMenuOpen(false)}>Sign In</Link>
             )}
           </div>
         </nav>
