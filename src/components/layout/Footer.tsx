@@ -36,7 +36,7 @@ export default function Footer() {
           </div>
         </div>
         <div className="mt-10 border-t border-stone-200 pt-6 text-xs text-stone-400">
-          © {new Date().getFullYear()} Abrahamic Lore. A shared space for learning.
+          © 2026 Abrahamic Lore. A shared space for learning.
         </div>
       </div>
     </footer>

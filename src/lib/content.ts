@@ -14,7 +14,7 @@ export const HERO_CONTENT: Record<string, { headline: string; description: strin
   islam: {
     headline: 'Discover the World of Islam',
     description:
-      'Explore the Quran, Islamic history, theology, the prophets, and the traditions that have shaped one of the world's great civilizations.',
+      "Explore the Quran, Islamic history, theology, the prophets, and the traditions that have shaped one of the world's great civilizations.",
   },
   christianity: {
     headline: 'Discover the World of Christianity',
