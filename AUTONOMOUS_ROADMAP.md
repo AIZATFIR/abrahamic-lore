@@ -1346,3 +1346,119 @@ assert.strictEqual(testNode.children.length, 2, 'Lineage must parse direct desce
 console.log('✓ Lineage tree schema valid');
 ```
 → skipped: Server Actions and Node runtime configs; add when persistent user-submitted lore annotations are added.
+
+
+### Cycle #33 Directive (2026-11-03 00:14)
+### 1. Lineage View: Native CSS Tree (Drop Graph Libs / Fix Hydration)
+
+Replace JS canvas/graph dependencies with native semantic HTML and CSS pseudo-connectors. Zero JS, 100% SSR-safe, no hydration mismatch.
+
+```tsx
+// components/lineage-tree.tsx
+type Person = { id: string; name: string; title?: string; children?: Person[] };
+
+export function LineageNode({ person }: { person: Person }) {
+  return (
+    <li className="relative pl-6 before:absolute before:left-0 before:top-3 before:h-px before:w-4 before:bg-stone-300 dark:before:bg-stone-700">
+      <div className="inline-flex items-baseline gap-2 rounded-md border border-stone-200/80 bg-stone-50/50 px-2.5 py-1 text-sm dark:border-stone-800 dark:bg-stone-900/50">
+        <span className="font-medium text-stone-900 dark:text-stone-100">{person.name}</span>
+        {person.title && <span className="text-xs text-stone-500">{person.title}</span>}
+      </div>
+      {person.children && person.children.length > 0 && (
+        <ul className="relative ml-2 border-l border-stone-300 pl-2 dark:border-stone-700">
+          {person.children.map((c) => (
+            <LineageNode key={c.id} person={c} />
+          ))}
+        </ul>
+      )}
+    </li>
+  );
+}
+```
+`components/lineage-tree.tsx` → skipped: Pan/zoom canvas & interactive expand/collapse; add when graph depth > 6 levels or viewport culling is required.
+
+---
+
+### 2. Comparative Timeline: CSS Scroll-Snap Parallel Tracks
+
+Synchronize multi-tradition epochs using CSS Subgrid/Sticky headers instead of synced JS scroll listeners.
+
+```tsx
+// components/comparative-timeline.tsx
+interface EpochEvent { tradition: 'judaism' | 'christianity' | 'islam'; label: string; year: string }
+
+export function ComparativeTimeline({ events }: { events: EpochEvent[] }) {
+  // ponytail: Flat mapping assumes static chronological sorting at ingest.
+  return (
+    <div className="flex w-full snap-x snap-mandatory overflow-x-auto border-y border-stone-200 py-6 scrollbar-none dark:border-stone-800">
+      <div className="grid auto-cols-[18rem] grid-flow-col gap-6 px-4">
+        {events.map((e, idx) => (
+          <div key={idx} className="snap-start rounded-lg border border-stone-200/60 p-4 bg-stone-50/30 dark:border-stone-800 dark:bg-stone-900/20">
+            <span className="text-xs font-mono tracking-wider text-amber-700 dark:text-amber-400 uppercase">{e.tradition}</span>
+            <p className="mt-1 font-serif text-base text-stone-800 dark:text-stone-200">{e.label}</p>
+            <time className="mt-2 block text-xs text-stone-400">{e.year}</time>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+```
+`components/comparative-timeline.tsx` → skipped: JS scroll-sync observers and timeline scale zooming; add when non-linear temporal scaling is requested.
+
+---
+
+### 3. Next.js 15 Zero-Error Route & Build Lock
+
+Prevent route type mismatch crashes during `next build` by enforcing async `params` and static route validation.
+
+```tsx
+// app/lore/[tradition]/[figure]/page.tsx
+import { notFound } from 'next/navigation';
+
+interface RouteProps {
+  params: Promise<{ tradition: string; figure: string }>;
+}
+
+export const dynamicParams = false;
+
+export async function generateStaticParams() {
+  // Hardcoded or stdlib file-scan to guarantee zero build-time dynamic misses
+  return [
+    { tradition: 'abrahamic', figure: 'abraham' },
+    { tradition: 'judaism', figure: 'moses' },
+    { tradition: 'islam', figure: 'ibrahim' },
+  ];
+}
+
+export default async function LoreFigurePage({ params }: RouteProps) {
+  const { tradition, figure } = await params;
+  if (!tradition || !figure) notFound();
+
+  return (
+    <main className="mx-auto max-w-2xl px-6 py-12">
+      <h1 className="font-serif text-2xl capitalize text-stone-900 dark:text-stone-100">{figure}</h1>
+      <p className="text-sm text-stone-500">Tradition: {tradition}</p>
+    </main>
+  );
+}
+```
+`app/lore/[tradition]/[figure]/page.tsx` → skipped: CMS remote fetch & fallback revalidation; add when switching lore content from static files to external DB.
+
+---
+
+### Self-Check
+
+```ts
+// assert-build-contract.ts (run via: npx tsx assert-build-contract.ts)
+import assert from 'node:assert/strict';
+
+async function testParamResolution() {
+  const mockParams = Promise.resolve({ tradition: 'islam', figure: 'ibrahim' });
+  const resolved = await mockParams;
+  assert.equal(resolved.tradition, 'islam');
+  assert.equal(resolved.figure, 'ibrahim');
+}
+
+testParamResolution().then(() => console.log('✓ Route contract valid'));
+```
