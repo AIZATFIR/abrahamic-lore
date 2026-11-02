@@ -1002,3 +1002,119 @@ export default async function LineagePage({ params }: { params: Promise<{ slug: 
 ```
 skipped: Middleware-based route rewriting and dynamic query validation layer.  
 add when: Lore data is sourced from an external CMS or headless DB at runtime.
+
+
+### Cycle #28 Directive (2026-11-02 23:45)
+### 1. Synchronized Comparative Timeline (CSS Subgrid)
+
+Replaces heavy timeline JS libraries with native CSS Subgrid to align traditions synchronously per era.
+
+```tsx
+// components/ComparativeTimeline.tsx
+interface EpochEvent {
+  id: string;
+  era: string;
+  traditions: { judaism?: string; christianity?: string; islam?: string };
+}
+
+export function ComparativeTimeline({ events }: { events: EpochEvent[] }) {
+  // ponytail: text-only cells; upgrade to modal popovers when citation corpus lands.
+  return (
+    <section aria-label="Comparative Timeline" className="grid grid-cols-[90px_repeat(3,1fr)] gap-x-4 divide-y divide-stone-200/60 text-sm">
+      <header className="sticky top-0 z-10 grid grid-cols-subgrid col-span-4 bg-stone-50/90 py-2.5 font-mono text-[11px] uppercase tracking-wider text-stone-500 backdrop-blur-xs">
+        <span>Era</span>
+        <span>Judaism</span>
+        <span>Christianity</span>
+        <span>Islam</span>
+      </header>
+      {events.map((e) => (
+        <div key={e.id} className="grid grid-cols-subgrid col-span-4 py-3.5 items-baseline">
+          <span className="font-mono text-xs text-stone-600">{e.era}</span>
+          <p className="text-stone-800 leading-snug">{e.traditions.judaism ?? '—'}</p>
+          <p className="text-stone-800 leading-snug">{e.traditions.christianity ?? '—'}</p>
+          <p className="text-stone-800 leading-snug">{e.traditions.islam ?? '—'}</p>
+        </div>
+      ))}
+    </section>
+  );
+}
+```
+→ skipped: virtual scrolling and JS synchronization locks; add when dataset exceeds 500 synchronous epochs.
+
+---
+
+### 2. Zero-JS Semantic Lineage Tree (Pure CSS Connectors)
+
+Eliminates D3/Canvas overhead. Renders genealogy hierarchically using native nested lists and CSS pseudo-elements.
+
+```tsx
+// components/LineageTree.tsx
+export interface LineagePerson {
+  name: string;
+  title?: string;
+  descendants?: LineagePerson[];
+}
+
+export function LineageNode({ person }: { person: LineagePerson }) {
+  // ponytail: single-parent tree; upgrade to SVG DAG when cross-branch unions are required.
+  return (
+    <li className="relative pl-5 before:absolute before:left-0 before:top-3 before:h-px before:w-3.5 before:bg-stone-300">
+      <div className="inline-flex items-center gap-1.5 rounded-md border border-stone-200/80 bg-white px-2 py-0.5 text-xs text-stone-800 shadow-2xs">
+        <span className="font-medium">{person.name}</span>
+        {person.title && <span className="text-[10px] text-stone-600">({person.title})</span>}
+      </div>
+      {person.descendants && person.descendants.length > 0 && (
+        <ul className="relative ml-1.5 border-l border-stone-300 pl-1.5">
+          {person.descendants.map((child) => (
+            <LineageNode key={child.name} person={child} />
+          ))}
+        </ul>
+      )}
+    </li>
+  );
+}
+```
+→ skipped: drag-and-zoom viewport; add when branch depth causes horizontal viewport clipping on mobile.
+
+---
+
+### 3. Production Build Lock: Strict Static Slugs & Param Typing
+
+Prevents dynamic server bailout, Next.js 15 `params` Promise mismatch, and route prerender failures during `next build`.
+
+```tsx
+// app/figure/[id]/page.tsx
+import { notFound } from 'next/navigation';
+
+export const dynamicParams = false;
+
+export async function generateStaticParams() {
+  const figures: { id: string }[] = (await import('@/data/figures.json')).default;
+  return figures.map((f) => ({ id: f.id }));
+}
+
+export default async function FigurePage({ params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params;
+  const figures: { id: string; name: string }[] = (await import('@/data/figures.json')).default;
+  const figure = figures.find((f) => f.id === id);
+
+  if (!figure) notFound();
+
+  return <main className="mx-auto max-w-prose py-8 text-stone-900"><h1 className="text-xl font-semibold">{figure.name}</h1></main>;
+}
+```
+→ skipped: remote CMS/database fetch wrappers; add when lore data moves out of local typed JSON files.
+
+---
+
+### Verification
+
+```ts
+// scripts/verify-lore.ts
+import figures from '../data/figures.json';
+import assert from 'node:assert';
+
+assert(Array.isArray(figures), 'Figures must be an array');
+assert(figures.every((f) => typeof f.id === 'string' && f.id.length > 0), 'Every figure requires a valid slug string');
+console.log('✓ Lineage and route targets statically valid.');
+```
