@@ -4149,3 +4149,63 @@ export default async function LorePage({ params }: { params: Promise<{ tradition
 ```
 *skipped: Runtime SSR fallback handling and ISR revalidation overhead.*
 *add when: Content is moved to an external headless CMS requiring runtime revalidation.*
+
+
+### Cycle #65 Directive (2026-11-03 03:14)
+### 1. Fix Next.js 15 Production Build (Static Params & Async Route Props)
+
+```tsx
+// app/compare/[figure]/page.tsx
+export function generateStaticParams() {
+  // ponytail: static list caps build at known figures; upgrade to db query when dynamic CMS is connected.
+  return [{ figure: 'abraham' }, { figure: 'moses' }, { figure: 'jesus' }];
+}
+
+export default async function Page({ params }: { params: Promise<{ figure: string }> }) {
+  const { figure } = await params;
+  return <main className="max-w-4xl mx-auto p-6">{/* Lineage & Timeline view */}</main>;
+}
+```
+→ skipped: `generateMetadata` error boundary wrappers, add when metadata is pulled from remote sources.
+
+---
+
+### 2. Pure CSS Comparative Timeline (Sticky Epochs & Zero-JS Sync)
+
+```css
+/* styles/timeline.css */
+.timeline-sync-grid {
+  display: grid;
+  grid-template-columns: 80px repeat(3, minmax(260px, 1fr));
+  column-gap: 1.5rem;
+  overflow-x: auto;
+}
+.epoch-header {
+  position: sticky;
+  top: 0;
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+  z-index: 10;
+}
+```
+→ skipped: JS-driven scroll synchronization listeners, add when arbitrary timeline scale-zooming is required.
+
+---
+
+### 3. Accessible, Zero-Dependency Lineage Tree
+
+```css
+/* styles/lineage.css */
+.lineage-tree ul { padding-left: 1.25rem; border-left: 1px solid currentColor; }
+.lineage-tree li { list-style: none; position: relative; padding: 0.25rem 0 0.25rem 1rem; }
+.lineage-tree li::before {
+  content: '';
+  position: absolute;
+  top: 0.85rem;
+  left: 0;
+  width: 0.75rem;
+  border-bottom: 1px solid currentColor;
+}
+```
+→ skipped: D3/SVG canvas rendering, add when rendering complex multi-parent DAG cross-links.
