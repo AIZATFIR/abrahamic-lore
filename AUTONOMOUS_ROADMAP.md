@@ -4511,3 +4511,127 @@ export function LineageNode({ person }: { person: Person }) {
 }
 ```
 `components/LineageNode.tsx` → skipped: heavy graph visualization packages (D3/ReactFlow); add when genealogical links become a multi-parent directed acyclic graph.
+
+
+### Cycle #69 Directive (2026-11-03 03:36)
+### 1. Lineage View: Native CSS Tree Connectors (Drop heavy graph libs)
+
+Replace SVG/Canvas libraries with native CSS pseudo-elements for zero-runtime ancestor branches.
+
+```css
+/* styles/lineage.module.css */
+.tree, .tree ul {
+  display: flex;
+  justify-content: center;
+  padding-top: 1.25rem;
+  position: relative;
+}
+.tree li {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+  padding: 1.25rem 0.5rem 0;
+}
+.tree li::before, .tree li::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 50%;
+  border-top: 1px solid var(--border-subtle, #e5e5e5);
+  width: 50%;
+  height: 1.25rem;
+}
+.tree li::after {
+  right: auto;
+  left: 50%;
+  border-left: 1px solid var(--border-subtle, #e5e5e5);
+}
+.tree li:only-child::after, .tree li:only-child::before { display: none; }
+.tree li:only-child { padding-top: 0; }
+.tree li:first-child::before, .tree li:last-child::after { border: 0 none; }
+.tree li:last-child::before { border-right: 1px solid var(--border-subtle, #e5e5e5); border-radius: 0 4px 0 0; }
+.tree li:first-child::after { border-radius: 4px 0 0 0; }
+.tree ul::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 50%;
+  border-left: 1px solid var(--border-subtle, #e5e5e5);
+  width: 0;
+  height: 1.25rem;
+}
+```
+→ skipped: Pan/zoom canvas & React Flow. Add when: Lineage trees exceed 5 generations in viewport.
+
+---
+
+### 2. Comparative Timeline: CSS Subgrid Column Sync
+
+Align parallel traditions (Judaism, Christianity, Islam) without resize observers or scroll sync scripts.
+
+```tsx
+// components/ComparativeTimeline.tsx
+interface EpochEvent {
+  epoch: string;
+  jewish?: string;
+  christian?: string;
+  islamic?: string;
+}
+
+export function ComparativeTimeline({ events }: { events: EpochEvent[] }) {
+  // ponytail: fixed 4-col layout ceiling; upgrade to dynamic headers if adding traditions (e.g., Baha'i).
+  return (
+    <div className="grid grid-cols-[120px_repeat(3,1fr)] gap-x-6 gap-y-4 items-start overflow-x-auto text-sm">
+      <div className="sticky top-0 bg-background/80 backdrop-blur z-10 font-mono text-xs text-muted-foreground pb-2">Epoch</div>
+      <div className="sticky top-0 bg-background/80 backdrop-blur z-10 font-serif font-medium pb-2 border-b">Judaism</div>
+      <div className="sticky top-0 bg-background/80 backdrop-blur z-10 font-serif font-medium pb-2 border-b">Christianity</div>
+      <div className="sticky top-0 bg-background/80 backdrop-blur z-10 font-serif font-medium pb-2 border-b">Islam</div>
+
+      {events.map((e, idx) => (
+        <div key={idx} className="contents border-t border-border/40">
+          <span className="font-mono text-xs text-muted-foreground py-3 self-center">{e.epoch}</span>
+          <div className="p-3 bg-muted/20 rounded-md">{e.jewish || "—"}</div>
+          <div className="p-3 bg-muted/20 rounded-md">{e.christian || "—"}</div>
+          <div className="p-3 bg-muted/20 rounded-md">{e.islamic || "—"}</div>
+        </div>
+      ))}
+    </div>
+  );
+}
+```
+→ skipped: JS-driven virtualized sync scrolling. Add when: Timeline exceeds 500 synchronous nodes.
+
+---
+
+### 3. Production Build Fix: Next.js 15 Async Dynamic Route Params
+
+Ensure error-free `next build` static export / SSG by typing dynamic routes as Promises and enforcing fallback boundaries.
+
+```tsx
+// app/figures/[slug]/page.tsx
+import { notFound } from "next/navigation";
+
+type PageProps = {
+  params: Promise<{ slug: string }>;
+};
+
+// Validate build-time paths exist
+export async function generateStaticParams() {
+  // Static known canonical keys to prevent 404 build failure
+  const figures = ["abraham", "moses", "jesus", "muhammad", "noah"];
+  return figures.map((slug) => ({ slug }));
+}
+
+export default async function FigurePage({ params }: PageProps) {
+  const { slug } = await params;
+  if (!slug) notFound();
+
+  return (
+    <main className="max-w-2xl mx-auto py-12 px-4">
+      <h1 className="text-2xl font-serif capitalize tracking-tight">{slug}</h1>
+    </main>
+  );
+}
+```
+→ skipped: Dynamic runtime fallback handling (`fallback: true`). Add when: Figure data moves to an external remote CMS.
