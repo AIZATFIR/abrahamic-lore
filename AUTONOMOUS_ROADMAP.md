@@ -5773,3 +5773,112 @@ export default async function TimelinePage({ params }: { params: Promise<{ id: s
 }
 ```
 → skipped: Dynamic on-demand SSR runtime; add when private user authentication or mutative APIs are introduced.
+
+
+### Cycle #102 Directive (2026-11-03 06:40)
+### 1. Pure CSS Lineage Tree Connectors (Kill graph/canvas libs)
+
+```tsx
+// components/LineageNode.tsx
+interface Person {
+  name: string;
+  traditionNames?: { hebrew?: string; arabic?: string };
+  children?: Person[];
+}
+
+export function LineageNode({ person }: { person: Person }) {
+  return (
+    <li className="relative flex flex-col items-center p-2">
+      <div className="z-10 rounded-lg border border-stone-200/60 bg-stone-50/80 px-3 py-1.5 text-center backdrop-blur-sm dark:border-stone-800 dark:bg-stone-900/80">
+        <span className="text-sm font-medium tracking-tight text-stone-900 dark:text-stone-100">{person.name}</span>
+        {person.traditionNames && (
+          <span className="block text-[11px] text-stone-500 font-serif">
+            {[person.traditionNames.hebrew, person.traditionNames.arabic].filter(Boolean).join(' • ')}
+          </span>
+        )}
+      </div>
+      {/* ponytail: CSS tree depth ceiling = ~6 tiers. Upgrade to virtualized SVG canvas if rendering >200 nodes simultaneously. */}
+      {person.children && person.children.length > 0 && (
+        <ul className="flex pt-4 before:absolute before:top-9 before:h-4 before:w-px before:bg-stone-300 dark:before:bg-stone-700">
+          {person.children.map((child) => (
+            <LineageNode key={child.name} person={child} />
+          ))}
+        </ul>
+      )}
+    </li>
+  );
+}
+```
+→ skipped: Pan/zoom canvas state and D3 hierarchy calculations.  
+Add when: Lineage graph requires bidirectional cross-unions (cycles) or exceeds 200 nodes on screen.
+
+---
+
+### 2. Zero-JS Synchronized Comparative Timeline
+
+```tsx
+// components/ComparativeTimeline.tsx
+interface TimelineEpoch {
+  era: string;
+  jewish: string[];
+  christian: string[];
+  islamic: string[];
+}
+
+export function ComparativeTimeline({ epochs }: { epochs: TimelineEpoch[] }) {
+  return (
+    <div className="w-full overflow-x-auto">
+      <div className="grid min-w-[640px] grid-cols-[100px_repeat(3,1fr)] gap-px bg-stone-200 text-xs dark:bg-stone-800">
+        <div className="sticky top-0 z-20 bg-stone-100 p-2 font-mono font-semibold dark:bg-stone-900">Era</div>
+        <div className="sticky top-0 z-20 bg-stone-100 p-2 font-semibold text-amber-900 dark:bg-stone-900 dark:text-amber-200">Judaism</div>
+        <div className="sticky top-0 z-20 bg-stone-100 p-2 font-semibold text-sky-900 dark:bg-stone-900 dark:text-sky-200">Christianity</div>
+        <div className="sticky top-0 z-20 bg-stone-100 p-2 font-semibold text-emerald-900 dark:bg-stone-900 dark:text-emerald-200">Islam</div>
+
+        {epochs.map((e) => (
+          <div key={e.era} className="contents bg-stone-50 dark:bg-stone-950">
+            <div className="p-2 font-mono text-stone-400 border-t border-stone-200 dark:border-stone-800">{e.era}</div>
+            <div className="p-2 border-t border-stone-200 dark:border-stone-800">{e.jewish.join(', ') || '—'}</div>
+            <div className="p-2 border-t border-stone-200 dark:border-stone-800">{e.christian.join(', ') || '—'}</div>
+            <div className="p-2 border-t border-stone-200 dark:border-stone-800">{e.islamic.join(', ') || '—'}</div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+```
+→ skipped: Scroll-sync event listeners and multi-track absolute pixel positioning.  
+Add when: Users need fractional-year zooming or continuous scrub-scrub time scale scrubbing.
+
+---
+
+### 3. Next.js 15 Zero-Error Dynamic Params Hardening
+
+```tsx
+// app/figure/[slug]/page.tsx
+import { notFound } from 'next/navigation';
+
+const LORE_DATA: Record<string, { title: string; lineage: string[] }> = {
+  abraham: { title: 'Abraham / Ibrahim', lineage: ['Terah', 'Nahor'] },
+};
+
+export function generateStaticParams() {
+  return Object.keys(LORE_DATA).map((slug) => ({ slug }));
+}
+
+// ponytail: Next.js 15 params promise handling. Upgrade to DB fetch with React cache() when moving off flat files.
+export default async function FigurePage({ params }: { params: Promise<{ slug: string }> }) {
+  const { slug } = await params;
+  const figure = LORE_DATA[slug];
+
+  if (!figure) notFound();
+
+  return (
+    <main className="mx-auto max-w-xl p-6">
+      <h1 className="text-xl font-medium tracking-tight text-stone-900 dark:text-stone-100">{figure.title}</h1>
+    </main>
+  );
+}
+```
+→ skipped: Remote CMS SDK layers and database connection pools.  
+Add when: Lore repository migrates from static JSON/Markdown assets to a live external DB.
