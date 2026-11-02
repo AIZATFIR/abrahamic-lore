@@ -2503,3 +2503,115 @@ export function LineageNode({ figure }: { figure: FigureNode }) {
 }
 ```
 → skipped: `force-directed graph physics`, add when `rendering multi-parent non-linear biblical unions`.
+
+
+### Cycle #50 Directive (2026-11-03 01:50)
+### 1. Lineage View: Pure CSS Tree (Drop D3/Canvas/ReactFlow)
+
+Replace canvas/graph libraries with native semantic HTML lists and CSS pseudo-element connectors.
+
+```tsx
+// components/LineageNode.tsx
+interface Person {
+  name: string;
+  traditionName?: { hebrew?: string; arabic?: string };
+  children?: Person[];
+}
+
+export function LineageTree({ data }: { data: Person }) {
+  return (
+    <ul className="flex justify-center p-4 pl-0 [&_ul]:pt-5 [&_ul]:relative">
+      <li className="relative float-left text-center list-none p-5 pt-0">
+        <div className="inline-block rounded-lg border border-amber-900/10 bg-amber-50/40 px-3 py-1.5 text-xs text-stone-800 shadow-sm backdrop-blur-sm dark:border-amber-100/10 dark:bg-stone-900/40 dark:text-stone-200">
+          <span className="font-serif font-medium">{data.name}</span>
+          {data.traditionName?.arabic && (
+            <span className="ml-1 text-[10px] text-stone-400">({data.traditionName.arabic})</span>
+          )}
+        </div>
+        {data.children && data.children.length > 0 && (
+          <div className="flex justify-center">
+            {/* ponytail: CSS tree branches max 4 levels; upgrade to SVG canvas if rendering >500 nodes */}
+            {data.children.map((child) => (
+              <LineageTree key={child.name} data={child} />
+            ))}
+          </div>
+        )}
+      </li>
+    </ul>
+  );
+}
+```
+→ skipped: Pan/zoom virtualization & canvas engine.  
+→ add when: Lineage depth exceeds 12 generations or DOM node count causes main-thread frame drops.
+
+---
+
+### 2. Comparative Timeline: Native Sticky Grid (Zero JS Scroll-Sync)
+
+Eliminate `onScroll` JS event-listeners. Use CSS sticky positioning and subgrid across the 3 traditions (Judaism, Christianity, Islam).
+
+```tsx
+// components/ComparativeTimeline.tsx
+interface EpochEvent {
+  era: string;
+  judaism: string;
+  christianity: string;
+  islam: string;
+}
+
+export function ComparativeTimeline({ events }: { events: EpochEvent[] }) {
+  return (
+    <div className="w-full overflow-x-auto">
+      <div className="grid min-w-[640px] grid-cols-[100px_1fr_1fr_1fr] gap-x-px bg-stone-200 dark:bg-stone-800 text-xs">
+        <div className="sticky top-0 z-10 bg-stone-100 p-2 font-mono font-medium text-stone-500 dark:bg-stone-900">Era</div>
+        <div className="sticky top-0 z-10 bg-stone-100 p-2 font-serif font-medium text-stone-700 dark:bg-stone-900 dark:text-stone-300">Judaism</div>
+        <div className="sticky top-0 z-10 bg-stone-100 p-2 font-serif font-medium text-stone-700 dark:bg-stone-900 dark:text-stone-300">Christianity</div>
+        <div className="sticky top-0 z-10 bg-stone-100 p-2 font-serif font-medium text-stone-700 dark:bg-stone-900 dark:text-stone-300">Islam</div>
+
+        {events.map((e, i) => (
+          <div key={i} className="contents bg-stone-50 dark:bg-stone-950">
+            <div className="p-2.5 font-mono text-stone-400 border-t border-stone-200/50 dark:border-stone-800/50">{e.era}</div>
+            <div className="p-2.5 border-t border-stone-200/50 dark:border-stone-800/50 leading-relaxed">{e.judaism}</div>
+            <div className="p-2.5 border-t border-stone-200/50 dark:border-stone-800/50 leading-relaxed">{e.christianity}</div>
+            <div className="p-2.5 border-t border-stone-200/50 dark:border-stone-800/50 leading-relaxed">{e.islam}</div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+```
+→ skipped: Bi-directional scroll-wheel locks and custom drag-physics.  
+→ add when: Horizontal timeline requires scrubbing arbitrary micro-centuries on mobile viewports.
+
+---
+
+### 3. Next.js Zero-Error Build Enforcer (Next 15 Prerender Guard)
+
+Halt dynamic bailout errors during `next build` by enforcing static route evaluation and handling async dynamic props natively.
+
+```typescript
+// app/timeline/[slug]/page.tsx
+import { notFound } from "next/navigation";
+
+export const dynamic = "error"; // Fails build fast if any dynamic SSR leak is introduced
+export const dynamicParams = false;
+
+interface PageProps {
+  params: Promise<{ slug: string }>;
+}
+
+export async function generateStaticParams() {
+  // Read local dataset synchronously at build time
+  return [{ slug: "abraham" }, { slug: "moses" }, { slug: "jesus" }, { slug: "muhammad" }];
+}
+
+export default async function TimelinePage({ params }: PageProps) {
+  const { slug } = await params; // Next 15 requirement
+  if (!slug) notFound();
+
+  return <main className="mx-auto max-w-4xl p-6 antialiased">{/* Timeline view */}</main>;
+}
+```
+→ skipped: Dynamic SSR database fallbacks and ISR revalidation intervals.  
+→ add when: CMS webhooks are wired to trigger live, on-demand revalidation.
