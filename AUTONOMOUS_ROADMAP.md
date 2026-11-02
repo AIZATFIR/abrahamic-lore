@@ -1684,3 +1684,98 @@ assert.deepStrictEqual(routes.map(r => r.slug), ['judaism', 'christianity', 'isl
 ```
 skipped: Middleware-based route rewrites and runtime dynamic fallbacks.  
 add when: Lore content moves from static code bundles to an external headless CMS.
+
+
+### Cycle #40 Directive (2026-11-03 00:54)
+### 1. Next.js 15 Async Route Params (`app/timeline/[slug]/page.tsx`)
+
+```tsx
+import { notFound } from "next/navigation";
+import { getTraditionEvents } from "@/lib/lore";
+
+type Props = { params: Promise<{ slug: string }> };
+
+export default async function TimelineSlugPage({ params }: Props) {
+  const { slug } = await params;
+  const events = getTraditionEvents(slug); // ponytail: in-memory filter; upgrade to DB query if >2000 records
+  if (!events) notFound();
+
+  return (
+    <main className="mx-auto max-w-4xl px-4 py-8">
+      <h1 className="text-lg font-serif tracking-tight capitalize text-stone-900 dark:text-stone-100">{slug}</h1>
+      <ol className="mt-6 border-l border-stone-200 dark:border-stone-800 space-y-6 pl-4">
+        {events.map((e) => (
+          <li key={e.id} className="relative">
+            <span className="absolute -left-[21px] top-1.5 h-2 w-2 rounded-full bg-stone-400 dark:bg-stone-600" />
+            <time className="text-xs font-mono text-stone-500">{e.year}</time>
+            <p className="text-sm text-stone-800 dark:text-stone-200">{e.title}</p>
+          </li>
+        ))}
+      </ol>
+    </main>
+  );
+}
+```
+→ skipped: dynamic client fetching and custom fallback spinners.  
+add when: records move off static JSON to dynamic user-generated DB queries.
+
+---
+
+### 2. Pure CSS Comparative Timeline Sync (`components/ComparativeTimeline.tsx`)
+
+```tsx
+type EraEvent = { id: string; year: string; name: string };
+
+export function ComparativeTimeline({ tracks }: { tracks: Record<"judaism" | "christianity" | "islam", EraEvent[]> }) {
+  const traditions = Object.keys(tracks) as (keyof typeof tracks)[];
+
+  return (
+    <div className="grid grid-cols-1 md:grid-cols-3 divide-y md:divide-y-0 md:divide-x divide-stone-200 dark:divide-stone-800 border-y border-stone-200 dark:border-stone-800">
+      {traditions.map((t) => (
+        <section key={t} className="p-4 space-y-4">
+          <header className="sticky top-0 bg-stone-50/90 dark:bg-stone-950/90 backdrop-blur py-1 text-xs font-mono uppercase tracking-widest text-stone-500">
+            {t}
+          </header>
+          {/* ponytail: array map; add intersection-observer sync when tracking cross-tradition epoch alignments */}
+          <ul className="space-y-3">
+            {tracks[t].map((ev) => (
+              <li key={ev.id} className="text-sm">
+                <span className="font-mono text-xs text-amber-700 dark:text-amber-500 mr-2">{ev.year}</span>
+                <span className="text-stone-700 dark:text-stone-300">{ev.name}</span>
+              </li>
+            ))}
+          </ul>
+        </section>
+      ))}
+    </div>
+  );
+}
+```
+→ skipped: JS scroll-sync listeners, canvas engines, and external timeline libraries.  
+add when: non-linear bidirectional time scrubbing across eras is explicitly required.
+
+---
+
+### 3. Native CSS Hierarchy Lineage Tree (`components/LineageView.tsx`)
+
+```tsx
+type PersonNode = { id: string; name: string; children?: PersonNode[] };
+
+export function LineageNode({ node }: { node: PersonNode }) {
+  return (
+    <li className="relative pl-4 before:absolute before:left-0 before:top-2.5 before:h-px before:w-3 before:bg-stone-300 dark:before:bg-stone-700">
+      <span className="text-sm font-medium text-stone-900 dark:text-stone-100">{node.name}</span>
+      {/* ponytail: uncollapsible tree; upgrade to <details>/<summary> if depth > 4 */}
+      {node.children && node.children.length > 0 && (
+        <ul className="relative ml-2 border-l border-stone-300 dark:border-stone-700 pl-2 space-y-2 pt-2">
+          {node.children.map((child) => (
+            <LineageNode key={child.id} node={child} />
+          ))}
+        </ul>
+      )}
+    </li>
+  );
+}
+```
+→ skipped: heavy graph visualization packages (React Flow, D3, Vis.js).  
+add when: graph contains non-hierarchical cycles or dual-parent interconnects.
