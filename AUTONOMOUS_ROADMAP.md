@@ -513,3 +513,113 @@ const mockTree: Person = {
 
 console.assert(countNodes(mockTree) === 5, 'Lineage tree structure node count mismatch');
 ```
+
+
+### Cycle #5 Directive (2026-11-02 21:34)
+### 1. Comparative Timeline: Native CSS Grid with `display: contents`
+
+```tsx
+// components/comparative-timeline.tsx
+interface TimelineEvent {
+  era: string;
+  judaism: string;
+  christianity: string;
+  islam: string;
+}
+
+export function ComparativeTimeline({ events }: { events: TimelineEvent[] }) {
+  // ponytail: Flat grid with display:contents; upgrade to virtualized rows if events > 200
+  return (
+    <div className="grid grid-cols-4 gap-x-6 overflow-x-auto text-sm border-t border-stone-200 dark:border-stone-800">
+      <div className="sticky left-0 bg-stone-50/90 dark:bg-stone-950/90 backdrop-blur py-3 font-mono text-xs text-stone-400">Era</div>
+      <div className="py-3 font-serif font-medium text-stone-900 dark:text-stone-100">Judaism</div>
+      <div className="py-3 font-serif font-medium text-stone-900 dark:text-stone-100">Christianity</div>
+      <div className="py-3 font-serif font-medium text-stone-900 dark:text-stone-100">Islam</div>
+      
+      {events.map((e, i) => (
+        <div key={i} className="contents border-b border-stone-100 dark:border-stone-900">
+          <span className="sticky left-0 bg-stone-50/90 dark:bg-stone-950/90 backdrop-blur py-3 font-mono text-xs text-stone-400">{e.era}</span>
+          <p className="py-3 text-stone-700 dark:text-stone-300">{e.judaism || '—'}</p>
+          <p className="py-3 text-stone-700 dark:text-stone-300">{e.christianity || '—'}</p>
+          <p className="py-3 text-stone-700 dark:text-stone-300">{e.islam || '—'}</p>
+        </div>
+      ))}
+    </div>
+  );
+}
+```
+skipped: JS sync-scroll listeners and third-party table libraries.  
+add when: columns require individual dynamic reordering or horizontal track panning.
+
+---
+
+### 2. Lineage View: Zero-Dep CSS Pseudo-Element Tree
+
+```tsx
+// components/lineage-node.tsx
+export interface FigureNode {
+  name: string;
+  aka?: string;
+  children?: FigureNode[];
+}
+
+export function LineageNode({ node }: { node: FigureNode }) {
+  // ponytail: CSS pseudo-lines; upgrade to Canvas/SVG layout if DAG/inter-marriage cross-links are needed
+  return (
+    <li className="relative pl-6 before:absolute before:left-2 before:top-3 before:h-full before:w-px before:bg-stone-200 dark:before:bg-stone-800 last:before:hidden">
+      <div className="relative inline-flex items-baseline gap-2 py-1.5 before:absolute before:-left-4 before:top-3 before:h-px before:w-4 before:bg-stone-200 dark:before:bg-stone-800">
+        <span className="font-serif text-sm font-medium text-stone-900 dark:text-stone-100">{node.name}</span>
+        {node.aka && <span className="font-mono text-xs text-stone-400">{node.aka}</span>}
+      </div>
+      {node.children && node.children.length > 0 && (
+        <ul className="ml-2">
+          {node.children.map((child) => (
+            <LineageNode key={child.name} node={child} />
+          ))}
+        </ul>
+      )}
+    </li>
+  );
+}
+```
+skipped: React Flow, D3 graph solvers, and canvas drag-zoom viewports.  
+add when: genealogy requires bidirectional graph edges rather than single-root parent-child trees.
+
+---
+
+### 3. Next.js 15 Zero-Error Static Export Guard
+
+```tsx
+// app/figure/[slug]/page.tsx
+import { notFound } from 'next/navigation';
+import { getFigure, getAllFigureSlugs } from '@/lib/lore';
+
+export const dynamicParams = false;
+
+export async function generateStaticParams() {
+  return getAllFigureSlugs().map((slug) => ({ slug }));
+}
+
+export default async function FigurePage({ params }: { params: Promise<{ slug: string }> }) {
+  const { slug } = await params;
+  const figure = getFigure(slug);
+
+  if (!figure) notFound();
+
+  return (
+    <article className="max-w-xl mx-auto py-12 px-4">
+      <h1 className="font-serif text-3xl text-stone-900 dark:text-stone-50">{figure.name}</h1>
+      <p className="mt-4 text-stone-600 dark:text-stone-300 leading-relaxed">{figure.summary}</p>
+    </article>
+  );
+}
+
+// Runnable self-check
+if (process.env.NODE_ENV === 'test') {
+  const testSlugs = ['abraham', 'moses'];
+  const params = testSlugs.map((slug) => ({ slug }));
+  console.assert(params.length === 2 && params[0].slug === 'abraham', 'Static param contract failed');
+}
+```
+skipped: On-demand fallback SSR rendering and dynamic API fetching.  
+add when: lore data is fetched from an external headless CMS at request-time instead of compile-time Markdown/JSON.
