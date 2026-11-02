@@ -4741,3 +4741,111 @@ const params = generateStaticParams();
 assert.strictEqual(params.length, 4, 'Must prerender all 4 canonical patriarchs/prophets');
 assert.ok(params.every(p => typeof p.slug === 'string'), 'Slugs must be strictly typed strings');
 ```
+
+
+### Cycle #71 Directive (2026-11-03 03:47)
+### 1. Comparative Timeline: Zero-JS Parallel Lane Alignment
+
+```tsx
+// components/timeline/ComparativeTimeline.tsx
+interface TimelineEvent {
+  era: string;
+  judaism?: string;
+  christianity?: string;
+  islam?: string;
+}
+
+export function ComparativeTimeline({ events }: { events: TimelineEvent[] }) {
+  // ponytail: Flat array ceiling; add virtualized windowing if events > 150.
+  return (
+    <div className="grid grid-cols-[100px_repeat(3,1fr)] gap-px bg-stone-200 dark:bg-stone-800 rounded-xl overflow-hidden border border-stone-250 dark:border-stone-800 text-sm">
+      <div className="sticky top-0 z-10 bg-stone-100/90 dark:bg-stone-900/90 p-3 font-mono text-xs uppercase tracking-wider backdrop-blur">Era</div>
+      <div className="sticky top-0 z-10 bg-stone-100/90 dark:bg-stone-900/90 p-3 font-serif font-medium backdrop-blur">Judaism</div>
+      <div className="sticky top-0 z-10 bg-stone-100/90 dark:bg-stone-900/90 p-3 font-serif font-medium backdrop-blur">Christianity</div>
+      <div className="sticky top-0 z-10 bg-stone-100/90 dark:bg-stone-900/90 p-3 font-serif font-medium backdrop-blur">Islam</div>
+
+      {events.map((e, idx) => (
+        <div key={idx} className="contents group">
+          <div className="bg-stone-50 dark:bg-stone-950 p-3 font-mono text-xs text-stone-500 tabular-nums">{e.era}</div>
+          <div className="bg-stone-50 dark:bg-stone-950 p-3 text-stone-800 dark:text-stone-200 leading-relaxed">{e.judaism || '—'}</div>
+          <div className="bg-stone-50 dark:bg-stone-950 p-3 text-stone-800 dark:text-stone-200 leading-relaxed">{e.christianity || '—'}</div>
+          <div className="bg-stone-50 dark:bg-stone-950 p-3 text-stone-800 dark:text-stone-200 leading-relaxed">{e.islam || '—'}</div>
+        </div>
+      ))}
+    </div>
+  );
+}
+```
+→ skipped: Drag-scrub timeline library, dynamic zoom, and canvas renderers.  
+→ add when: Horizontal historical scrubbing spanning >5,000 non-aligned overlapping events is required.
+
+---
+
+### 2. Lineage View: Semantic CSS Tree Connectors (No Canvas/SVG Bloat)
+
+```tsx
+// components/lineage/LineageNode.tsx
+interface FigureNode {
+  name: string;
+  title?: string;
+  children?: FigureNode[];
+}
+
+export function LineageNode({ node }: { node: FigureNode }) {
+  // ponytail: 2-level branching limit; migrate to recursive SVG paths if lineages cross-marry.
+  return (
+    <div className="flex flex-col items-center">
+      <div className="border border-stone-300 dark:border-stone-700 bg-stone-50 dark:bg-stone-900 px-4 py-2 rounded-lg text-center shadow-xs">
+        <span className="font-serif font-medium block text-stone-900 dark:text-stone-100">{node.name}</span>
+        {node.title && <span className="text-[11px] font-sans text-stone-500 block">{node.title}</span>}
+      </div>
+
+      {node.children && node.children.length > 0 && (
+        <div className="relative pt-6 flex gap-6 before:content-[''] before:absolute before:top-0 before:left-1/2 before:-translate-x-1/2 before:w-px before:h-6 before:bg-stone-300 dark:before:bg-stone-700">
+          {node.children.map((child, idx) => (
+            <div key={idx} className="relative before:content-[''] before:absolute before:-top-6 before:left-0 before:right-0 before:h-px before:bg-stone-300 dark:before:bg-stone-700 first:before:left-1/2 last:before:right-1/2">
+              <LineageNode node={child} />
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+```
+→ skipped: React Flow, ELK.js, and manual SVG bezier math.  
+→ add when: Graphs become cyclic or require dynamic pan-and-pinch nodes.
+
+---
+
+### 3. Production Build Lock: Strict Static Validation
+
+```ts
+// app/lore/[tradition]/[slug]/page.tsx
+import { notFound } from 'next/navigation';
+
+export const dynamic = 'error'; // Fail build if anything dynamic slips in
+export const dynamicParams = false; // 404 immediately on un-generated static routes
+
+interface PageProps {
+  params: Promise<{ tradition: 'judaism' | 'christianity' | 'islam'; slug: string }>;
+}
+
+export async function generateStaticParams() {
+  // ponytail: In-memory/local JSON data fetch; hook to local SQLite/MDX compiler at build-time.
+  return [
+    { tradition: 'judaism', slug: 'abraham' },
+    { tradition: 'christianity', slug: 'abraham' },
+    { tradition: 'islam', slug: 'ibrahim' },
+  ];
+}
+
+export default async function LorePage({ params }: PageProps) {
+  const { tradition, slug } = await params;
+  if (!tradition || !slug) notFound();
+
+  return <main className="max-w-2xl mx-auto p-6 font-serif leading-relaxed" />;
+}
+```
+→ skipped: Runtime fetch fallbacks and ISR revalidation routes.  
+→ add when: Content is supplied via external headful CMS with on-demand webhooks.
