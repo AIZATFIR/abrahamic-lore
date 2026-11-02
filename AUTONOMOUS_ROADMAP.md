@@ -4635,3 +4635,109 @@ export default async function FigurePage({ params }: PageProps) {
 }
 ```
 → skipped: Dynamic runtime fallback handling (`fallback: true`). Add when: Figure data moves to an external remote CMS.
+
+
+### Cycle #70 Directive (2026-11-03 03:42)
+### 1. Lineage View: Native CSS Tree Connectors
+
+Replace canvas/graph libs with semantic nested lists and pure CSS borders.
+
+```tsx
+// components/LineageNode.tsx
+export function LineageNode({ name, title, children }: { name: string; title?: string; children?: React.ReactNode }) {
+  // ponytail: Simple tree ceiling. Upgrade to SVG canvas if rendering multi-parent DAGs.
+  return (
+    <li className="relative pl-5 before:absolute before:left-0 before:top-3 before:h-px before:w-3.5 before:bg-stone-300 dark:before:bg-stone-700">
+      <div className="inline-flex items-baseline gap-1.5 rounded border border-stone-200/80 bg-stone-50/40 px-2 py-0.5 text-xs tracking-tight text-stone-800 dark:border-stone-800 dark:bg-stone-900/45 dark:text-stone-200">
+        <span className="font-medium">{name}</span>
+        {title && <span className="text-[10px] text-stone-400">{title}</span>}
+      </div>
+      {children && <ul className="relative ml-1.5 border-l border-stone-300 pl-1 dark:border-stone-700">{children}</ul>}
+    </li>
+  );
+}
+```
+* Skipped: React Flow / D3 graph engine.
+* Add when: Lineages require cross-branch marriage cycles or directed acyclic graph (DAG) visualization.
+
+---
+
+### 2. Comparative Timeline: CSS Grid Alignment
+
+Sync Jewish, Christian, and Islamic parallels via native grid track sizing instead of JS scroll listeners.
+
+```tsx
+// components/ComparativeTimeline.tsx
+interface TimelinePoint {
+  era: string;
+  judaic: string;
+  christian: string;
+  islamic: string;
+}
+
+export function ComparativeTimeline({ points }: { points: TimelinePoint[] }) {
+  return (
+    <div className="w-full overflow-x-auto">
+      <div className="min-w-[640px] divide-y divide-stone-100 font-sans text-xs dark:divide-stone-800">
+        <header className="grid grid-cols-[80px_1fr_1fr_1fr] pb-2 text-[11px] font-medium text-stone-400">
+          <span>Era</span>
+          <span>Judaism</span>
+          <span>Christianity</span>
+          <span>Islam</span>
+        </header>
+        {points.map((pt) => (
+          <div key={pt.era} className="grid grid-cols-[80px_1fr_1fr_1fr] gap-3 py-2.5 items-start">
+            <span className="font-mono text-stone-400">{pt.era}</span>
+            <p className="text-stone-700 dark:text-stone-300">{pt.judaic || '—'}</p>
+            <p className="text-stone-700 dark:text-stone-300">{pt.christian || '—'}</p>
+            <p className="text-stone-700 dark:text-stone-300">{pt.islamic || '—'}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+```
+* Skipped: Complex scroll synchronizer hook and column drag-resize libraries.
+* Add when: Users need interactive epoch-filtering or custom tradition pin-reordering.
+
+---
+
+### 3. Next.js 15 Zero-Error Dynamic Prerender
+
+Awaited route params and exhaustive `generateStaticParams` to prevent dynamic bailouts during `next build`.
+
+```tsx
+// app/figure/[slug]/page.tsx
+import { notFound } from 'next/navigation';
+
+const CANONICAL_SLUGS = ['abraham', 'moses', 'jesus', 'muhammad'] as const;
+
+export function generateStaticParams() {
+  return CANONICAL_SLUGS.map((slug) => ({ slug }));
+}
+
+export default async function FigurePage({ params }: { params: Promise<{ slug: string }> }) {
+  const { slug } = await params;
+  if (!CANONICAL_SLUGS.includes(slug as (typeof CANONICAL_SLUGS)[number])) {
+    notFound();
+  }
+
+  return <main className="mx-auto max-w-2xl px-4 py-8">{/* Figure content */}</main>;
+}
+```
+* Skipped: Dynamic database fallback queries (`fallback: 'blocking'`).
+* Add when: Lore database moves from in-repo static records to an external CMS/database.
+
+---
+
+### Verification Check
+```ts
+// assert-check.ts
+import assert from 'node:assert';
+import { generateStaticParams } from './app/figure/[slug]/page';
+
+const params = generateStaticParams();
+assert.strictEqual(params.length, 4, 'Must prerender all 4 canonical patriarchs/prophets');
+assert.ok(params.every(p => typeof p.slug === 'string'), 'Slugs must be strictly typed strings');
+```
