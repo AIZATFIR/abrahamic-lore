@@ -2880,3 +2880,99 @@ const mockData = { name: "Terah", children: [{ name: "Abraham" }, { name: "Nahor
 console.assert(typeof LineageNode === "function", "Lineage component must be defined");
 console.assert(mockData.children.length === 2, "Lineage mock must match schema");
 ```
+
+
+### Cycle #53 Directive (2026-11-03 02:07)
+### 1. Zero-JS Comparative Timeline Track (CSS Grid + Snap)
+
+```tsx
+// components/ComparativeTimeline.tsx
+interface TimelineEvent {
+  year: number;
+  tradition: 'judaism' | 'christianity' | 'islam';
+  title: string;
+}
+
+export function ComparativeTimeline({ events }: { events: TimelineEvent[] }) {
+  // ponytail: sort in memory; ceiling: <500 events; upgrade to DB sort if paginated
+  const sorted = [...events].sort((a, b) => a.year - b.year);
+
+  return (
+    <div className="overflow-x-auto scroll-smooth snap-x snap-mandatory border-y border-stone-200 dark:border-stone-800 py-6">
+      <div className="grid grid-rows-3 grid-flow-col auto-cols-[minmax(220px,1fr)] gap-4 px-4 min-w-max">
+        {sorted.map((ev, i) => (
+          <div
+            key={i}
+            className={`row-start-${ev.tradition === 'judaism' ? 1 : ev.tradition === 'christianity' ? 2 : 3} 
+              snap-start p-3 rounded-lg border border-stone-200/60 dark:border-stone-800 bg-stone-50/50 dark:bg-stone-900/50 text-xs backdrop-blur-sm`}
+          >
+            <span className="font-mono text-[10px] text-stone-400 dark:text-stone-500 block">
+              {ev.year < 0 ? `${Math.abs(ev.year)} BCE` : `${ev.year} CE`}
+            </span>
+            <span className="font-serif font-medium text-stone-800 dark:text-stone-200">
+              {ev.title}
+            </span>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+```
+→ skipped: timeline zoom/pan engines, add when supporting >1,000 dense overlapping events.
+
+---
+
+### 2. Pure Semantic CSS Lineage Tree (No Canvas / Graph Libs)
+
+```tsx
+// components/LineageTree.tsx
+type Figure = { name: string; children?: Figure[] };
+
+export function LineageNode({ figure }: { figure: Figure }) {
+  return (
+    <li className="flex flex-col items-center relative px-2 before:content-[''] before:absolute before:top-0 before:h-4 before:w-px before:bg-stone-300 dark:before:bg-stone-700 first:before:hidden">
+      <div className="z-10 rounded-full border border-stone-300 dark:border-stone-700 px-3 py-1 text-xs font-serif bg-stone-50 dark:bg-stone-900 shadow-sm">
+        {figure.name}
+      </div>
+      {figure.children && figure.children.length > 0 && (
+        <ul className="flex pt-4 relative before:content-[''] before:absolute before:top-0 before:left-1/2 before:h-4 before:w-px before:bg-stone-300 dark:before:bg-stone-700">
+          {figure.children.map((child) => (
+            <LineageNode key={child.name} figure={child} />
+          ))}
+        </ul>
+      )}
+    </li>
+  );
+}
+```
+→ skipped: react-flow/dagre layout engines, add when cyclic graphs or complex multi-parent marriages are rendered.
+
+---
+
+### 3. Next.js 15 Zero-Error Dynamic Params & Build Guard
+
+```tsx
+// app/lineage/[slug]/page.tsx
+import { notFound } from 'next/navigation';
+
+const VALID_SLUGS = ['abrahamic', 'patriarchs', 'prophets'] as const;
+
+export function generateStaticParams() {
+  return VALID_SLUGS.map((slug) => ({ slug }));
+}
+
+export const dynamicParams = false; // ponytail: zero runtime 404 surprises; build fails on bad links
+
+export default async function LineagePage({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}) {
+  const { slug } = await params;
+  if (!VALID_SLUGS.includes(slug as (typeof VALID_SLUGS)[number])) notFound();
+
+  return <main className="max-w-screen-md mx-auto p-6 font-serif">{slug}</main>;
+}
+```
+→ skipped: runtime database fetch with ISR revalidation, add when content is managed via remote CMS.
