@@ -2333,3 +2333,92 @@ assert.equal(typeof sample.epoch, "string");
 assert.ok(sample.judaism && sample.christianity && sample.islam);
 ```
 → skipped: Dynamic SSR fallbacks/revalidation, add when CMS allows live un-rebuilt publishing.
+
+
+### Cycle #48 Directive (2026-11-03 01:39)
+### 1. Comparative Timeline: Pure CSS Subgrid (Kills JS scroll-sync bloat)
+
+```tsx
+// components/timeline/ComparativeTimeline.tsx
+interface EraRow {
+  year: string;
+  judaism: React.ReactNode;
+  christianity: React.ReactNode;
+  islam: React.ReactNode;
+}
+
+export function ComparativeTimeline({ rows }: { rows: EraRow[] }) {
+  return (
+    <div className="grid grid-cols-[5rem_repeat(3,minmax(18rem,1fr))] gap-x-6 overflow-x-auto selection:bg-stone-200">
+      <div className="sticky top-0 z-20 col-span-4 grid grid-cols-subgrid border-b border-stone-200/80 bg-stone-50/80 py-3.5 backdrop-blur-md text-[11px] font-medium tracking-wide text-stone-500 uppercase">
+        <span>Epoch</span><span>Judaism</span><span>Christianity</span><span>Islam</span>
+      </div>
+      {rows.map((row) => (
+        <div key={row.year} className="col-span-4 grid grid-cols-subgrid border-b border-stone-100 py-6 items-baseline group hover:bg-stone-50/50 transition-colors">
+          <span className="sticky left-0 font-mono text-xs text-stone-400 select-none">{row.year}</span>
+          <div className="text-[13px] leading-relaxed text-stone-700 pr-4">{row.judaism}</div>
+          <div className="text-[13px] leading-relaxed text-stone-700 pr-4">{row.christianity}</div>
+          <div className="text-[13px] leading-relaxed text-stone-700">{row.islam}</div>
+        </div>
+      ))}
+    </div>
+  );
+}
+```
+→ skipped: JS scroll-listener synchronization, virtualized windowing.  
+→ add when: Dataset exceeds 200 epochs or horizontal column count becomes user-configurable.
+
+---
+
+### 2. Lineage View: Native Cubic Bezier Connectors
+
+```tsx
+// components/lineage/LineageEdge.tsx
+export function LineageEdge({ from, to }: { from: [number, number]; to: [number, number] }) {
+  // ponytail: assumes top-to-bottom tree flow. Upgrade to orthogonal router if nodes overlap.
+  const [x1, y1] = from;
+  const [x2, y2] = to;
+  const cy = (y1 + y2) / 2;
+
+  return (
+    <path
+      d={`M ${x1} ${y1} C ${x1} ${cy}, ${x2} ${cy}, ${x2} ${y2}`}
+      fill="none"
+      className="stroke-stone-300 transition-colors duration-300 hover:stroke-stone-500"
+      strokeWidth={1.5}
+      vectorEffect="non-scaling-stroke"
+    />
+  );
+}
+```
+→ skipped: D3-hierarchy, ReactFlow runtime graph solvers.  
+→ add when: Bi-directional lineage cycles or complex cross-generation marriages occur.
+
+---
+
+### 3. Build Guard: Next.js 15 Async Route Params & Static Generation
+
+```tsx
+// app/figure/[slug]/page.tsx
+import { notFound } from 'next/navigation';
+import { FIGURES, FigureSlug } from '@/data/figures';
+
+interface PageProps {
+  params: Promise<{ slug: string }>;
+}
+
+export async function generateStaticParams() {
+  return Object.keys(FIGURES).map((slug) => ({ slug }));
+}
+
+export default async function FigurePage({ params }: PageProps) {
+  const { slug } = await params;
+  const figure = FIGURES[slug as FigureSlug];
+
+  if (!figure) notFound();
+
+  return <main className="mx-auto max-w-2xl px-6 py-16 text-stone-900">{/* lineage & timeline hooks */}</main>;
+}
+```
+→ skipped: `generateMetadata` dynamic fetching, runtime boundary fallbacks.  
+→ add when: Lore figures migrate from static data modules to a remote database.
