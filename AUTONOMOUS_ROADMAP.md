@@ -4209,3 +4209,113 @@ export default async function Page({ params }: { params: Promise<{ figure: strin
 }
 ```
 → skipped: D3/SVG canvas rendering, add when rendering complex multi-parent DAG cross-links.
+
+
+### Cycle #66 Directive (2026-11-03 03:19)
+### 1. Native Snap Comparative Timeline
+
+```tsx
+// components/ComparativeTimeline.tsx
+interface Era {
+  id: string;
+  name: string;
+  traditions: { judaism?: string; christianity?: string; islam?: string };
+}
+
+export function ComparativeTimeline({ eras }: { eras: Era[] }) {
+  return (
+    <div className="flex gap-4 overflow-x-auto pb-4 snap-x snap-mandatory scrollbar-none">
+      {eras.map((era) => (
+        <article
+          key={era.id}
+          className="snap-start shrink-0 w-80 rounded-2xl border border-stone-200/80 bg-stone-50/40 p-5 dark:border-stone-800 dark:bg-stone-900/40"
+        >
+          <time className="font-mono text-xs uppercase tracking-widest text-stone-500">{era.name}</time>
+          <div className="mt-4 space-y-3 text-sm">
+            {(["judaism", "christianity", "islam"] as const).map(
+              (key) =>
+                era.traditions[key] && (
+                  <div key={key} className="border-l-2 border-stone-300 pl-3 dark:border-stone-700">
+                    <span className="block text-[10px] font-medium uppercase text-stone-400">{key}</span>
+                    <p className="mt-0.5 text-stone-800 dark:text-stone-200">{era.traditions[key]}</p>
+                  </div>
+                )
+            )}
+          </div>
+        </article>
+      ))}
+    </div>
+  );
+}
+// ponytail: horizontal cards only; add vertical comparative sync when traditions exceed 4 parallel tracks.
+```
+→ skipped: heavy timeline libraries (`vis-timeline`, Framer drag), add when multi-track freeform zooming is requested.
+
+---
+
+### 2. Pure CSS Zero-JS Lineage Connectors
+
+```tsx
+// components/LineageNode.tsx
+interface Figure {
+  name: string;
+  children?: Figure[];
+}
+
+export function LineageNode({ figure }: { figure: Figure }) {
+  return (
+    <div className="flex flex-col items-center">
+      <div className="rounded-xl border border-stone-200 bg-white px-4 py-2 text-sm font-medium shadow-xs dark:border-stone-800 dark:bg-stone-900">
+        {figure.name}
+      </div>
+      {figure.children && figure.children.length > 0 && (
+        <div className="relative pt-6">
+          <div className="absolute top-0 left-1/2 h-6 w-px -translate-x-1/2 bg-stone-300 dark:bg-stone-700" />
+          <div className="flex gap-8 border-t border-stone-300 dark:border-stone-700">
+            {figure.children.map((child) => (
+              <div key={child.name} className="relative pt-6">
+                <div className="absolute top-0 left-1/2 h-6 w-px -translate-x-1/2 bg-stone-300 dark:bg-stone-700" />
+                <LineageNode figure={child} />
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+// ponytail: strict top-down tree; add SVG curved connectors when cross-branch unions/inter-marriages are introduced.
+```
+→ skipped: React Flow / D3 / HTML Canvas, add when pan-and-zoom and complex cross-branch edges are needed.
+
+---
+
+### 3. Next.js Static Export & Async Params Build-Fix
+
+```tsx
+// app/lineage/[slug]/page.tsx
+import { notFound } from "next/navigation";
+
+const LORE_SLUGS = ["abraham", "moses", "jesus", "muhammad"] as const;
+
+export function generateStaticParams() {
+  return LORE_SLUGS.map((slug) => ({ slug }));
+}
+
+export default async function LineagePage({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}) {
+  const { slug } = await params;
+  if (!LORE_SLUGS.includes(slug as (typeof LORE_SLUGS)[number])) notFound();
+
+  return (
+    <main className="mx-auto max-w-4xl px-6 py-12">
+      <h1 className="font-serif text-3xl capitalize text-stone-900 dark:text-stone-100">{slug}</h1>
+    </main>
+  );
+}
+// ponytail: static array slug validation; add schema-validated JSON loader when dataset externalizes.
+```
+→ skipped: dynamic runtime database queries, add when database-backed content requires on-demand revalidation.
