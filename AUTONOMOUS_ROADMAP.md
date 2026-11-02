@@ -5882,3 +5882,79 @@ export default async function FigurePage({ params }: { params: Promise<{ slug: s
 ```
 → skipped: Remote CMS SDK layers and database connection pools.  
 Add when: Lore repository migrates from static JSON/Markdown assets to a live external DB.
+
+
+### Cycle #103 Directive (2026-11-03 06:46)
+### 1. Build Parity: Lock Static Prerendering (`app/lineage/[id]/page.tsx`)
+
+```tsx
+// Force zero-dynamic build guarantee; fails fast at `next build` if data is incomplete.
+export const dynamic = 'error';
+export const dynamicParams = false;
+
+export async function generateStaticParams() {
+  const { figures } = await import('@/data/figures.json');
+  // ponytail: assumes single flat figures array; upgrade to paginated batches if set exceeds 5k.
+  return figures.map((f: { id: string }) => ({ id: f.id }));
+}
+```
+→ skipped: runtime dynamic fallbacks and DB connection pools; add when moving off static JSON to a live CMS/database.
+
+---
+
+### 2. Comparative Timeline: Pure CSS Alignment (`components/ComparativeTimeline.tsx`)
+
+```tsx
+interface EraEntry {
+  bce: number;
+  traditions: { judaism?: string; christianity?: string; islam?: string };
+}
+
+export function ComparativeTimeline({ entries }: { entries: EraEntry[] }) {
+  return (
+    <div className="grid grid-cols-[80px_repeat(3,1fr)] gap-3 border-l border-zinc-200 dark:border-zinc-800">
+      {entries.map(({ bce, traditions }) => (
+        <div key={bce} className="contents">
+          <time className="sticky top-4 text-xs font-mono text-zinc-400 py-2">{Math.abs(bce)} BCE</time>
+          {(['judaism', 'christianity', 'islam'] as const).map((faith) => (
+            <div key={faith} className="p-3 bg-zinc-50/50 dark:bg-zinc-900/50 border border-zinc-200 dark:border-zinc-800 rounded-md text-xs leading-relaxed">
+              {traditions[faith] ?? <span className="text-zinc-300 dark:text-zinc-700">—</span>}
+            </div>
+          ))}
+        </div>
+      ))}
+    </div>
+  );
+}
+```
+→ skipped: JS-driven scroll synchronization and virtualization; add when horizontal era count exceeds 300 entries.
+
+---
+
+### 3. Lineage View: Native HTML/CSS Tree (`components/LineageTree.tsx`)
+
+```tsx
+interface Member {
+  name: string;
+  canon: string;
+  children?: Member[];
+}
+
+export function LineageNode({ node }: { node: Member }) {
+  return (
+    <li className="relative pl-5 before:absolute before:left-0 before:top-2 before:h-full before:w-px before:bg-zinc-300 dark:before:bg-zinc-700 last:before:h-2">
+      <span className="absolute left-0 top-2 h-px w-3 bg-zinc-300 dark:bg-zinc-700" />
+      <span className="text-xs font-serif font-medium text-zinc-900 dark:text-zinc-100">{node.name}</span>
+      <span className="ml-1.5 text-[10px] text-zinc-400">{node.canon}</span>
+      {node.children && (
+        <ul className="mt-1 space-y-1">
+          {node.children.map((child) => (
+            <LineageNode key={child.name} node={child} />
+          ))}
+        </ul>
+      )}
+    </li>
+  );
+}
+```
+→ skipped: Canvas/D3/React Flow layout engine; add when lineage requirements evolve from hierarchical trees to cyclic/bidirectional graphs.
