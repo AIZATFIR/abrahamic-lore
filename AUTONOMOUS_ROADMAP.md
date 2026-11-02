@@ -131,3 +131,136 @@ export default async function FigurePage({ params }: { params: Promise<{ slug: s
 ```
 skipped: Dynamic server runtime (SSR) and on-demand fallback revalidation.  
 add when: User-generated lore contributions require runtime ISR.
+
+
+### Cycle #1 Directive (2026-11-02 21:11)
+### 1. Comparative Timeline: Native Sticky Grid (Zero-JS Sync)
+
+Replace complex timeline sync logic with native CSS grid and sticky era headers for Abrahamic traditions (Judaism, Christianity, Islam).
+
+```tsx
+// components/ComparativeTimeline.tsx
+interface EraEvent {
+  year: string;
+  traditions: {
+    judaism?: string;
+    christianity?: string;
+    islam?: string;
+  };
+}
+
+export function ComparativeTimeline({ events }: { events: EraEvent[] }) {
+  // ponytail: static 3-column grid; upgrade to dynamic columns if adding Baha'i/Druze lore
+  return (
+    <div className="w-full max-w-5xl mx-auto px-4 font-sans text-stone-800 dark:text-stone-200">
+      <header className="sticky top-0 z-20 grid grid-cols-4 gap-4 py-3 bg-stone-50/90 dark:bg-stone-900/90 backdrop-blur border-b border-stone-200 dark:border-stone-800 text-xs tracking-wider uppercase text-stone-500">
+        <span>Era / BCE-CE</span>
+        <span>Judaism</span>
+        <span>Christianity</span>
+        <span>Islam</span>
+      </header>
+      <div className="divide-y divide-stone-200/50 dark:divide-stone-800/50 text-sm">
+        {events.map((e, idx) => (
+          <div key={idx} className="grid grid-cols-4 gap-4 py-4 items-baseline">
+            <span className="font-mono text-xs text-stone-400 select-none">{e.year}</span>
+            <div className="space-y-1">{e.traditions.judaism ?? <span className="text-stone-300 dark:text-stone-700">—</span>}</div>
+            <div className="space-y-1">{e.traditions.christianity ?? <span className="text-stone-300 dark:text-stone-700">—</span>}</div>
+            <div className="space-y-1">{e.traditions.islam ?? <span className="text-stone-300 dark:text-stone-700">—</span>}</div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+```
+→ skipped: JS-driven canvas/scroll-sync libraries (vis-timeline, react-flow).  
+→ add when: Horizontal dragging or interactive cross-era node-linking is explicitly required.
+
+---
+
+### 2. Lineage View: Semantic Tree via Native CSS Pseudo-Borders
+
+Drop graph layout engines. Render patriarchal lineages with a semantic `<ul>`/`<li>` tree using native CSS border connectors.
+
+```tsx
+// components/LineageTree.tsx
+interface PersonNode {
+  name: string;
+  title?: string;
+  children?: PersonNode[];
+}
+
+export function LineageTree({ data }: { data: PersonNode }) {
+  // ponytail: strict single-parent descending lineage; upgrade to full DAG if displaying complex maternal ties
+  return (
+    <div className="inline-block p-6">
+      <NodeItem node={data} />
+    </div>
+  );
+}
+
+function NodeItem({ node }: { node: PersonNode }) {
+  return (
+    <div className="flex flex-col items-center">
+      <div className="px-3 py-1.5 rounded-md border border-stone-300 dark:border-stone-700 bg-stone-100 dark:bg-stone-800 text-stone-900 dark:text-stone-100 text-sm shadow-sm">
+        <span className="font-medium">{node.name}</span>
+        {node.title && <span className="block text-[10px] text-stone-500 tracking-tight">{node.title}</span>}
+      </div>
+      {node.children && node.children.length > 0 && (
+        <div className="flex pt-4 relative before:content-[''] before:absolute before:top-0 before:left-1/2 before:w-px before:h-4 before:bg-stone-300 dark:before:bg-stone-700">
+          {node.children.map((child, idx) => (
+            <div key={idx} className="relative px-3 before:content-[''] before:absolute before:top-0 before:left-0 before:right-0 before:h-px before:bg-stone-300 dark:before:bg-stone-700 first:before:left-1/2 last:before:right-1/2">
+              <NodeItem node={child} />
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+```
+→ skipped: `@visx/hierarchy`, `d3-hierarchy`, and manual `<svg>` bezier path calculation.  
+→ add when: Lineage requires dynamic node-collapsing or bidirectional marriage nodes.
+
+---
+
+### 3. Next.js Zero-Error Build: Strict Static Param Freezing
+
+Prevent dynamic route build-time crashes (`PageNotFoundError`, undefined parameter slips, or accidental dynamic fallbacks during `next build`).
+
+```tsx
+// app/figures/[slug]/page.tsx
+import { notFound } from "next/navigation";
+
+// Enforce total static-export verification at build-time
+export const dynamic = "error";
+export const dynamicParams = false;
+
+interface PageProps {
+  params: Promise<{ slug: string }>;
+}
+
+export async function generateStaticParams() {
+  // ponytail: direct local dataset read; upgrade to fs-cached manifest if dataset exceeds 500 records
+  const { getAllFigureSlugs } = await import("@/lib/lore");
+  return getAllFigureSlugs().map((slug) => ({ slug }));
+}
+
+export default async function FigurePage({ params }: PageProps) {
+  const { slug } = await params;
+  const { getFigureBySlug } = await import("@/lib/lore");
+  const figure = getFigureBySlug(slug);
+
+  if (!figure) notFound();
+
+  return <main className="p-8 font-sans">{/* View payload */}</main>;
+}
+
+// Self-check: ensures static generator matches page expectation
+if (process.env.NODE_ENV === "test") {
+  const testParams = await generateStaticParams();
+  console.assert(Array.isArray(testParams), "generateStaticParams must return an array");
+}
+```
+→ skipped: On-demand incremental dynamic rendering (ISR) and fallback skeleton loaders.  
+→ add when: Lore database moves from static markdown/JSON to an active remote CMS.
