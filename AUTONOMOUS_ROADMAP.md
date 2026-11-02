@@ -1779,3 +1779,133 @@ export function LineageNode({ node }: { node: PersonNode }) {
 ```
 → skipped: heavy graph visualization packages (React Flow, D3, Vis.js).  
 add when: graph contains non-hierarchical cycles or dual-parent interconnects.
+
+
+### Cycle #43 Directive (2026-11-03 01:11)
+### 1. Build Fix: Next.js 15 Strict Async Route Typing & Prerender Safety
+
+```tsx
+// app/traditions/[figure]/page.tsx
+import { notFound } from "next/navigation";
+
+const VALID_FIGURES = ["abraham", "moses", "jesus", "muhammad"] as const;
+type Figure = (typeof VALID_FIGURES)[number];
+
+export function generateStaticParams() {
+  return VALID_FIGURES.map((figure) => ({ figure }));
+}
+
+export default async function FigurePage({
+  params,
+}: {
+  params: Promise<{ figure: string }>;
+}) {
+  const { figure } = await params;
+  if (!VALID_FIGURES.includes(figure as Figure)) notFound();
+
+  return (
+    <main className="mx-auto max-w-xl px-6 py-12 text-stone-900">
+      <h1 className="text-xl font-medium tracking-tight capitalize">{figure}</h1>
+    </main>
+  );
+}
+```
+skipped: Dynamic DB query and client-side loaders.  
+add when: Lore data moves from static content to an external headless CMS/DB.
+
+---
+
+### 2. Comparative Timeline: Zero-Dep Synchronized CSS Grid
+
+```tsx
+// components/comparative-timeline.tsx
+type EraRow = {
+  era: string;
+  judaism: string;
+  christianity: string;
+  islam: string;
+};
+
+export function ComparativeTimeline({ rows }: { rows: EraRow[] }) {
+  return (
+    <div className="grid grid-cols-[80px_repeat(3,minmax(0,1fr))] gap-2 text-xs border-t border-stone-200">
+      <div className="sticky top-0 z-10 bg-stone-50/90 py-2.5 font-mono text-stone-400 backdrop-blur">Era</div>
+      <div className="sticky top-0 z-10 bg-stone-50/90 py-2.5 font-medium text-stone-700 backdrop-blur">Judaism</div>
+      <div className="sticky top-0 z-10 bg-stone-50/90 py-2.5 font-medium text-stone-700 backdrop-blur">Christianity</div>
+      <div className="sticky top-0 z-10 bg-stone-50/90 py-2.5 font-medium text-stone-700 backdrop-blur">Islam</div>
+
+      {rows.map((r) => (
+        <div key={r.era} className="contents group">
+          <span className="py-2 font-mono text-stone-400 border-b border-stone-100">{r.era}</span>
+          <div className="rounded bg-stone-100/60 p-2 text-stone-800 transition group-hover:bg-stone-100 border-b border-stone-100">{r.judaism}</div>
+          <div className="rounded bg-stone-100/60 p-2 text-stone-800 transition group-hover:bg-stone-100 border-b border-stone-100">{r.christianity}</div>
+          <div className="rounded bg-stone-100/60 p-2 text-stone-800 transition group-hover:bg-stone-100 border-b border-stone-100">{r.islam}</div>
+        </div>
+      ))}
+    </div>
+  );
+}
+```
+skipped: Heavy charting/canvas packages and interactive zoom listeners.  
+add when: Range-based spans exceed row-level granular comparison.
+
+---
+
+### 3. Lineage View: Native CSS Tree Nodes
+
+```tsx
+// components/lineage-tree.tsx
+export type LineageNode = { name: string; children?: LineageNode[] };
+
+export function LineageTree({ node }: { node: LineageNode }) {
+  // ponytail: recursion ceiling 10 levels deep; add iteration/virtualization if nodes > 100
+  return (
+    <div className="flex flex-col items-center">
+      <span className="rounded-full border border-stone-200 bg-stone-50 px-3 py-1 text-xs font-medium text-stone-800 shadow-sm">
+        {node.name}
+      </span>
+      {node.children && node.children.length > 0 && (
+        <div className="relative flex pt-4 before:absolute before:top-0 before:left-1/2 before:h-4 before:w-px before:bg-stone-300">
+          {node.children.map((child) => (
+            <div
+              key={child.name}
+              className="relative px-3 before:absolute before:top-0 before:left-0 before:right-0 before:h-px before:bg-stone-300 first:before:left-1/2 last:before:right-1/2"
+            >
+              <div className="mx-auto h-3 w-px bg-stone-300" />
+              <LineageTree node={child} />
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+```
+skipped: React Flow / D3 SVG layout engine dependencies.  
+add when: Non-hierarchical cross-links (e.g., intermarriages across branches) require multi-parent graphs.
+
+---
+
+### Self-Check
+
+```ts
+// tests/lineage-validator.ts
+import assert from "node:assert";
+import type { LineageNode } from "../components/lineage-tree";
+
+function countDescendants(node: LineageNode): number {
+  if (!node.children || node.children.length === 0) return 1;
+  return 1 + node.children.reduce((acc, c) => acc + countDescendants(c), 0);
+}
+
+const tree: LineageNode = {
+  name: "Terah",
+  children: [
+    { name: "Abraham", children: [{ name: "Isaac" }, { name: "Ishmael" }] },
+    { name: "Nahor" },
+  ],
+};
+
+assert.strictEqual(countDescendants(tree), 5, "Tree traversal mismatch");
+console.log("✓ Lineage self-check passed");
+```
