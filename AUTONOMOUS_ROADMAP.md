@@ -3421,3 +3421,92 @@ export default async function Page({ params }: { params: Promise<{ era: string }
 ```
 → skipped: Client-side loading spinners and runtime edge fallbacks.  
 → add when: Lore entries update via live external CMS webhooks.
+
+
+### Cycle #58 Directive (2026-11-03 02:35)
+### 1. Pure CSS Lineage Tree (Drop heavy canvas/graph deps)
+
+```css
+/* app/lineage/lineage.module.css */
+.tree, .tree ul { list-style: none; margin: 0; padding-left: 1rem; position: relative; }
+.tree li { position: relative; padding: 0.35rem 0 0.35rem 1rem; }
+.tree li::before {
+  content: ""; position: absolute; left: 0; top: 0.85rem; width: 0.75rem;
+  border-top: 1px solid currentColor; opacity: 0.2;
+}
+.tree li::after {
+  content: ""; position: absolute; left: 0; top: 0; bottom: 0;
+  border-left: 1px solid currentColor; opacity: 0.2;
+}
+.tree li:last-child::after { height: 0.85rem; }
+```
+```tsx
+// ponytail: pure CSS branch rendering; upgrade to SVG bezier paths only if multi-parent cross-links are added.
+export function LineageNode({ name, children }: { name: string; children?: React.ReactNode }) {
+  return (
+    <li className="font-serif text-sm tracking-tight text-stone-800 dark:text-stone-200">
+      <span>{name}</span>
+      {children && <ul className={styles.tree}>{children}</ul>}
+    </li>
+  );
+}
+```
+→ skipped: `@xyflow/react` / `d3-hierarchy` runtime bloat.  
+→ add when: free-form drag-and-pan canvas navigation is strictly demanded.
+
+---
+
+### 2. Comparative Sync Grid (Judaism | Christianity | Islam)
+
+```tsx
+type Tradition = "judaism" | "christianity" | "islam";
+interface TimelinePoint { id: string; tradition: Tradition; eraIndex: number; year: string; name: string; }
+
+const colMap: Record<Tradition, number> = { judaism: 1, christianity: 2, islam: 3 };
+
+// ponytail: eraIndex ties traditions to unified CSS grid rows without scroll-sync JS.
+export function ComparativeTimeline({ points }: { points: TimelinePoint[] }) {
+  return (
+    <div className="grid grid-cols-3 gap-x-6 gap-y-2 border-stone-200 dark:border-stone-800 border-x px-4">
+      {points.map((pt) => (
+        <article
+          key={pt.id}
+          style={{ gridRow: pt.eraIndex, gridColumn: colMap[pt.tradition] }}
+          className="rounded-sm border border-stone-200/60 bg-stone-50/50 p-2.5 text-xs dark:border-stone-800/80 dark:bg-stone-900/40"
+        >
+          <time className="font-mono text-[10px] text-stone-400">{pt.year}</time>
+          <h4 className="font-medium text-stone-900 dark:text-stone-100">{pt.name}</h4>
+        </article>
+      ))}
+    </div>
+  );
+}
+```
+→ skipped: JS scroll-sync observers and virtualized canvas layouts.  
+→ add when: simultaneous continuous event density exceeds 5,000 DOM nodes.
+
+---
+
+### 3. Static Type-Safe Params Guard (Next.js 15 Zero-Error Build)
+
+```tsx
+// app/figures/[slug]/page.tsx
+import { notFound } from "next/navigation";
+import { figures } from "@/data/figures";
+
+export const dynamicParams = false;
+
+export function generateStaticParams(): Array<{ slug: string }> {
+  return Object.keys(figures).map((slug) => ({ slug }));
+}
+
+export default async function FigurePage({ params }: { params: Promise<{ slug: string }> }) {
+  const { slug } = await params;
+  const figure = figures[slug];
+  if (!figure) notFound();
+
+  return <main className="max-w-xl mx-auto py-12 px-6 font-serif">{figure.name}</main>;
+}
+```
+→ skipped: ISR caching revalidation headers and DB client wrappers.  
+→ add when: lore records are sourced from a headless CMS at runtime.
