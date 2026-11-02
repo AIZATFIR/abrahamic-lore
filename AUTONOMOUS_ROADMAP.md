@@ -375,3 +375,141 @@ validateLoreGraph([{ id: 'abraham' }, { id: 'isaac', parentId: 'abraham' }]);
 ```
 skipped: Zod runtime validation schema and custom build-step plugin.  
 add when: Lore data is ingested dynamically from an untrusted third-party CMS or dynamic user input.
+
+
+### Cycle #4 Directive (2026-11-02 21:28)
+### 1. Comparative Timeline: Native Sticky Scroll-Snap Track
+
+Replace timeline JS libraries with pure CSS scroll-snapping multi-column comparison.
+
+```tsx
+// components/ComparativeTimeline.tsx
+interface TimelineEvent {
+  year: string;
+  tradition: 'judaism' | 'christianity' | 'islam';
+  title: string;
+}
+
+export function ComparativeTimeline({ events }: { events: TimelineEvent[] }) {
+  // ponytail: flat array sorted client-side; ceiling is 500 events; upgrade to server cursor when lore DB expands.
+  const traditions = ['judaism', 'christianity', 'islam'] as const;
+
+  return (
+    <div className="flex overflow-x-auto snap-x snap-mandatory scroll-smooth pb-4 border-b border-stone-200 dark:border-stone-800">
+      {traditions.map((trad) => (
+        <section key={trad} className="min-w-[280px] md:min-w-[340px] snap-start px-4 border-r border-stone-150 dark:border-stone-800/60 last:border-r-0">
+          <header className="sticky top-0 bg-stone-50/90 dark:bg-stone-950/90 backdrop-blur py-2 text-xs font-mono uppercase tracking-wider text-stone-500">
+            {trad}
+          </header>
+          <ul className="space-y-4 pt-4">
+            {events.filter((e) => e.tradition === trad).map((e, idx) => (
+              <li key={idx} className="p-3 rounded-lg bg-stone-100/50 dark:bg-stone-900/50 border border-stone-200/50 dark:border-stone-800/50">
+                <time className="text-[11px] font-mono text-stone-400 block">{e.year}</time>
+                <span className="text-sm font-medium text-stone-800 dark:text-stone-200">{e.title}</span>
+              </li>
+            ))}
+          </ul>
+        </section>
+      ))}
+    </div>
+  );
+}
+```
+`ComparativeTimeline.tsx` → skipped: virtualized list and canvas connectors; add when records exceed 300 per lane.
+
+---
+
+### 2. Lineage View: Native Semantic Tree with CSS Connectors
+
+Replaces graph visualization libraries (D3/ReactFlow) using recursive semantic markup.
+
+```tsx
+// components/LineageNode.tsx
+export interface Person {
+  id: string;
+  name: string;
+  meaning?: string;
+  children?: Person[];
+}
+
+export function LineageTree({ root }: { root: Person }) {
+  return (
+    <ul className="pl-6 border-l border-stone-300 dark:border-stone-700 space-y-3 font-sans">
+      <li className="relative">
+        <span className="absolute -left-6 top-3 w-4 border-t border-stone-300 dark:border-stone-700" />
+        <div className="inline-flex items-baseline gap-2 py-1 px-2.5 rounded-md bg-stone-150/60 dark:bg-stone-800/60 text-sm">
+          <span className="font-medium text-stone-900 dark:text-stone-100">{root.name}</span>
+          {root.meaning && <span className="text-xs text-stone-400 italic">({root.meaning})</span>}
+        </div>
+        {root.children?.map((child) => (
+          <LineageTree key={child.id} root={child} />
+        ))}
+      </li>
+    </ul>
+  );
+}
+```
+`LineageNode.tsx` → skipped: SVG zoom/pan engine; add when lineage depth exceeds 8 generations horizontally.
+
+---
+
+### 3. Next.js 15 Zero-Error Dynamic Route & Build Safety
+
+Ensures Next.js 15 async dynamic route params resolve correctly during static generation (`next build`).
+
+```tsx
+// app/lore/[tradition]/[figure]/page.tsx
+import { notFound } from 'next/navigation';
+
+interface Props {
+  params: Promise<{ tradition: string; figure: string }>;
+}
+
+export const dynamicParams = false;
+
+export async function generateStaticParams() {
+  // ponytail: hardcoded seed list; upgrade to dynamic read from MDX/DB source
+  return [
+    { tradition: 'islam', figure: 'ibrahim' },
+    { tradition: 'judaism', figure: 'abraham' },
+    { tradition: 'christianity', figure: 'abraham' }
+  ];
+}
+
+export default async function FigurePage({ params }: Props) {
+  const { tradition, figure } = await params;
+  if (!tradition || !figure) notFound();
+
+  return (
+    <main className="max-w-2xl mx-auto py-12 px-4">
+      <h1 className="text-2xl font-serif capitalize text-stone-900 dark:text-stone-50">{figure}</h1>
+      <p className="text-sm font-mono text-stone-500 capitalize">{tradition} Tradition</p>
+    </main>
+  );
+}
+```
+`FigurePage.tsx` → skipped: catch-all route validation middleware; add when slugs accept unvetted external paths.
+
+---
+
+### Runnable Self-Check
+
+```ts
+// scripts/check-lineage.ts
+import { Person } from '../components/LineageNode';
+
+function countNodes(node: Person): number {
+  return 1 + (node.children?.reduce((acc, c) => acc + countNodes(c), 0) ?? 0);
+}
+
+const mockTree: Person = {
+  id: '1',
+  name: 'Terah',
+  children: [
+    { id: '2', name: 'Abraham', children: [{ id: '4', name: 'Isaac' }, { id: '5', name: 'Ishmael' }] },
+    { id: '3', name: 'Nahor' }
+  ]
+};
+
+console.assert(countNodes(mockTree) === 5, 'Lineage tree structure node count mismatch');
+```
