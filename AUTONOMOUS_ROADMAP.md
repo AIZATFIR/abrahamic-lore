@@ -5356,3 +5356,125 @@ export default async function Page({
 ```
 → skipped: runtime SSR fallback checks, dynamic caching tiers.  
 → add when: user-generated commentary or dynamic content editing is integrated.
+
+
+### Cycle #98 Directive (2026-11-03 06:18)
+### 1. Pure CSS Lineage Tree (Zero-JS Connectors)
+
+```tsx
+// components/LineageNode.tsx
+interface Figure {
+  id: string;
+  name: string;
+  traditions: string[];
+  children?: Figure[];
+}
+
+export function LineageTree({ figure }: { figure: Figure }) {
+  // ponytail: recursive flex-tree caps out at ~6 visible generations before horizontal overflow. Upgrade to virtualized pan/zoom if >500 nodes.
+  return (
+    <div className="flex flex-col items-center">
+      <div className="rounded-lg border border-stone-200/80 bg-white/60 px-3 py-1.5 text-xs font-medium text-stone-800 shadow-xs backdrop-blur-md dark:border-stone-800 dark:bg-stone-900/60 dark:text-stone-200">
+        {figure.name}
+      </div>
+      {figure.children && figure.children.length > 0 && (
+        <div className="relative flex pt-6 before:absolute before:top-0 before:left-1/2 before:h-6 before:w-px before:-translate-x-1/2 before:bg-stone-300 dark:before:bg-stone-700">
+          {figure.children.map((child, idx, arr) => (
+            <div
+              key={child.id}
+              className={`relative flex flex-col items-center px-3 before:absolute before:top-0 before:h-px before:bg-stone-300 dark:before:bg-stone-700 ${
+                arr.length === 1
+                  ? "before:hidden"
+                  : idx === 0
+                  ? "before:left-1/2 before:right-0"
+                  : idx === arr.length - 1
+                  ? "before:left-0 before:right-1/2"
+                  : "before:left-0 before:right-0"
+              }`}
+            >
+              <div className="h-4 w-px bg-stone-300 dark:bg-stone-700" />
+              <LineageTree figure={child} />
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+```
+`skipped: [D3/react-flow canvas overhead, custom SVG path math], add when [freeform drag-and-drop or graph cycle support is explicitly required].`
+
+---
+
+### 2. Multi-Tradition Comparative Timeline (Native CSS Grid)
+
+```tsx
+// components/ComparativeTimeline.tsx
+interface EpochSync {
+  bceYear: number;
+  label: string;
+  judaism?: string;
+  christianity?: string;
+  islam?: string;
+}
+
+export function ComparativeTimeline({ epochs }: { epochs: EpochSync[] }) {
+  // ponytail: simple CSS grid layout caps out if traditions > 4.
+  return (
+    <div className="grid grid-cols-[80px_repeat(3,1fr)] divide-y divide-stone-100 text-xs dark:divide-stone-800/50">
+      <div className="sticky top-0 z-10 grid grid-cols-subgrid col-span-4 bg-stone-50/90 py-2.5 font-medium text-stone-500 backdrop-blur-md dark:bg-stone-950/90">
+        <span className="pl-2">Epoch</span>
+        <span>Judaism (Tanakh)</span>
+        <span>Christianity (NT)</span>
+        <span>Islam (Quran/Hadith)</span>
+      </div>
+      {epochs.map((e) => (
+        <div key={e.bceYear} className="grid grid-cols-subgrid col-span-4 py-3 items-baseline hover:bg-stone-50/50 dark:hover:bg-stone-900/30">
+          <time className="pl-2 font-mono tabular-nums text-stone-400">{Math.abs(e.bceYear)} {e.bceYear < 0 ? "BCE" : "CE"}</time>
+          <div className="pr-4 text-stone-700 dark:text-stone-300">{e.judaism ?? "—"}</div>
+          <div className="pr-4 text-stone-700 dark:text-stone-300">{e.christianity ?? "—"}</div>
+          <div className="pr-4 text-stone-700 dark:text-stone-300">{e.islam ?? "—"}</div>
+        </div>
+      ))}
+    </div>
+  );
+}
+```
+`skipped: [JS scroll-sync and virtual list listeners], add when [timeline entries exceed 200 concurrent DOM rows].`
+
+---
+
+### 3. Next.js 15 Static Contract & Route Guard
+
+```typescript
+// app/traditions/[slug]/page.tsx
+import { notFound } from "next/navigation";
+
+export const dynamicParams = false;
+
+const VALID_SLUGS = ["judaism", "christianity", "islam"] as const;
+type TraditionSlug = (typeof VALID_SLUGS)[number];
+
+export function generateStaticParams(): Array<{ slug: TraditionSlug }> {
+  return VALID_SLUGS.map((slug) => ({ slug }));
+}
+
+interface PageProps {
+  params: Promise<{ slug: TraditionSlug }>;
+}
+
+export default async function TraditionPage({ params }: PageProps) {
+  const { slug } = await params;
+  if (!VALID_SLUGS.includes(slug)) notFound();
+
+  return <main className="mx-auto max-w-4xl px-4 py-8">{/* Content */}</main>;
+}
+
+// Self-check for Next.js static integrity
+function _assertStaticGuard() {
+  const generated = generateStaticParams();
+  if (generated.length !== 3) throw new Error("Build assert failed: missing traditions in static params");
+}
+_assertStaticGuard();
+```
+`skipped: [Dynamic CMS route handlers and external DB fetch wrappers], add when [traditions become runtime-configurable via external datastore].`
