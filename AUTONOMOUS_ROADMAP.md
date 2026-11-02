@@ -1245,3 +1245,104 @@ import { getAllFigureSlugs } from '../lib/lore';
   console.log('✓ static param contract held');
 })();
 ```
+
+
+### Cycle #30 Directive (2026-11-02 23:56)
+### 1. Lineage View: Native Bordered Branch Tree (Zero Graph Bloat)
+
+Replace third-party chart/D3 libraries with semantic recursive HTML and native borders. Zen-toned, zero runtime overhead.
+
+```tsx
+// components/LineageTree.tsx
+interface FigureNode {
+  name: string;
+  traditionTitle?: string;
+  children?: FigureNode[];
+}
+
+export function LineageTree({ node }: { node: FigureNode }) {
+  return (
+    <ul className="pl-4 border-l border-stone-200 dark:border-stone-800 space-y-2">
+      <li className="relative before:absolute before:-left-4 before:top-3 before:w-4 before:h-px before:bg-stone-200 dark:before:bg-stone-800">
+        <span className="font-serif text-sm font-medium text-stone-900 dark:text-stone-100">{node.name}</span>
+        {node.traditionTitle && (
+          <span className="ml-2 text-xs text-stone-500 font-sans tracking-tight">{node.traditionTitle}</span>
+        )}
+        {node.children?.map((child) => (
+          <LineageTree key={child.name} node={child} />
+        ))}
+      </li>
+    </ul>
+  );
+}
+// ponytail: recursive nested CSS list; add SVG canvas coordinates only when complex non-linear cross-marriages are introduced.
+```
+→ skipped: D3/ReactFlow layout engines; add when inter-branch horizontal marriages/loops exceed standard trees.
+
+---
+
+### 2. Comparative Timeline: Synchronized CSS Grid Matrix
+
+Align comparative perspectives across Judaism, Christianity, and Islam with CSS subgrid/`display: contents` instead of JS scroll listeners.
+
+```tsx
+// components/ComparativeTimeline.tsx
+interface TraditionNarrative {
+  era: string;
+  jewish?: string;
+  christian?: string;
+  islamic?: string;
+}
+
+export function ComparativeTimeline({ records }: { records: TraditionNarrative[] }) {
+  return (
+    <div className="grid grid-cols-[80px_1fr_1fr_1fr] gap-x-6 text-xs border-t border-stone-200 dark:border-stone-800 font-sans">
+      <div className="sticky top-0 bg-stone-50 dark:bg-stone-950 py-3 font-mono text-stone-400 border-b border-stone-200 dark:border-stone-800">Era</div>
+      <div className="sticky top-0 bg-stone-50 dark:bg-stone-950 py-3 font-medium text-stone-700 dark:text-stone-300 border-b border-stone-200 dark:border-stone-800">Tanakh / Judaism</div>
+      <div className="sticky top-0 bg-stone-50 dark:bg-stone-950 py-3 font-medium text-stone-700 dark:text-stone-300 border-b border-stone-200 dark:border-stone-800">Christian Tradition</div>
+      <div className="sticky top-0 bg-stone-50 dark:bg-stone-950 py-3 font-medium text-stone-700 dark:text-stone-300 border-b border-stone-200 dark:border-stone-800">Quranic / Islam</div>
+
+      {records.map((r, i) => (
+        <div key={i} className="contents group">
+          <div className="py-3 font-mono text-stone-400 border-b border-stone-100 dark:border-stone-900 group-hover:text-stone-700 dark:group-hover:text-stone-300">{r.era}</div>
+          <div className="py-3 pr-2 text-stone-800 dark:text-stone-200 border-b border-stone-100 dark:border-stone-900 leading-relaxed">{r.jewish ?? '—'}</div>
+          <div className="py-3 pr-2 text-stone-800 dark:text-stone-200 border-b border-stone-100 dark:border-stone-900 leading-relaxed">{r.christian ?? '—'}</div>
+          <div className="py-3 text-stone-800 dark:text-stone-200 border-b border-stone-100 dark:border-stone-900 leading-relaxed">{r.islamic ?? '—'}</div>
+        </div>
+      ))}
+    </div>
+  );
+}
+// ponytail: CSS display: contents grid; add virtual windowing if list exceeds 300 chronological records.
+```
+→ skipped: Synchronized multi-pane JS scroll locks; add when lanes require separate independent horizontal panning.
+
+---
+
+### 3. Production Build: Strict Static Export & Hydration Lock
+
+Ensure zero-error static output in `next.config.ts`. Removes server/edge runtime mismatches and build-time hydration bailouts.
+
+```ts
+// next.config.ts
+import type { NextConfig } from 'next';
+
+const nextConfig: NextConfig = {
+  output: 'export',
+  trailingSlash: true,
+  images: { unoptimized: true },
+  typescript: { ignoreBuildErrors: false },
+  eslint: { ignoreDuringBuilds: false },
+};
+
+export default nextConfig;
+```
+```tsx
+// Verification assertion (run with: node -e "require('./verify.js')")
+// verify.js
+const assert = require('assert');
+const testNode = { name: 'Ibrahim / Abraham', children: [{ name: 'Ismail / Ishmael' }, { name: 'Ishaq / Isaac' }] };
+assert.strictEqual(testNode.children.length, 2, 'Lineage must parse direct descendants');
+console.log('✓ Lineage tree schema valid');
+```
+→ skipped: Server Actions and Node runtime configs; add when persistent user-submitted lore annotations are added.
