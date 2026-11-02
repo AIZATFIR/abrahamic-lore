@@ -3854,3 +3854,99 @@ console.log(`✓ Lore integrity: ${data.figures.length} figures validated.`);
 ```
 → skipped: Zod/Joi bundle weight and complex schema validation pipelines.  
 → add when: Lore data is ingested via an untrusted public API or dynamic CMS.
+
+
+### Cycle #62 Directive (2026-11-03 02:57)
+### 1. Pure CSS Lineage Tree Connectors (Eliminate Graph Libs)
+
+```tsx
+// components/LineageNode.tsx
+interface Person { name: string; title?: string; children?: Person[]; }
+
+export function LineageTree({ data }: { data: Person }) {
+  return (
+    <ul className="flex flex-col items-center pl-0">
+      <li className="relative flex flex-col items-center pt-5">
+        <div className="z-10 rounded-full border border-stone-200 bg-stone-50/80 px-3.5 py-1.5 text-xs tracking-wide text-stone-800 shadow-sm backdrop-blur-md dark:border-stone-800 dark:bg-stone-900/80 dark:text-stone-200">
+          {data.name}
+          {data.title && <span className="ml-1.5 text-[10px] text-stone-600 dark:text-stone-400">({data.title})</span>}
+        </div>
+        {data.children && data.children.length > 0 && (
+          <div className="relative flex pt-5 before:absolute before:top-0 before:left-1/2 before:h-5 before:w-px before:-translate-x-1/2 before:bg-stone-300 dark:before:bg-stone-700">
+            {data.children.map((child, i) => (
+              <div key={child.name} className="relative px-3 before:absolute before:top-0 before:right-1/2 before:h-px before:w-full before:bg-stone-300 first:before:left-1/2 first:before:w-1/2 last:before:right-1/2 last:before:w-1/2 only:before:hidden dark:before:bg-stone-700">
+                <LineageTree data={child} />
+              </div>
+            ))}
+          </div>
+        )}
+      </li>
+    </ul>
+  );
+}
+```
+`LineageTree` → skipped: interactive pan/zoom canvas, add when lineage depth exceeds 6 generations.
+
+---
+
+### 2. Multi-Tradition Comparative Timeline Track (CSS Grid + Native Sticky)
+
+```tsx
+// components/ComparativeTimeline.tsx
+interface EraEvent { id: string; era: string; judaic: string; christian: string; islamic: string; }
+
+export function ComparativeTimeline({ events }: { events: EraEvent[] }) {
+  return (
+    <div className="w-full overflow-x-auto">
+      <div className="grid min-w-[640px] grid-cols-[100px_repeat(3,1fr)] gap-px bg-stone-200/60 p-px text-xs dark:bg-stone-800/60">
+        <div className="sticky top-0 z-20 bg-stone-100/90 p-2.5 font-mono text-stone-600 backdrop-blur dark:bg-stone-900/90">Era</div>
+        <div className="sticky top-0 z-20 bg-stone-100/90 p-2.5 font-medium text-stone-900 backdrop-blur dark:bg-stone-900/90 dark:text-stone-100">Judaism</div>
+        <div className="sticky top-0 z-20 bg-stone-100/90 p-2.5 font-medium text-stone-900 backdrop-blur dark:bg-stone-900/90 dark:text-stone-100">Christianity</div>
+        <div className="sticky top-0 z-20 bg-stone-100/90 p-2.5 font-medium text-stone-900 backdrop-blur dark:bg-stone-900/90 dark:text-stone-100">Islam</div>
+
+        {events.map((e) => (
+          <div key={e.id} className="contents">
+            <span className="bg-stone-50/40 p-3 font-mono text-[11px] text-stone-600 dark:bg-stone-950/40">{e.era}</span>
+            <p className="bg-stone-50/40 p-3 text-stone-700 dark:bg-stone-950/40 dark:text-stone-300">{e.judaic}</p>
+            <p className="bg-stone-50/40 p-3 text-stone-700 dark:bg-stone-950/40 dark:text-stone-300">{e.christian}</p>
+            <p className="bg-stone-50/40 p-3 text-stone-700 dark:bg-stone-950/40 dark:text-stone-300">{e.islamic}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+```
+`ComparativeTimeline` → skipped: JS scroll-sync observers, add when lanes require asymmetrical vertical accordion expansion.
+
+---
+
+### 3. Next.js 15 Async Params & Static Export Compliance
+
+```tsx
+// app/figures/[slug]/page.tsx
+import { notFound } from "next/navigation";
+
+// ponytail: in-memory slug registry; switch to static JSON manifest if items > 500
+const FIGURES: Record<string, { title: string; lineage: string }> = {
+  abraham: { title: "Abraham / Ibrahim", lineage: "Terah → Abraham" },
+};
+
+export function generateStaticParams() {
+  return Object.keys(FIGURES).map((slug) => ({ slug }));
+}
+
+export default async function Page({ params }: { params: Promise<{ slug: string }> }) {
+  const { slug } = await params;
+  const figure = FIGURES[slug];
+  if (!figure) notFound();
+
+  return (
+    <main className="mx-auto max-w-xl py-12">
+      <h1 className="text-xl font-medium tracking-tight text-stone-900 dark:text-stone-100">{figure.title}</h1>
+      <p className="mt-2 text-sm text-stone-500 font-mono">{figure.lineage}</p>
+    </main>
+  );
+}
+```
+`app/figures/[slug]/page.tsx` → skipped: runtime SSR DB fetch, add when lore content is wired to a remote CMS or SQLite store.
