@@ -3087,3 +3087,106 @@ export default async function FigurePage(props: PageProps) {
 ```
 → skipped: Dynamic runtime fallback handling (`fallback: "blocking"`).
 → add when: Figure catalog is authored dynamically via CMS instead of static records.
+
+
+### Cycle #55 Directive (2026-11-03 02:18)
+### 1. Comparative Timeline: Pure CSS Multi-Track Sync
+
+Replace timeline script bloat with a CSS-only horizontal snap container and sticky track headers.
+
+```tsx
+// components/timeline/ComparativeTrack.tsx
+export function ComparativeTimeline({ eras, traditions }: TimelineProps) {
+  return (
+    <div className="relative overflow-x-auto snap-x snap-mandatory flex border-zinc-200/60 dark:border-zinc-850">
+      {eras.map((era) => (
+        <section key={era.id} className="min-w-[320px] md:min-w-[420px] snap-start border-r border-zinc-200/50 p-6">
+          <header className="sticky left-0 top-0 backdrop-blur-md bg-stone-50/80 py-2 border-b border-zinc-200/40">
+            <span className="text-xs font-mono uppercase tracking-widest text-stone-500">{era.range}</span>
+            <h3 className="text-sm font-medium text-stone-900">{era.label}</h3>
+          </header>
+          <div className="mt-4 space-y-4">
+            {traditions.map((t) => (
+              <div key={t} className="text-xs text-stone-600">
+                <span className="font-semibold text-stone-800">{t}:</span> {era.traditionEvents[t] ?? "—"}
+              </div>
+            ))}
+          </div>
+        </section>
+      ))}
+    </div>
+  );
+}
+```
+`→ skipped: canvas/JS timeline pan-zoom libraries, add when users request non-linear millisecond-scale scrub.`
+
+---
+
+### 2. Lineage View: Semantic CSS Branch Connectors
+
+Drop heavy canvas/graph packages (ReactFlow/D3). Render lineage hierarchies using native semantic lists and pseudo-element connectors.
+
+```css
+/* app/lineage.module.css */
+.tree, .tree ul { list-style: none; padding-left: 1.5rem; position: relative; }
+.tree ul::before {
+  content: ""; position: absolute; left: 0.75rem; top: 0; bottom: 0.75rem;
+  border-left: 1px solid var(--border-subtle, #e5e5e5);
+}
+.tree li { position: relative; margin: 0.5rem 0; padding-left: 1rem; }
+.tree li::before {
+  content: ""; position: absolute; left: -0.75rem; top: 0.75rem; width: 0.75rem;
+  border-bottom: 1px solid var(--border-subtle, #e5e5e5);
+}
+```
+
+```tsx
+// components/lineage/LineageNode.tsx
+import s from "./lineage.module.css";
+
+export function LineageNode({ figure }: { figure: Figure }) {
+  // ponytail: flat recursive list; upgrade to horizontal SVG dendrogram if multi-parent cycles exceed 3.
+  return (
+    <li className="text-xs tracking-tight">
+      <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded bg-stone-100 dark:bg-zinc-800 font-medium">
+        {figure.name} <span className="text-[10px] text-stone-400">({figure.epoch})</span>
+      </span>
+      {figure.descendants?.length > 0 && (
+        <ul className={s.tree}>
+          {figure.descendants.map((child) => (
+            <LineageNode key={child.id} figure={child} />
+          ))}
+        </ul>
+      )}
+    </li>
+  );
+}
+```
+`→ skipped: d3-hierarchy layout calculation, add when lineage forms directed acyclic graphs with dual-parent meshes.`
+
+---
+
+### 3. Next.js Static Export & Zero-Error Validation
+
+Guarantee error-free static compilation and eliminate hydration mismatches on static dynamic routes (`generateStaticParams`).
+
+```typescript
+// app/figures/[id]/page.tsx
+import { figures } from "@/data/figures";
+import { notFound } from "next/navigation";
+
+export const dynamicParams = false;
+
+export function generateStaticParams() {
+  return Object.keys(figures).map((id) => ({ id }));
+}
+
+export default async function FigurePage({ params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params;
+  const figure = figures[id];
+  if (!figure) notFound();
+
+  return <main className="max-w-xl mx-auto py-12 px-4">{/* View code */}</main>;
+}
+```
+`→ skipped: ISR/edge runtime config, add when figure data shifts from immutable static JSON to a live CMS.`
