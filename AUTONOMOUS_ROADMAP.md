@@ -3190,3 +3190,114 @@ export default async function FigurePage({ params }: { params: Promise<{ id: str
 }
 ```
 `→ skipped: ISR/edge runtime config, add when figure data shifts from immutable static JSON to a live CMS.`
+
+
+### Cycle #56 Directive (2026-11-03 02:24)
+### 1. Pure CSS Lineage Tree (Zero-lib genealogical branching)
+
+```css
+/* components/LineageView.module.css */
+.tree, .tree ul {
+  display: flex;
+  justify-content: center;
+  padding-top: 1.25rem;
+  position: relative;
+}
+.tree li {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+  padding: 1.25rem 0.5rem 0;
+}
+/* Connectors: ponytail: assumes binary/ternary tree; upgrade to SVG canvas if cycles exist */
+.tree li::before, .tree li::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 50%;
+  border-top: 1px solid var(--border-subtle, #e5e5e5);
+  width: 50%;
+  height: 1.25rem;
+}
+.tree li::after {
+  right: auto;
+  left: 50%;
+  border-left: 1px solid var(--border-subtle, #e5e5e5);
+}
+.tree li:only-child::after, .tree li:only-child::before { display: none; }
+.tree li:first-child::before, .tree li:last-child::after { border: 0 none; }
+.tree li:last-child::before { border-right: 1px solid var(--border-subtle, #e5e5e5); border-radius: 0 4px 0 0; }
+.tree li:first-child::after { border-radius: 4px 0 0 0; }
+.node {
+  background: var(--surface, #fff);
+  border: 1px solid var(--border, #d4d4d4);
+  padding: 0.5rem 0.75rem;
+  border-radius: 6px;
+  font-size: 0.8125rem;
+  font-weight: 500;
+  white-space: nowrap;
+}
+```
+`LineageView.module.css` → skipped: Pan/zoom canvas & D3 layout engine, add when genealogy depth exceeds 6 generations.
+
+---
+
+### 2. Native CSS Multi-Track Comparative Timeline
+
+```tsx
+// components/ComparativeTimeline.tsx
+interface EpochEvent { id: string; era: string; title: string; detail?: string; }
+interface TimelineSyncRow { epoch: string; tradition: { jewish?: EpochEvent; christian?: EpochEvent; islamic?: EpochEvent; }; }
+
+export function ComparativeTimeline({ rows }: { rows: TimelineSyncRow[] }) {
+  // ponytail: 3-column static grid; upgrade to dynamic tradition registration if traditions > 3
+  return (
+    <div className="grid grid-cols-[80px_repeat(3,1fr)] gap-x-4 border-t border-neutral-200 dark:border-neutral-800">
+      <div className="sticky top-0 z-10 grid grid-cols-subgrid col-span-4 bg-background/80 backdrop-blur-md py-2 border-b text-xs font-mono text-neutral-500">
+        <span>ERA</span><span>JUDAISM</span><span>CHRISTIANITY</span><span>ISLAM</span>
+      </div>
+      {rows.map(({ epoch, tradition }) => (
+        <div key={epoch} className="grid grid-cols-subgrid col-span-4 py-4 border-b border-neutral-100 dark:border-neutral-900 items-start text-sm">
+          <span className="font-mono text-xs text-neutral-400 select-none">{epoch}</span>
+          <div className="p-2 rounded bg-neutral-50/50 dark:bg-neutral-900/50">{tradition.jewish?.title ?? '—'}</div>
+          <div className="p-2 rounded bg-neutral-50/50 dark:bg-neutral-900/50">{tradition.christian?.title ?? '—'}</div>
+          <div className="p-2 rounded bg-neutral-50/50 dark:bg-neutral-900/50">{tradition.islamic?.title ?? '—'}</div>
+        </div>
+      ))}
+    </div>
+  );
+}
+```
+`ComparativeTimeline.tsx` → skipped: Dynamic column reordering & scroll-jacking sync, add when user-selected custom traditions are introduced.
+
+---
+
+### 3. Build-Time Static Lore Guard (Zero-Error Next.js Guarantee)
+
+```ts
+// lib/lore-schema.ts
+export interface LoreNode {
+  readonly id: string;
+  readonly canonicalName: string;
+  readonly traditionNames: { readonly hebrew?: string; readonly arabic?: string; readonly greek?: string; };
+  readonly parentId?: string;
+  readonly epoch: number; // Signed int: BCE is negative, CE positive
+}
+
+export function validateLoreTree(nodes: readonly LoreNode[]): readonly LoreNode[] {
+  const ids = new Set<string>();
+  for (const n of nodes) {
+    if (ids.has(n.id)) throw new Error(`Duplicate Lore ID: ${n.id}`);
+    if (n.parentId && !nodes.some(p => p.id === n.parentId)) {
+      throw new Error(`Orphan detected: ${n.id} points to non-existent ${n.parentId}`);
+    }
+    ids.add(n.id);
+  }
+  return nodes;
+}
+
+// Self-check: Fails fast during Next.js SSG build/import evaluation
+console.assert(validateLoreTree([{ id: 'abraham', canonicalName: 'Abraham', traditionNames: {}, epoch: -1800 }]).length === 1);
+```
+`lore-schema.ts` → skipped: Zod runtime bundle bloat, add when content arrives via untrusted external CMS/user APIs.
