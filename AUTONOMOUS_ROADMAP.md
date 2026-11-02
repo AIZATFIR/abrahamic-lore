@@ -3745,3 +3745,112 @@ validateLoreData([
 ```
 → skipped: Runtime Zod validation schemas across static pages.  
 → add when: Timeline/lineage content is fetched dynamically from a headless CMS/external API.
+
+
+### Cycle #61 Directive (2026-11-03 02:52)
+### 1. Comparative Timeline: Native Sticky Grid (Zero JS Sync)
+
+Replace scroll-listener sync with a single CSS grid using sticky time markers and CSS subgrid/columns.
+
+```tsx
+// components/ComparativeTimeline.tsx
+interface TimelineRow {
+  era: string;
+  jewish: string;
+  christian: string;
+  islamic: string;
+}
+
+export function ComparativeTimeline({ rows }: { rows: TimelineRow[] }) {
+  return (
+    <div className="grid grid-cols-[80px_1fr_1fr_1fr] gap-x-6 text-sm">
+      <div className="font-mono text-xs text-neutral-400 sticky top-0 bg-stone-50/80 backdrop-blur py-2">Era</div>
+      <div className="font-serif font-medium text-stone-800 sticky top-0 bg-stone-50/80 backdrop-blur py-2">Judaism</div>
+      <div className="font-serif font-medium text-stone-800 sticky top-0 bg-stone-50/80 backdrop-blur py-2">Christianity</div>
+      <div className="font-serif font-medium text-stone-800 sticky top-0 bg-stone-50/80 backdrop-blur py-2">Islam</div>
+
+      {rows.map((r, i) => (
+        <div key={i} className="contents border-b border-stone-200/60">
+          <div className="font-mono text-xs text-neutral-400 py-3">{r.era}</div>
+          <div className="py-3 text-stone-700 leading-relaxed">{r.jewish || "—"}</div>
+          <div className="py-3 text-stone-700 leading-relaxed">{r.christian || "—"}</div>
+          <div className="py-3 text-stone-700 leading-relaxed">{r.islamic || "—"}</div>
+        </div>
+      ))}
+    </div>
+  );
+}
+// ponytail: Flat grid breaks if an era has disjoint event dates; upgrade to CSS subgrid + row-spans when cross-era overlaps occur.
+```
+→ skipped: JS-based scroll virtualization and timeline canvas libraries.  
+→ add when: Dataset exceeds 500 parallel era nodes.
+
+---
+
+### 2. Lineage View: Semantic Tree with Native CSS Connectors
+
+Render genealogical lineages cleanly without React Flow, D3, or SVG graph libraries.
+
+```tsx
+// components/LineageNode.tsx
+interface Person {
+  id: string;
+  name: { en: string; ar?: string; he?: string };
+  children?: Person[];
+}
+
+export function LineageNode({ person }: { person: Person }) {
+  return (
+    <li className="relative pl-6 before:absolute before:left-0 before:top-3 before:h-px before:w-4 before:bg-stone-300">
+      <div className="inline-flex items-baseline gap-2 rounded-md border border-stone-200 bg-white/80 px-2.5 py-1 shadow-[0_1px_2px_rgba(0,0,0,0.03)] backdrop-blur">
+        <span className="font-serif text-stone-900">{person.name.en}</span>
+        {person.name.ar && <span className="text-xs text-stone-400 font-arabic">{person.name.ar}</span>}
+      </div>
+
+      {person.children && person.children.length > 0 && (
+        <ul className="relative ml-2 mt-2 space-y-2 border-l border-stone-300">
+          {person.children.map((child) => (
+            <LineageNode key={child.id} person={child} />
+          ))}
+        </ul>
+      )}
+    </li>
+  );
+}
+```
+→ skipped: Drag/zoom canvas and interactive graph-layout engines.  
+→ add when: Horizontal lineage spanning with multi-parent merges is required.
+
+---
+
+### 3. Build Guard: Zero-Dependency Lore Referential Integrity Check
+
+Eliminate SSG build crashes (`undefined` references on static export) with a native Node script in `prebuild`.
+
+```js
+// scripts/validate-lore.mjs
+import assert from "node:assert/strict";
+import data from "../data/abrahamic-lore.json" with { type: "json" };
+
+const ids = new Set(data.figures.map((f) => f.id));
+
+for (const figure of data.figures) {
+  assert.ok(figure.id, `Figure missing ID`);
+  assert.ok(figure.name?.en, `Missing English name for ${figure.id}`);
+  
+  if (figure.parentId) {
+    assert.ok(ids.has(figure.parentId), `Dangling parentId "${figure.parentId}" on ${figure.id}`);
+  }
+}
+console.log(`✓ Lore integrity: ${data.figures.length} figures validated.`);
+```
+
+```json
+// Add to package.json
+"scripts": {
+  "prebuild": "node scripts/validate-lore.mjs",
+  "build": "next build"
+}
+```
+→ skipped: Zod/Joi bundle weight and complex schema validation pipelines.  
+→ add when: Lore data is ingested via an untrusted public API or dynamic CMS.
