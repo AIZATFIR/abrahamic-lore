@@ -5563,3 +5563,104 @@ export function ComparativeTimeline({ epochs }: { epochs: { era: string; tracks:
 }
 ```
 `components/comparative-timeline.tsx` → skipped: synchronized dual-axis scroll JS listeners, add when epoch ranges have non-linear duration scaling.
+
+
+### Cycle #100 Directive (2026-11-03 06:29)
+### 1. Lineage View: Native CSS Tree Connectors (No D3/Canvas)
+
+```tsx
+// components/LineageNode.tsx
+interface Figure {
+  id: string;
+  name: string;
+  traditionNames: { hebrew?: string; arabic?: string };
+  children?: Figure[];
+}
+
+export function LineageNode({ figure }: { figure: Figure }) {
+  return (
+    <li className="relative flex flex-col items-center p-0 list-none">
+      <div className="z-10 rounded-lg border border-stone-200/80 bg-stone-50/90 px-3 py-1.5 text-center shadow-xs backdrop-blur-xs transition hover:border-amber-700/40 dark:border-stone-800 dark:bg-stone-900/90">
+        <span className="block text-xs font-serif font-medium text-stone-900 dark:text-stone-100">{figure.name}</span>
+        <span className="block text-[10px] tracking-wide text-stone-600 dark:text-stone-300">
+          {[figure.traditionNames.hebrew, figure.traditionNames.arabic].filter(Boolean).join(" • ")}
+        </span>
+      </div>
+      {figure.children && figure.children.length > 0 && (
+        <ul className="relative flex gap-4 pt-6 before:absolute before:top-0 before:left-1/2 before:h-6 before:w-px before:-translate-x-1/2 before:bg-stone-300 dark:before:bg-stone-700">
+          {figure.children.map((child) => (
+            <LineageNode key={child.id} figure={child} />
+          ))}
+        </ul>
+      )}
+    </li>
+  );
+}
+```
+`skipped: [Canvas pan/zoom, D3 graph layout engine], add when [node count exceeds 150].`
+
+---
+
+### 2. Comparative Timeline: 3-Track Synchronized CSS Grid
+
+```tsx
+// components/ComparativeTimeline.tsx
+interface EpochEvent {
+  yearBCE: number;
+  judaism?: string;
+  christianity?: string;
+  islam?: string;
+}
+
+export function ComparativeTimeline({ events }: { events: EpochEvent[] }) {
+  return (
+    <div className="w-full overflow-x-auto rounded-xl border border-stone-200/60 bg-stone-100/30 p-4 dark:border-stone-800/60 dark:bg-stone-950/20">
+      <div className="grid min-w-[640px] grid-cols-[80px_1fr_1fr_1fr] gap-y-3 text-xs">
+        <div className="sticky top-0 font-mono text-[10px] text-stone-600 dark:text-stone-300">EPOCH</div>
+        <div className="sticky top-0 font-serif font-medium text-amber-900/80 dark:text-amber-200/80">JUDAISM</div>
+        <div className="sticky top-0 font-serif font-medium text-rose-900/80 dark:text-rose-200/80">CHRISTIANITY</div>
+        <div className="sticky top-0 font-serif font-medium text-emerald-900/80 dark:text-emerald-200/80">ISLAM</div>
+
+        {events.map((e, idx) => (
+          <div key={idx} className="contents group">
+            <span className="self-center font-mono text-[10px] text-stone-600 dark:text-stone-300 border-t border-stone-200/40 py-2 dark:border-stone-800/40">{e.yearBCE} BCE</span>
+            <div className="border-t border-stone-200/40 p-2 text-stone-800 group-hover:bg-amber-500/5 dark:border-stone-800/40 dark:text-stone-200">{e.judaism ?? "—"}</div>
+            <div className="border-t border-stone-200/40 p-2 text-stone-800 group-hover:bg-rose-500/5 dark:border-stone-800/40 dark:text-stone-200">{e.christianity ?? "—"}</div>
+            <div className="border-t border-stone-200/40 p-2 text-stone-800 group-hover:bg-emerald-500/5 dark:border-stone-800/40 dark:text-stone-200">{e.islam ?? "—"}</div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+```
+`skipped: [Bidirectional sync-scrolling JS listeners], add when [mobile card-collapse view is required].`
+
+---
+
+### 3. Build Hardening: Static Route Params & Validation Guard
+
+```tsx
+// app/figures/[slug]/page.tsx
+import { notFound } from "next/navigation";
+
+// ponytail: Static figure registry ceiling: 100 figures inline. Upgrade to sqlite/fs if dataset outgrows code repo.
+const SLUGS = ["abraham", "moses", "jesus", "muhammad", "mary", "noah"] as const;
+type ValidSlug = typeof SLUGS[number];
+
+export function generateStaticParams(): Array<{ slug: ValidSlug }> {
+  return SLUGS.map((slug) => ({ slug }));
+}
+
+export default async function FigurePage({ params }: { params: Promise<{ slug: string }> }) {
+  const { slug } = await params;
+  if (!SLUGS.includes(slug as ValidSlug)) notFound();
+
+  return (
+    <main className="mx-auto max-w-xl py-12 px-4">
+      <h1 className="font-serif text-2xl capitalize text-stone-900 dark:text-stone-100">{slug}</h1>
+    </main>
+  );
+}
+```
+`skipped: [External CMS/Database dynamic fetch checks], add when [content is author-managed outside repo].`
