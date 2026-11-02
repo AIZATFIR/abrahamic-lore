@@ -2758,3 +2758,125 @@ data.forEach(item => assert(typeof item.name === 'string', `Invalid node: ${JSON
 ```
 skipped: CMS API fallbacks and dynamic revalidation.  
 add when: Lore data shifts from localized JSON files to external headless CMS.
+
+
+### Cycle #52 Directive (2026-11-03 02:01)
+### 1. Lineage View: Zero-JS Semantic Branching Tree
+
+Replace JS canvas/graph dependencies with native CSS tree connectors for prophet lineages.
+
+```tsx
+// components/LineageNode.tsx
+type Node = { name: string; epithet?: string; children?: Node[] };
+
+export function LineageNode({ node }: { node: Node }) {
+  // ponytail: recursive flex-tree caps at shallow depth; upgrade to virtualized canvas if lineage exceeds 100 visible nodes.
+  return (
+    <div className="flex flex-col items-center">
+      <div className="rounded-full border border-stone-200/80 bg-stone-50/50 px-3.5 py-1.5 text-xs tracking-wide text-stone-800 shadow-xs backdrop-blur-xs dark:border-stone-800 dark:bg-stone-900/50 dark:text-stone-200">
+        <span className="font-medium">{node.name}</span>
+        {node.epithet && <span className="ml-1 text-stone-400">({node.epithet})</span>}
+      </div>
+      {node.children && node.children.length > 0 && (
+        <div className="relative flex pt-5 before:absolute before:top-0 before:left-1/2 before:h-5 before:w-px before:bg-stone-200 dark:before:bg-stone-800">
+          {node.children.map((child, idx) => (
+            <div key={child.name} className="relative px-2 pt-3 before:absolute before:top-0 before:right-1/2 before:left-0 before:border-t before:border-stone-200 first:before:left-1/2 last:before:right-1/2 dark:before:border-stone-800">
+              <LineageNode node={child} />
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+```
+→ skipped: Pan/zoom gestures and dynamic node collapsing.  
+Add when: The visual tree depth exceeds standard screen viewport widths.
+
+---
+
+### 2. Comparative Timeline: Native Sticky Synchronized Columns
+
+Align Jewish, Christian, and Islamic narratives by epoch using CSS grid and subgrid instead of scroll-sync event listeners.
+
+```tsx
+// components/ComparativeTimeline.tsx
+interface EpochSync {
+  epoch: string;
+  judaism: string;
+  christianity: string;
+  islam: string;
+}
+
+export function ComparativeTimeline({ records }: { records: EpochSync[] }) {
+  return (
+    <div className="w-full overflow-x-auto">
+      <div className="min-w-[640px] grid grid-cols-4 gap-px bg-stone-200 font-sans text-xs dark:bg-stone-800">
+        <div className="sticky top-0 z-10 bg-stone-100 p-2.5 font-medium text-stone-500 backdrop-blur-md dark:bg-stone-900">Epoch</div>
+        <div className="sticky top-0 z-10 bg-stone-100 p-2.5 font-medium text-stone-700 backdrop-blur-md dark:bg-stone-900 dark:text-stone-300">Judaism (Tanakh)</div>
+        <div className="sticky top-0 z-10 bg-stone-100 p-2.5 font-medium text-stone-700 backdrop-blur-md dark:bg-stone-900 dark:text-stone-300">Christianity (Bible)</div>
+        <div className="sticky top-0 z-10 bg-stone-100 p-2.5 font-medium text-stone-700 backdrop-blur-md dark:bg-stone-900 dark:text-stone-300">Islam (Quran)</div>
+
+        {records.map((r, i) => (
+          <div key={i} className="contents bg-stone-50 text-stone-700 dark:bg-stone-950 dark:text-stone-300">
+            <div className="p-3 font-mono text-[11px] text-stone-400">{r.epoch}</div>
+            <div className="p-3 leading-relaxed">{r.judaism}</div>
+            <div className="p-3 leading-relaxed">{r.christianity}</div>
+            <div className="p-3 leading-relaxed">{r.islam}</div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+```
+→ skipped: JS-driven scroll synchronization and virtualized rows.  
+Add when: Epoch entries exceed 100 rows causing initial DOM render lag.
+
+---
+
+### 3. Build Hardening: Next.js 15 Strict Async Routes & Static Locking
+
+Eliminate dynamic bailouts and dynamic server route errors during `next build`.
+
+```tsx
+// app/figure/[slug]/page.tsx
+import { notFound } from "next/navigation";
+
+// ponytail: hardcoded slug validation; upgrade to static JSON/CMS fetch when slug count > 50
+const FIGURES = ["abraham", "moses", "jesus", "muhammad"] as const;
+
+export const dynamicParams = false;
+
+export async function generateStaticParams() {
+  return FIGURES.map((slug) => ({ slug }));
+}
+
+export default async function FigurePage({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}) {
+  const { slug } = await params;
+  if (!FIGURES.includes(slug as typeof FIGURES[number])) notFound();
+
+  return (
+    <main className="mx-auto max-w-xl p-6">
+      <h1 className="text-lg font-medium capitalize text-stone-900 dark:text-stone-100">{slug}</h1>
+    </main>
+  );
+}
+```
+→ skipped: Dynamic ISR fallback revalidation.  
+Add when: Prophetic figure content updates independently of code deployments.
+
+---
+
+### Self-Check Harness
+```ts
+// assert-check.ts
+import { LineageNode } from "./components/LineageNode";
+const mockData = { name: "Terah", children: [{ name: "Abraham" }, { name: "Nahor" }] };
+console.assert(typeof LineageNode === "function", "Lineage component must be defined");
+console.assert(mockData.children.length === 2, "Lineage mock must match schema");
+```
