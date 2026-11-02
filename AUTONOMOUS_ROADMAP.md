@@ -5042,3 +5042,110 @@ console.assert(Boolean(testEra.id && testEra.period), "Era schema violated");
 ```
 → skipped: Runtime schema parsing libraries (Zod/Valibot).  
 Add when: Dynamic external APIs or user-generated inputs enter the timeline route.
+
+
+### Cycle #95 Directive (2026-11-03 06:01)
+### 1. Synchronized Comparative Timeline (Native CSS Grid, Zero JS Listeners)
+
+```tsx
+// components/ComparativeTimeline.tsx
+interface TimelineEvent {
+  year: number;
+  label: string;
+  traditions: { tradition: 'jewish' | 'christian' | 'islamic'; text: string }[];
+}
+
+export function ComparativeTimeline({ events }: { events: TimelineEvent[] }) {
+  return (
+    <div className="relative border-l border-amber-900/10 dark:border-amber-100/10 ml-4 pl-6 space-y-12">
+      {events.map((e) => (
+        <section key={e.year} className="relative grid grid-cols-1 md:grid-cols-4 gap-4 items-baseline">
+          <div className="sticky top-12 md:col-span-1">
+            <span className="text-xs font-mono tracking-wider text-amber-800/60 dark:text-amber-200/60">
+              {e.year < 0 ? `${Math.abs(e.year)} BCE` : `${e.year} CE`}
+            </span>
+            <h3 className="text-sm font-medium text-stone-900 dark:text-stone-100">{e.label}</h3>
+          </div>
+          <div className="md:col-span-3 grid grid-cols-1 sm:grid-cols-3 gap-3">
+            {['jewish', 'christian', 'islamic'].map((trad) => {
+              const item = e.traditions.find((t) => t.tradition === trad);
+              return (
+                <div key={trad} className="p-3 rounded-lg bg-stone-50 dark:bg-stone-900/40 border border-stone-200/50 dark:border-stone-800/50 text-xs text-stone-700 dark:text-stone-300">
+                  <span className="block capitalize font-serif text-[10px] text-amber-700 dark:text-amber-300/80 mb-1">{trad}</span>
+                  {item ? item.text : <span className="text-stone-400 italic">—</span>}
+                </div>
+              );
+            })}
+          </div>
+        </section>
+      ))}
+    </div>
+  );
+}
+```
+`skipped: Scroll-sync event listeners and canvas overlays; add when multi-century continuous panning is requested.`
+
+---
+
+### 2. Lineage Connector View (Semantic Pure CSS Tree)
+
+```tsx
+// components/LineageView.tsx
+interface FigureNode {
+  id: string;
+  name: string;
+  arabicName?: string;
+  children?: FigureNode[];
+}
+
+export function LineageNode({ node }: { node: FigureNode }) {
+  // ponytail: max recursion depth unmetered; upgrade to virtualized list if tree > 500 nodes.
+  return (
+    <li className="relative pl-6 before:absolute before:left-0 before:top-3 before:w-4 before:border-t before:border-amber-900/20 dark:before:border-amber-100/20">
+      <div className="inline-flex items-baseline gap-2 py-1 px-2.5 rounded border border-stone-200/60 dark:border-stone-800 bg-white dark:bg-stone-900 text-sm">
+        <span className="font-serif font-medium text-stone-800 dark:text-stone-200">{node.name}</span>
+        {node.arabicName && <span className="font-arabic text-xs text-stone-400">{node.arabicName}</span>}
+      </div>
+      {node.children && node.children.length > 0 && (
+        <ul className="relative ml-2 pl-2 border-l border-amber-900/20 dark:border-amber-100/20 space-y-2 mt-2">
+          {node.children.map((child) => (
+            <LineageNode key={child.id} node={child} />
+          ))}
+        </ul>
+      )}
+    </li>
+  );
+}
+```
+`skipped: React Flow / D3 layout engines; add when user needs interactive drag-and-drop hierarchy re-ordering.`
+
+---
+
+### 3. Build-Guard: Strict Static Export Contract
+
+```ts
+// app/figures/[slug]/page.tsx
+import { notFound } from 'next/navigation';
+
+const FIGURES = ['abraham', 'moses', 'jesus', 'muhammad'] as const;
+type FigureSlug = typeof FIGURES[number];
+
+export function generateStaticParams(): { slug: FigureSlug }[] {
+  return FIGURES.map((slug) => ({ slug }));
+}
+
+export default async function Page({ params }: { params: Promise<{ slug: string }> }) {
+  const { slug } = await params;
+  if (!FIGURES.includes(slug as FigureSlug)) notFound();
+
+  return <main className="max-w-2xl mx-auto p-6">{/* Page content */}</main>;
+}
+
+// Self-check
+(() => {
+  const params = generateStaticParams();
+  console.assert(params.length === 4, 'generateStaticParams failed to return all canonical figures');
+  console.assert(params.every(p => typeof p.slug === 'string'), 'Dynamic slug is non-string');
+})();
+```
+`skipped: Remote headless CMS query during build; add when lore data moves out of local repo manifests.`
