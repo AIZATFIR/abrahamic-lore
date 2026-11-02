@@ -4319,3 +4319,89 @@ export default async function LineagePage({
 // ponytail: static array slug validation; add schema-validated JSON loader when dataset externalizes.
 ```
 → skipped: dynamic runtime database queries, add when database-backed content requires on-demand revalidation.
+
+
+### Cycle #67 Directive (2026-11-03 03:25)
+### 1. Build Guard: Zero-Bailout Static Export (`generateStaticParams`)
+
+Ensure dynamic timeline/figure routes evaluate purely at build time without SSR fallbacks or dynamic client mismatch.
+
+```typescript
+// app/timeline/[era]/page.tsx
+import { ERAS, type EraId } from "@/data/lore";
+
+export const dynamicParams = false;
+
+export function generateStaticParams(): { era: EraId }[] {
+  return Object.keys(ERAS).map((era) => ({ era: era as EraId }));
+}
+
+// ponytail: Static dictionary lookup; upgrade to edge DB query if eras exceed static lore scale.
+export default async function EraPage({ params }: { params: Promise<{ era: EraId }> }) {
+  const { era } = await params;
+  return <EraView era={ERAS[era]} />;
+}
+```
+→ skipped: `notFound()` boundary checks and Zod route schemas.  
+→ add when: lore eras become runtime user-generated content.
+
+---
+
+### 2. Comparative Timeline: Zero-JS 3-Column Parallel Sync
+
+Replace custom scroll/layout math with native CSS Grid tracks aligning Jewish, Christian, and Islamic traditions across shared eras.
+
+```tsx
+// components/ComparativeTimeline.tsx
+export function ComparativeTimeline({ eras }: { eras: EraComparison[] }) {
+  return (
+    <div className="grid grid-cols-[100px_repeat(3,minmax(0,1fr))] gap-x-4 gap-y-6 text-sm text-stone-800 dark:text-stone-200">
+      <div className="font-mono text-xs uppercase tracking-wider text-stone-400">Era</div>
+      <div className="font-medium text-amber-900 dark:text-amber-200">Judaism</div>
+      <div className="font-medium text-sky-900 dark:text-sky-200">Christianity</div>
+      <div className="font-medium text-emerald-900 dark:text-emerald-200">Islam</div>
+
+      {eras.map(({ id, period, jewish, christian, islamic }) => (
+        <div key={id} className="contents border-t border-stone-200/60 dark:border-stone-800">
+          <time className="font-mono text-xs text-stone-400 self-baseline">{period}</time>
+          <div className="p-3 bg-stone-50 dark:bg-stone-900/50 rounded-lg">{jewish}</div>
+          <div className="p-3 bg-stone-50 dark:bg-stone-900/50 rounded-lg">{christian}</div>
+          <div className="p-3 bg-stone-50 dark:bg-stone-900/50 rounded-lg">{islamic}</div>
+        </div>
+      ))}
+    </div>
+  );
+}
+```
+→ skipped: JS layout listeners, D3 scales, synchronized horizontal scroll containers.  
+→ add when: events require non-linear, hour-granular canvas rendering.
+
+---
+
+### 3. Lineage Tree: Native CSS Connectors
+
+Render family descent without SVG line calculations using semantic HTML lists and native pseudo-elements.
+
+```tsx
+// components/LineageNode.tsx
+interface Node { name: string; title?: string; children?: Node[] }
+
+export function LineageNode({ node }: { node: Node }) {
+  return (
+    <li className="relative pl-6 before:absolute before:left-0 before:top-3 before:h-px before:w-4 before:bg-stone-300 dark:before:bg-stone-700">
+      <span className="inline-block py-1 px-2.5 rounded border border-stone-200 dark:border-stone-800 text-xs font-medium">
+        {node.name} {node.title && <span className="text-stone-400">({node.title})</span>}
+      </span>
+      {node.children && (
+        <ul className="relative ml-2 border-l border-stone-300 dark:border-stone-700 space-y-2 pt-2">
+          {node.children.map((child) => (
+            <LineageNode key={child.name} node={child} />
+          ))}
+        </ul>
+      )}
+    </li>
+  );
+}
+```
+→ skipped: React Flow, ELKjs, and interactive graph zooming engines.  
+→ add when: branches contain cyclic relationships or cross-tradition node merging.
