@@ -765,3 +765,90 @@ export default async function Page({ params }: { params: Promise<{ tradition: st
 ```
 *   **Skipped**: Middleware redirect cascades and runtime zod route schemas.
 *   **Add when**: Dynamic end-user lore contributions require runtime API route guards.
+
+
+### Cycle #23 Directive (2026-11-02 23:17)
+### 1. Comparative Timeline: Multi-Tradition CSS Grid
+
+Replace scroll-sync JS with pure CSS sticky headers and native subgrid alignment.
+
+```tsx
+// components/ComparativeTimeline.tsx
+export function ComparativeTimeline({ epochs }: { epochs: { era: string; traditions: Record<'jewish' | 'christian' | 'islamic', string> }[] }) {
+  return (
+    <div className="grid grid-cols-[100px_repeat(3,1fr)] gap-4 overflow-x-auto p-4 border border-stone-200 rounded-xl bg-stone-50/50">
+      <div className="sticky top-0 font-mono text-xs text-stone-400 font-medium">ERA</div>
+      <div className="sticky top-0 text-xs font-semibold tracking-wider text-amber-900/80 uppercase">Jewish</div>
+      <div className="sticky top-0 text-xs font-semibold tracking-wider text-stone-800 uppercase">Christian</div>
+      <div className="sticky top-0 text-xs font-semibold tracking-wider text-emerald-900/80 uppercase">Islamic</div>
+
+      {epochs.map(({ era, traditions }) => (
+        <div key={era} className="contents border-t border-stone-200/60 text-sm">
+          <span className="font-mono text-xs text-stone-400 py-3">{era}</span>
+          <div className="py-3 pr-2 text-stone-700">{traditions.jewish || '—'}</div>
+          <div className="py-3 pr-2 text-stone-700">{traditions.christian || '—'}</div>
+          <div className="py-3 text-stone-700">{traditions.islamic || '—'}</div>
+        </div>
+      ))}
+    </div>
+  );
+}
+// ponytail: Flat epoch row layout; upgrade to dynamic CSS subgrid when per-tradition event counts vary wildly.
+```
+skipped: IntersectionObserver and synced scroll event listeners.  
+add when: Columns need individual horizontal scrolling on sub-375px screens.
+
+---
+
+### 2. Lineage View: Zero-Dep CSS Tree Branching
+
+Replace canvas/graph libraries with semantic HTML and pseudo-element connector lines.
+
+```tsx
+// components/LineageView.tsx
+interface Person { name: string; title?: string; children?: Person[] }
+
+export function LineageNode({ person }: { person: Person }) {
+  return (
+    <li className="relative pl-6 before:absolute before:left-0 before:top-3 before:h-px before:w-4 before:bg-stone-300">
+      <div className="inline-flex items-baseline gap-2 rounded-md border border-stone-200 bg-white px-2.5 py-1 text-xs shadow-xs">
+        <span className="font-medium text-stone-900">{person.name}</span>
+        {person.title && <span className="text-[10px] text-stone-400">{person.title}</span>}
+      </div>
+      {person.children && (
+        <ul className="relative ml-2 border-l border-stone-300 pl-2">
+          {person.children.map((child) => <LineageNode key={child.name} person={child} />)}
+        </ul>
+      )}
+    </li>
+  );
+}
+```
+skipped: React Flow / D3 hierarchy layout abstractions.  
+add when: Bidirectional cross-marriages or multi-parent graph traversal is required.
+
+---
+
+### 3. Production Build: Strict Static Params & Dynamic Lock
+
+Eliminate prerender/hydration runtime failures in `next build` by enforcing typed params and 404 boundaries.
+
+```tsx
+// app/traditions/[slug]/page.tsx
+import { notFound } from 'next/navigation';
+
+export const dynamicParams = false;
+
+export function generateStaticParams() {
+  return [{ slug: 'judaism' }, { slug: 'christianity' }, { slug: 'islam' }];
+}
+
+export default async function TraditionPage({ params }: { params: Promise<{ slug: string }> }) {
+  const { slug } = await params;
+  if (!['judaism', 'christianity', 'islam'].includes(slug)) notFound();
+
+  return <main className="mx-auto max-w-xl py-12 text-stone-900">{/* Page content */}</main>;
+}
+```
+skipped: Dynamic server SSR error handling wrappers.  
+add when: Moving from static datasets to external runtime DB/CMS queries.
