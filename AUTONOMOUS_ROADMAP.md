@@ -1462,3 +1462,128 @@ async function testParamResolution() {
 
 testParamResolution().then(() => console.log('✓ Route contract valid'));
 ```
+
+
+### Cycle #35 Directive (2026-11-03 00:25)
+### 1. Pure CSS Lineage Tree (Zero-JS Connectors)
+Replaces canvas/D3 bloat with semantic, accessible CSS-tree connectors.
+
+```tsx
+// components/LineageTree.tsx
+type Person = { id: string; name: string; epithet?: string; children?: Person[] };
+
+export function LineageNode({ person }: { person: Person }) {
+  // ponytail: recursive tree hits depth limit around ~50 levels; upgrade to flat BFS + SVG paths if lineage expands globally.
+  return (
+    <li className="relative flex flex-col items-center p-2">
+      <div className="z-10 rounded-lg border border-amber-900/10 bg-[#faf8f5] px-3.5 py-1.5 text-center shadow-xs">
+        <span className="font-serif text-sm font-medium text-stone-900">{person.name}</span>
+        {person.epithet && <span className="block text-[11px] text-stone-500">{person.epithet}</span>}
+      </div>
+      {person.children && person.children.length > 0 && (
+        <ul className="relative flex pt-5 before:absolute before:top-0 before:left-1/2 before:h-5 before:w-px before:bg-stone-300">
+          {person.children.map((child, idx, arr) => (
+            <div key={child.id} className="relative flex flex-col items-center">
+              {arr.length > 1 && (
+                <div
+                  className={`absolute top-0 h-px bg-stone-300 ${
+                    idx === 0 ? "left-1/2 right-0" : idx === arr.length - 1 ? "left-0 right-1/2" : "left-0 right-0"
+                  }`}
+                />
+              )}
+              <LineageNode person={child} />
+            </div>
+          ))}
+        </ul>
+      )}
+    </li>
+  );
+}
+```
+→ skipped: Pan/zoom engine, dynamic node folding.  
+→ add when: Tree exceeds viewport width on desktop.
+
+---
+
+### 2. Multi-Tradition Comparative Timeline Row
+Synchronizes Jewish, Christian, and Islamic epochs using native CSS Grid subgrid alignment without timeline JS packages.
+
+```tsx
+// components/ComparativeTimeline.tsx
+interface FigureRow {
+  era: string;
+  judaism: string;
+  christianity: string;
+  islam: string;
+}
+
+export function ComparativeTimeline({ rows }: { rows: FigureRow[] }) {
+  return (
+    <div className="grid grid-cols-[100px_repeat(3,minmax(180px,1fr))] border-t border-stone-200 text-xs">
+      <div className="sticky top-0 z-20 col-span-full grid grid-cols-subgrid bg-[#faf8f5]/95 py-2 font-serif font-semibold text-stone-600 backdrop-blur-xs border-b border-stone-200">
+        <span>Era</span>
+        <span>Judaism (Tanakh)</span>
+        <span>Christianity (Biblical)</span>
+        <span>Islam (Quranic)</span>
+      </div>
+      {rows.map((r, i) => (
+        <div key={i} className="col-span-full grid grid-cols-subgrid py-3 border-b border-stone-100 hover:bg-amber-500/5 items-baseline">
+          <span className="font-mono text-stone-400">{r.era}</span>
+          <span className="text-stone-800">{r.judaism || "—"}</span>
+          <span className="text-stone-800">{r.christianity || "—"}</span>
+          <span className="text-stone-800 font-medium">{r.islam || "—"}</span>
+        </div>
+      ))}
+    </div>
+  );
+}
+```
+→ skipped: Virtualized table scrolling.  
+→ add when: Row count crosses 200 comparative figures.
+
+---
+
+### 3. Build-Time Static Type Lock & Segment Guard
+Eliminates dynamic SSG failure on dynamic routes in `next build`.
+
+```tsx
+// app/figures/[tradition]/[slug]/page.tsx
+import { notFound } from "next/navigation";
+
+export const dynamicParams = false; // Prevents runtime fallback bailouts
+
+export async function generateStaticParams() {
+  const figures = await import("@/data/figures.json").then((m) => m.default);
+  return figures.map((f) => ({
+    tradition: f.tradition.toLowerCase(),
+    slug: f.slug,
+  }));
+}
+
+export default async function Page({ params }: { params: Promise<{ tradition: string; slug: string }> }) {
+  const { tradition, slug } = await params;
+  const figures = await import("@/data/figures.json").then((m) => m.default);
+  const figure = figures.find((f) => f.tradition.toLowerCase() === tradition && f.slug === slug);
+
+  if (!figure) notFound();
+
+  return <article className="prose prose-stone mx-auto p-6">{figure.name}</article>;
+}
+```
+→ skipped: External Headless CMS fetch wrapper.  
+→ add when: Content is decoupled from the Git repository.
+
+---
+
+### Self-Check
+```ts
+// scripts/verify-data.mjs (Run via: node scripts/verify-data.mjs)
+import assert from "node:assert";
+import figures from "../data/figures.json" with { type: "json" };
+
+figures.forEach((f) => {
+  assert(f.slug && typeof f.slug === "string", `Figure missing slug: ${JSON.stringify(f)}`);
+  assert(["judaism", "christianity", "islam"].includes(f.tradition.toLowerCase()), `Invalid tradition: ${f.tradition}`);
+});
+console.log(`✓ ${figures.length} figures validated for zero-error static export.`);
+```
