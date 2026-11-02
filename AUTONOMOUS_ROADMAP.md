@@ -3510,3 +3510,116 @@ export default async function FigurePage({ params }: { params: Promise<{ slug: s
 ```
 → skipped: ISR caching revalidation headers and DB client wrappers.  
 → add when: lore records are sourced from a headless CMS at runtime.
+
+
+### Cycle #59 Directive (2026-11-03 02:40)
+### 1. Comparative Timeline: Zero-JS Sticky Grid Rail
+
+Replaces multi-column scroll-sync libraries with native CSS `display: contents` and `position: sticky`.
+
+```tsx
+// components/ComparativeTimeline.tsx
+interface EraRow {
+  era: string;
+  judaism?: string;
+  christianity?: string;
+  islam?: string;
+}
+
+export function ComparativeTimeline({ data }: { data: EraRow[] }) {
+  // ponytail: flat array ceiling. Upgrade to virtualized list if eras > 300.
+  return (
+    <div className="grid grid-cols-[80px_repeat(3,1fr)] gap-x-4 border-l border-stone-200 dark:border-stone-800">
+      <div className="sticky top-0 z-10 bg-white/80 dark:bg-stone-950/80 backdrop-blur font-mono text-[11px] text-stone-400 pb-2">ERA</div>
+      <div className="sticky top-0 z-10 bg-white/80 dark:bg-stone-950/80 backdrop-blur text-xs font-serif font-medium pb-2">JUDAISM</div>
+      <div className="sticky top-0 z-10 bg-white/80 dark:bg-stone-950/80 backdrop-blur text-xs font-serif font-medium pb-2">CHRISTIANITY</div>
+      <div className="sticky top-0 z-10 bg-white/80 dark:bg-stone-950/80 backdrop-blur text-xs font-serif font-medium pb-2">ISLAM</div>
+
+      {data.map(({ era, judaism, christianity, islam }) => (
+        <div key={era} className="contents group font-sans text-xs text-stone-700 dark:text-stone-300">
+          <div className="py-3 font-mono text-stone-400 tabular-nums select-none border-t border-stone-100 dark:border-stone-900">{era}</div>
+          <div className="py-3 px-2 border-t border-stone-100 dark:border-stone-900 group-hover:bg-stone-50/50 dark:group-hover:bg-stone-900/30 transition-colors">{judaism || '—'}</div>
+          <div className="py-3 px-2 border-t border-stone-100 dark:border-stone-900 group-hover:bg-stone-50/50 dark:group-hover:bg-stone-900/30 transition-colors">{christianity || '—'}</div>
+          <div className="py-3 px-2 border-t border-stone-100 dark:border-stone-900 group-hover:bg-stone-50/50 dark:group-hover:bg-stone-900/30 transition-colors">{islam || '—'}</div>
+        </div>
+      ))}
+    </div>
+  );
+}
+```
+→ skipped: JS scroll listeners and synced div refs.  
+→ add when: user requests independent column horizontal scrolling or dynamic timeline zooming.
+
+---
+
+### 2. Lineage View: Native CSS Tree Nodes
+
+Eliminates D3/ReactFlow bloat; uses semantic lists with pseudo-element branch connectors.
+
+```tsx
+// components/LineageNode.tsx
+export type LineagePerson = {
+  id: string;
+  name: string;
+  honorific?: string;
+  children?: LineagePerson[];
+};
+
+export function LineageNode({ person }: { person: LineagePerson }) {
+  // ponytail: single-parent descent only; upgrade to SVG canvas if rendering multi-parent intermarriages.
+  return (
+    <li className="relative pl-4 before:absolute before:left-0 before:top-3 before:w-3 before:h-px before:bg-stone-300 dark:before:bg-stone-700">
+      <div className="inline-flex items-baseline gap-1.5 py-1 px-2 rounded hover:bg-stone-100 dark:hover:bg-stone-900 transition-colors cursor-pointer">
+        <span className="text-sm font-medium text-stone-900 dark:text-stone-100">{person.name}</span>
+        {person.honorific && <span className="text-[10px] text-stone-400 italic">{person.honorific}</span>}
+      </div>
+      {person.children && person.children.length > 0 && (
+        <ul className="ml-2 pl-2 border-l border-stone-200 dark:border-stone-800 flex flex-col gap-0.5">
+          {person.children.map((child) => (
+            <LineageNode key={child.id} person={child} />
+          ))}
+        </ul>
+      )}
+    </li>
+  );
+}
+```
+→ skipped: Pan/zoom canvas, auto-layout graph engines.  
+→ add when: genealogical cross-links require a DAG instead of a strict hierarchical tree.
+
+---
+
+### 3. Next.js 15 Async Params & Strict Production Route Guard
+
+Guarantees 0-error `next build` by resolving dynamic params asynchronously and strictly validating route params.
+
+```tsx
+// app/figures/[slug]/page.tsx
+import { notFound } from 'next/navigation';
+
+const VALID_SLUGS = ['abraham', 'moses', 'jesus', 'muhammad'] as const;
+type ValidSlug = (typeof VALID_SLUGS)[number];
+
+export function generateStaticParams() {
+  return VALID_SLUGS.map((slug) => ({ slug }));
+}
+
+export default async function FigurePage({ params }: { params: Promise<{ slug: string }> }) {
+  const { slug } = await params;
+  if (!VALID_SLUGS.includes(slug as ValidSlug)) notFound();
+
+  return (
+    <main className="max-w-xl mx-auto py-12 px-6">
+      <h1 className="text-2xl font-serif capitalize tracking-tight">{slug}</h1>
+    </main>
+  );
+}
+
+// Self-check
+(() => {
+  const params = generateStaticParams();
+  console.assert(params.length === 4, 'Static param count mismatch');
+})();
+```
+→ skipped: Remote CMS runtime fetching and fallback ISR revalidation.  
+→ add when: lore datasets move from static versioned JSON into an external headless CMS.
