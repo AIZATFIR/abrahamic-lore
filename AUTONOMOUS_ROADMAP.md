@@ -2615,3 +2615,146 @@ export default async function TimelinePage({ params }: PageProps) {
 ```
 → skipped: Dynamic SSR database fallbacks and ISR revalidation intervals.  
 → add when: CMS webhooks are wired to trigger live, on-demand revalidation.
+
+
+### Cycle #51 Directive (2026-11-03 01:56)
+### 1. Multi-Track Timeline via CSS Subgrid (Replaces timeline JS libs)
+
+```tsx
+// components/ComparativeTimeline.tsx
+interface Event {
+  era: string;
+  tradition: 'judaism' | 'christianity' | 'islam';
+  title: string;
+}
+
+export function ComparativeTimeline({ events }: { events: Event[] }) {
+  // ponytail: fixed 3-column layout. Upgrade to dynamic cols if adding Baha'i/Druze traditions.
+  return (
+    <div className="grid grid-cols-[120px_repeat(3,1fr)] gap-4 border-l border-stone-200 pl-4 font-serif">
+      <div className="sticky top-0 bg-stone-50/90 py-2 text-xs font-sans tracking-widest text-stone-400 uppercase">Era</div>
+      <div className="sticky top-0 bg-stone-50/90 py-2 text-xs font-sans tracking-widest text-stone-500 uppercase">Judaism</div>
+      <div className="sticky top-0 bg-stone-50/90 py-2 text-xs font-sans tracking-widest text-stone-500 uppercase">Christianity</div>
+      <div className="sticky top-0 bg-stone-50/90 py-2 text-xs font-sans tracking-widest text-stone-500 uppercase">Islam</div>
+
+      {events.map((e, i) => (
+        <div key={i} className="contents group">
+          <span className="py-3 text-xs font-sans text-stone-400 group-hover:text-stone-900 transition-colors">{e.era}</span>
+          <div className={`p-3 rounded-lg border border-stone-200/60 bg-white/50 text-sm ${
+            e.tradition === 'judaism' ? 'col-start-2' : e.tradition === 'christianity' ? 'col-start-3' : 'col-start-4'
+          }`}>
+            {e.title}
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+}
+```
+skipped: IntersectionObserver active-era state tracking and scroll animations.  
+add when: Timeline height exceeds viewport and users report disorientation.
+
+---
+
+### 2. Zero-Runtime Lineage Connectors (Semantic CSS Tree)
+
+```css
+/* app/lineage/lineage.module.css */
+.tree, .tree ul {
+  display: flex;
+  justify-content: center;
+  padding-left: 0;
+  margin: 0;
+  list-style: none;
+}
+.tree li {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+  padding: 1.5rem 0.75rem 0;
+}
+/* Connectors */
+.tree li::before, .tree li::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 50%;
+  border-top: 1px solid #d6d3d1; /* stone-300 */
+  width: 50%;
+  height: 1.5rem;
+}
+.tree li::after {
+  right: auto;
+  left: 50%;
+  border-left: 1px solid #d6d3d1;
+}
+.tree li:only-child::after, .tree li:only-child::before { display: none; }
+.tree li:only-child { padding-top: 0; }
+.tree li:first-child::before, .tree li:last-child::after { border: 0 none; }
+.tree li:last-child::before { border-right: 1px solid #d6d3d1; border-radius: 0 4px 0 0; }
+.tree li:first-child::after { border-radius: 4px 0 0 0; }
+.tree ul::before {
+  content: '';
+  position: absolute;
+  top: -1.5rem;
+  left: 50%;
+  border-left: 1px solid #d6d3d1;
+  width: 0;
+  height: 1.5rem;
+}
+```
+```tsx
+// components/LineageNode.tsx
+import s from '@/app/lineage/lineage.module.css';
+
+export interface Person { name: string; children?: Person[] }
+
+export function LineageNode({ person }: { person: Person }) {
+  // ponytail: unidirectional descendancy. Upgrade to SVG canvas if rendering complex cross-marriages.
+  return (
+    <li className={s.node}>
+      <span className="rounded border border-stone-200 bg-stone-50 px-3 py-1 font-serif text-stone-800 text-sm shadow-xs">
+        {person.name}
+      </span>
+      {person.children && person.children.length > 0 && (
+        <ul className={s.tree}>
+          {person.children.map((c) => <LineageNode key={c.name} person={c} />)}
+        </ul>
+      )}
+    </li>
+  );
+}
+```
+skipped: React-Flow / D3 rendering libraries.  
+add when: Non-linear graphs (inter-cousin unions, polyamorous multi-branch merging) break 1D nesting.
+
+---
+
+### 3. Build-Time Static Hardening (`next.config.mjs`)
+
+```js
+// next.config.mjs
+/** @type {import('next').NextConfig} */
+const nextConfig = {
+  output: 'export',
+  trailingSlash: true,
+  typescript: { ignoreBuildErrors: false },
+  eslint: { ignoreDuringBuilds: false },
+};
+
+export default nextConfig;
+```
+```ts
+// tests/lore-build-check.ts
+import assert from 'node:assert';
+import { readFileSync, existsSync } from 'node:fs';
+
+// Verify static lore data shape pre-build to prevent SSG silent failures
+const raw = readFileSync('./data/lineage.json', 'utf8');
+const data = JSON.parse(raw);
+assert(Array.isArray(data) && data.length > 0, "Lineage dataset cannot be empty");
+data.forEach(item => assert(typeof item.name === 'string', `Invalid node: ${JSON.stringify(item)}`));
+```
+skipped: CMS API fallbacks and dynamic revalidation.  
+add when: Lore data shifts from localized JSON files to external headless CMS.
