@@ -5149,3 +5149,109 @@ export default async function Page({ params }: { params: Promise<{ slug: string 
 })();
 ```
 `skipped: Remote headless CMS query during build; add when lore data moves out of local repo manifests.`
+
+
+### Cycle #96 Directive (2026-11-03 06:06)
+### 1. Pure CSS Comparative Timeline (Sticky Columns + Scroll Snap)
+
+Eliminate timeline layout libraries. Use native CSS sticky columns with scroll-snap for cross-tradition alignment.
+
+```css
+/* styles/timeline.css */
+.timeline-grid {
+  display: grid;
+  grid-template-columns: 80px repeat(3, minmax(280px, 1fr));
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+}
+.timeline-era-header {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  backdrop-filter: blur(12px);
+  background: rgba(253, 252, 247, 0.85); /* zen warm parchment */
+}
+.timeline-col {
+  scroll-snap-align: start;
+  border-left: 1px solid var(--border-subtle, #e5e0d8);
+}
+```
+`timeline.css` → skipped: JS scroll-sync/virtualization, add when node count exceeds 500 items.
+
+---
+
+### 2. Zero-JS Semantic Lineage Tree (CSS Connector Lines)
+
+Replace canvas/SVG tree libraries (e.g., React Flow, D3) with native semantic lists and pseudo-elements.
+
+```tsx
+// components/LineageTree.tsx
+type Figure = { id: string; name: string; children?: Figure[] };
+
+export function LineageNode({ node }: { node: Figure }) {
+  // ponytail: recursive render ceiling at depth ~15; upgrade to flat map if stack overflows
+  return (
+    <li className="relative pl-6 before:absolute before:left-0 before:top-3 before:h-px before:w-4 before:bg-stone-300">
+      <span className="inline-block rounded-md border border-stone-200 bg-stone-50/50 px-2.5 py-1 text-xs font-medium text-stone-800">
+        {node.name}
+      </span>
+      {node.children && node.children.length > 0 && (
+        <ol className="relative ml-2 border-l border-stone-300">
+          {node.children.map((child) => (
+            <LineageNode key={child.id} node={child} />
+          ))}
+        </ol>
+      )}
+    </li>
+  );
+}
+```
+`LineageNode.tsx` → skipped: collapsible/zoomable canvas view, add when visual horizontal panning is strictly required.
+
+---
+
+### 3. Next.js Zero-Error Build Lock (`generateStaticParams`)
+
+Prevent dynamic route build failures during SSG by locking static paths and enforcing strict route parameters.
+
+```tsx
+// app/lore/[figureId]/page.tsx
+import { notFound } from 'next/navigation';
+import { figures } from '@/data/lore';
+
+export const dynamicParams = false; // hard-fail build on invalid routes
+
+export function generateStaticParams() {
+  return figures.map((f) => ({ figureId: f.id }));
+}
+
+export default async function LorePage({ params }: { params: Promise<{ figureId: string }> }) {
+  const { figureId } = await params;
+  const figure = figures.find((f) => f.id === figureId);
+  if (!figure) notFound();
+
+  return <main>{/* view */}</main>;
+}
+```
+`page.tsx` → skipped: dynamic server-side fallback, add when lore entries are fetched from a CMS at runtime.
+
+---
+
+### Runnable Verification Check
+
+```ts
+// scripts/verify-lore.ts
+import { figures } from '../data/lore';
+import assert from 'node:assert';
+
+// 1. Lineage IDs exist
+const ids = new Set(figures.map(f => f.id));
+assert.strictEqual(ids.size, figures.length, "Duplicate figure ID found");
+
+// 2. Parents resolve to existing figures
+figures.forEach(f => {
+  if (f.parentId) assert(ids.has(f.parentId), `Dangling parentId: ${f.parentId} on ${f.id}`);
+});
+
+console.log("Lore sanity check passed: 0 build errors expected.");
+```
