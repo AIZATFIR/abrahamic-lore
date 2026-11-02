@@ -1909,3 +1909,88 @@ const tree: LineageNode = {
 assert.strictEqual(countDescendants(tree), 5, "Tree traversal mismatch");
 console.log("✓ Lineage self-check passed");
 ```
+
+
+### Cycle #44 Directive (2026-11-03 01:16)
+### 1. Synchronized 3-Tradition Timeline Track (CSS Subgrid + Sticky Epochs)
+
+```tsx
+// components/timeline/ComparativeGrid.tsx
+export function ComparativeGrid({ epochs }: { epochs: Array<{ era: string; traditions: [string, string, string] }> }) {
+  return (
+    <div className="grid grid-cols-[120px_repeat(3,1fr)] gap-x-6 border-l border-stone-200/60 dark:border-stone-800/60 font-serif">
+      <div className="sticky top-0 z-10 grid grid-cols-subgrid col-span-4 bg-stone-50/80 dark:bg-stone-950/80 backdrop-blur py-3 text-xs tracking-widest uppercase text-stone-500 border-b border-stone-200/40">
+        <span>Epoch</span><span>Judaism</span><span>Christianity</span><span>Islam</span>
+      </div>
+      {epochs.map((e) => (
+        <div key={e.era} className="grid grid-cols-subgrid col-span-4 py-6 border-b border-stone-100 dark:border-stone-900/50 text-sm">
+          <span className="text-xs font-mono text-stone-400 self-start">{e.era}</span>
+          {e.traditions.map((text, i) => (
+            <p key={i} className="text-stone-700 dark:text-stone-300 leading-relaxed pr-4">{text || '—'}</p>
+          ))}
+        </div>
+      ))}
+    </div>
+  );
+}
+```
+* skipped: Scroll-sync JS listeners and canvas rendering.
+* add when: Horizontal infinite-timeline scrubbing across >10 concurrent traditions is required.
+
+---
+
+### 2. Zero-Dependency Lineage Tree (Semantic HTML + Native CSS Connectors)
+
+```tsx
+// components/lineage/LineageNode.tsx
+interface Figure { name: string; title?: string; children?: Figure[]; }
+
+export function LineageNode({ node }: { node: Figure }) {
+  // ponytail: flat recursive CSS tree; upgrade to Canvas/SVG paths if node degree > 6
+  return (
+    <li className="relative pl-6 before:absolute before:left-0 before:top-3 before:w-4 before:border-t before:border-stone-300 dark:before:border-stone-700">
+      <div className="inline-flex items-baseline gap-2 py-1">
+        <span className="font-serif text-stone-900 dark:text-stone-100 text-sm font-medium">{node.name}</span>
+        {node.title && <span className="font-sans text-xs text-stone-500 tracking-tight">({node.title})</span>}
+      </div>
+      {node.children && node.children.length > 0 && (
+        <ul className="relative ml-2 border-l border-stone-300 dark:border-stone-700">
+          {node.children.map((child) => (
+            <LineageNode key={child.name} node={child} />
+          ))}
+        </ul>
+      )}
+    </li>
+  );
+}
+```
+* skipped: Cytoscape/D3 tree layout engines and pan-zoom canvas state.
+* add when: Bi-directional non-hierarchical cross-marriages cause circular DOM references.
+
+---
+
+### 3. Build-Time Static Guarantees (`app/figure/[slug]/page.tsx`)
+
+```tsx
+import { notFound } from 'next/navigation';
+
+export const dynamic = 'error';
+export const dynamicParams = false;
+
+// ponytail: reads local JSON lore records; upgrade to SQLite/libSQL when records > 5,000
+import records from '@/data/figures.json' assert { type: 'json' };
+
+export async function generateStaticParams() {
+  return records.map((f) => ({ slug: f.slug }));
+}
+
+export default async function Page({ params }: { params: Promise<{ slug: string }> }) {
+  const { slug } = await params;
+  const figure = records.find((f) => f.slug === slug);
+  if (!figure) notFound();
+
+  return <article className="max-w-prose mx-auto py-12">{/* View code */}</article>;
+}
+```
+* skipped: Incremental Static Regeneration (ISR) and runtime edge database queries.
+* add when: Lore data is updated via dynamic headless CMS Webhooks without git deployment.
