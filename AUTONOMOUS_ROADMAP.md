@@ -1118,3 +1118,130 @@ assert(Array.isArray(figures), 'Figures must be an array');
 assert(figures.every((f) => typeof f.id === 'string' && f.id.length > 0), 'Every figure requires a valid slug string');
 console.log('✓ Lineage and route targets statically valid.');
 ```
+
+
+### Cycle #29 Directive (2026-11-02 23:51)
+### 1. Comparative Timeline: Native Multi-Column Sticky Track
+
+Replace JS scroll-sync/canvas engines with native CSS Grid. Sticky labels with parallel tradition tracks (Judaism, Christianity, Islam) preserve alignment using browser layout alone.
+
+```tsx
+// components/timeline/ComparativeTrack.tsx
+export function ComparativeTrack({ epochs }: { epochs: Epoch[] }) {
+  return (
+    <div className="overflow-x-auto overscroll-x-contain pb-6 select-none">
+      <div className="grid grid-cols-[140px_repeat(3,minmax(280px,1fr))] min-w-[980px] gap-px bg-stone-200/60 dark:bg-stone-800/60 rounded-xl overflow-hidden border border-stone-200 dark:border-stone-800">
+        <div className="sticky left-0 z-20 bg-stone-50 dark:bg-stone-900 p-3 text-xs font-serif text-stone-500">Period</div>
+        {['Hebrew', 'Christian', 'Islamic'].map((t) => (
+          <div key={t} className="bg-stone-50 dark:bg-stone-900 p-3 text-xs font-medium tracking-wide text-stone-600 dark:text-stone-400">{t}</div>
+        ))}
+
+        {epochs.map((e) => (
+          <div key={e.id} className="contents group">
+            <div className="sticky left-0 z-10 bg-stone-50/95 dark:bg-stone-900/95 backdrop-blur-sm p-4 text-xs font-mono text-stone-400 border-t border-stone-200/40 dark:border-stone-800/40">{e.range}</div>
+            <div className="bg-white dark:bg-stone-950 p-4 border-t border-stone-100 dark:border-stone-900 text-sm">{e.judaism}</div>
+            <div className="bg-white dark:bg-stone-950 p-4 border-t border-stone-100 dark:border-stone-900 text-sm">{e.christianity}</div>
+            <div className="bg-white dark:bg-stone-950 p-4 border-t border-stone-100 dark:border-stone-900 text-sm">{e.islam}</div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+// ponytail: Fixed 3-tradition model. Upgrade to dynamic track columns if Baha'i/Druze tracks are ingested.
+```
+→ skipped: JS-driven scroll synchronization and virtualized grid tables.  
+→ add when: Epoch count exceeds 1,000 DOM nodes or tracks become user-configurable.
+
+---
+
+### 2. Lineage View: Zero-Dep CSS Tree Connectors
+
+Drop external graph libraries (React Flow/D3). Render generational lineages using semantic nested lists and pure CSS borders.
+
+```css
+/* styles/lineage.css */
+.lineage-tree ul {
+  display: flex;
+  justify-content: center;
+  padding-top: 20px;
+  position: relative;
+}
+.lineage-tree li {
+  float: left;
+  text-align: center;
+  list-style-type: none;
+  position: relative;
+  padding: 20px 8px 0 8px;
+}
+.lineage-tree li::before, .lineage-tree li::after {
+  content: '';
+  position: absolute; top: 0; right: 50%;
+  border-top: 1px solid var(--line-color, #d6d3d1);
+  width: 50%; height: 20px;
+}
+.lineage-tree li::after {
+  right: auto; left: 50%;
+  border-left: 1px solid var(--line-color, #d6d3d1);
+}
+.lineage-tree li:only-child::after, .lineage-tree li:only-child::before { display: none; }
+.lineage-tree li:only-child { padding-top: 0; }
+.lineage-tree li:first-child::before, .lineage-tree li:last-child::after { border: 0 none; }
+.lineage-tree li:last-child::before { border-right: 1px solid var(--line-color, #d6d3d1); border-radius: 0 4px 0 0; }
+.lineage-tree li:first-child::after { border-radius: 4px 0 0 0; }
+.lineage-tree ul ul::before {
+  content: '';
+  position: absolute; top: 0; left: 50%;
+  border-left: 1px solid var(--line-color, #d6d3d1);
+  width: 0; height: 20px;
+}
+```
+→ skipped: D3 canvas calculations, zoom-pan listeners, and force-directed graph state.  
+→ add when: Lineage requires multi-parent cyclical graph networks (non-strictly-hierarchical).
+
+---
+
+### 3. Production Build Lock: Strict Static Validation
+
+Ensure zero-error `next build` static export by forcing strict route dynamic checking and missing param fail-safes.
+
+```typescript
+// app/figure/[slug]/page.tsx
+import { getAllFigureSlugs, getFigureBySlug } from '@/lib/lore';
+import { notFound } from 'next/navigation';
+
+export const dynamic = 'error';
+export const dynamicParams = false;
+
+export async function generateStaticParams() {
+  const slugs = await getAllFigureSlugs();
+  return slugs.map((slug) => ({ slug }));
+}
+
+export default async function FigurePage({ params }: { params: Promise<{ slug: string }> }) {
+  const { slug } = await params;
+  const figure = await getFigureBySlug(slug);
+  if (!figure) notFound();
+
+  return <article className="prose dark:prose-invert font-serif">{figure.name}</article>;
+}
+```
+→ skipped: Fallback ISR rendering and client-side suspense fallbacks for unknown slugs.  
+→ add when: Figures are edited live by external CMS without triggering repository rebuilds.
+
+---
+
+### Verification Check
+```typescript
+// test/build-params.test.ts
+import assert from 'node:assert';
+import { getAllFigureSlugs } from '../lib/lore';
+
+(async function testStaticParams() {
+  const slugs = await getAllFigureSlugs();
+  assert(Array.isArray(slugs), 'Slugs must resolve to an array');
+  assert(slugs.length > 0, 'Slugs cannot be empty for dynamicParams = false');
+  assert(slugs.every(s => typeof s === 'string' && s.length > 0), 'Every slug must be a valid string');
+  console.log('✓ static param contract held');
+})();
+```
