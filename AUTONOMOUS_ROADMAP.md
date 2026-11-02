@@ -2075,3 +2075,116 @@ export default async function Page({ params }: { params: Params }) {
 })();
 ```
 `Page` → skipped: remote CMS/database fetchers and edge caching; add when content is decoupled from static markdown or local JSON.
+
+
+### Cycle #46 Directive (2026-11-03 01:28)
+### 1. Zero-Dependency Comparative Timeline (`CSS Grid + Contents`)
+
+```tsx
+// components/ComparativeTimeline.tsx
+interface TimelineEra {
+  era: string;
+  traditions: { jewish: string[]; christian: string[]; islamic: string[] };
+}
+
+export function ComparativeTimeline({ eras }: { eras: TimelineEra[] }) {
+  // ponytail: pure CSS grid timeline; upgrade to virtualized windowing if era rows exceed 100.
+  return (
+    <div className="grid grid-cols-[80px_repeat(3,1fr)] gap-x-6 gap-y-3 overflow-x-auto text-sm text-stone-800">
+      <div className="sticky top-0 text-xs tracking-wider text-stone-400 uppercase">Era</div>
+      <div className="sticky top-0 font-serif text-stone-900">Judaism</div>
+      <div className="sticky top-0 font-serif text-stone-900">Christianity</div>
+      <div className="sticky top-0 font-serif text-stone-900">Islam</div>
+      
+      {eras.map((row) => (
+        <div key={row.era} className="contents border-t border-stone-200/60">
+          <span className="py-2 text-xs font-mono text-stone-400">{row.era}</span>
+          {(['jewish', 'christian', 'islamic'] as const).map((t) => (
+            <div key={t} className="py-2 border-t border-stone-100">
+              {row.traditions[t]?.join(', ') || '—'}
+            </div>
+          ))}
+        </div>
+      ))}
+    </div>
+  );
+}
+```
+→ skipped: Third-party chart/timeline libraries (visx, d3).
+→ add when: Horizontal drag/zoom scaling across centuries becomes an explicit requirement.
+
+---
+
+### 2. Semantic CSS Lineage Tree (`border-l` recursion)
+
+```tsx
+// components/LineageNode.tsx
+export type FigureNode = { name: string; title?: string; children?: FigureNode[] };
+
+export function LineageNode({ node }: { node: FigureNode }) {
+  // ponytail: single-parent descent; upgrade to DAG canvas if complex cross-marriages are mapped.
+  return (
+    <div className="relative pl-4 border-l border-stone-200 transition-colors hover:border-amber-700/40">
+      <div className="flex items-baseline gap-2 py-1">
+        <span className="font-serif text-stone-900 font-medium">{node.name}</span>
+        {node.title && <span className="text-xs text-stone-400 tracking-tight">{node.title}</span>}
+      </div>
+      {node.children && node.children.length > 0 && (
+        <div className="space-y-1">
+          {node.children.map((child) => (
+            <LineageNode key={child.name} node={child} />
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+```
+→ skipped: Heavy graph visualizers (React Flow, Cytoscape).
+→ add when: Bidirectional non-linear lineage (matrilineal + patrilineal crossovers) breaks single-edge recursion.
+
+---
+
+### 3. Next.js Static Export Parity & Error-Free Build Guard
+
+```tsx
+// app/figures/[slug]/page.tsx
+import { notFound } from 'next/navigation';
+import { FIGURES } from '@/data/figures';
+
+export const dynamicParams = false;
+
+export function generateStaticParams() {
+  return Object.keys(FIGURES).map((slug) => ({ slug }));
+}
+
+export default async function FigurePage({ params }: { params: Promise<{ slug: string }> }) {
+  const { slug } = await params;
+  const figure = FIGURES[slug];
+  if (!figure) notFound();
+
+  return (
+    <main className="max-w-2xl mx-auto px-6 py-12 antialiased">
+      <h1 className="font-serif text-3xl text-stone-900">{figure.name}</h1>
+    </main>
+  );
+}
+```
+→ skipped: Runtime server-side database lookups and catch-all routes.
+→ add when: Lore database migrates to a CMS requiring on-demand ISR/revalidation.
+
+---
+
+### Verification Check
+
+```ts
+// scripts/verify-data.ts
+import { FIGURES } from '../data/figures';
+import assert from 'node:assert';
+
+assert.ok(Object.keys(FIGURES).length > 0, "Figure dataset cannot be empty");
+for (const [slug, fig] of Object.entries(FIGURES)) {
+  assert.ok(fig.name, `Missing name at slug: ${slug}`);
+}
+console.log('✓ Lore integrity passed');
+```
