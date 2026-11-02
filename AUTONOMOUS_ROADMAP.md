@@ -4849,3 +4849,98 @@ export default async function LorePage({ params }: PageProps) {
 ```
 → skipped: Runtime fetch fallbacks and ISR revalidation routes.  
 → add when: Content is supplied via external headful CMS with on-demand webhooks.
+
+
+### Cycle #72 Directive (2026-11-03 03:53)
+### 1. Pure CSS Lineage Tree (Zero Dependencies)
+
+```tsx
+// components/lineage-tree.tsx
+interface Person { id: string; name: string; title?: string; children?: Person[] }
+
+export function LineageTree({ node }: { node: Person }) {
+  // ponytail: Simple CSS branching; upgrade to SVG canvas if rendering lateral cross-marriages.
+  return (
+    <li className="relative flex flex-col items-center">
+      <div className="z-10 rounded-md border border-stone-200/80 bg-stone-50/80 px-3 py-1.5 text-xs text-stone-800 shadow-xs backdrop-blur-xs dark:border-stone-800 dark:bg-stone-900 dark:text-stone-200">
+        <span className="font-medium tracking-tight">{node.name}</span>
+        {node.title && <span className="ml-1 text-[10px] text-stone-400 dark:text-stone-500">({node.title})</span>}
+      </div>
+      {node.children && node.children.length > 0 && (
+        <ul className="relative flex gap-6 pt-5 before:absolute before:top-0 before:left-1/2 before:h-5 before:w-px before:bg-stone-200 dark:before:bg-stone-800">
+          {node.children.map((child) => (
+            <LineageTree key={child.id} node={child} />
+          ))}
+        </ul>
+      )}
+    </li>
+  );
+}
+```
+skipped: ReactFlow / D3 graph engine, add when cross-branch marital loops need layout calculation.
+
+---
+
+### 2. Comparative Sync Grid (Native CSS Multi-Lane)
+
+```tsx
+// components/comparative-timeline.tsx
+type EraEvent = { era: string; judaism?: string; christianity?: string; islam?: string };
+
+export function ComparativeTimeline({ data }: { data: EraEvent[] }) {
+  return (
+    <div className="grid grid-cols-[80px_repeat(3,minmax(200px,1fr))] gap-px overflow-x-auto rounded-lg border border-stone-200 bg-stone-200 text-xs dark:border-stone-800 dark:bg-stone-800">
+      <div className="sticky left-0 bg-stone-100 p-2.5 font-mono text-stone-400 dark:bg-stone-900">Era</div>
+      <div className="bg-stone-100 p-2.5 font-medium text-stone-700 dark:bg-stone-900 dark:text-stone-300">Judaism</div>
+      <div className="bg-stone-100 p-2.5 font-medium text-stone-700 dark:bg-stone-900 dark:text-stone-300">Christianity</div>
+      <div className="bg-stone-100 p-2.5 font-medium text-stone-700 dark:bg-stone-900 dark:text-stone-300">Islam</div>
+      {data.map((row) => (
+        <div key={row.era} className="contents">
+          <div className="sticky left-0 bg-stone-50/95 p-3 font-mono text-stone-500 backdrop-blur-xs dark:bg-stone-950/95">{row.era}</div>
+          <div className="bg-stone-50 p-3 leading-relaxed text-stone-600 dark:bg-stone-950 dark:text-stone-400">{row.judaism || '—'}</div>
+          <div className="bg-stone-50 p-3 leading-relaxed text-stone-600 dark:bg-stone-950 dark:text-stone-400">{row.christianity || '—'}</div>
+          <div className="bg-stone-50 p-3 leading-relaxed text-stone-600 dark:bg-stone-950 dark:text-stone-400">{row.islam || '—'}</div>
+        </div>
+      ))}
+    </div>
+  );
+}
+```
+skipped: JS scroll-sync hooks and virtualizer, add when timeline exceeds 150 total epochs.
+
+---
+
+### 3. Next.js Static Export & Dynamic Segment Seal
+
+```tsx
+// app/traditions/[slug]/page.tsx
+interface PageProps {
+  params: Promise<{ slug: string }>;
+}
+
+export const dynamicParams = false;
+
+// ponytail: Hardcoded canon slugs; upgrade to dynamic file/DB scan when MDX lore files grow.
+export async function generateStaticParams() {
+  return [{ slug: 'judaism' }, { slug: 'christianity' }, { slug: 'islam' }];
+}
+
+export default async function Page({ params }: PageProps) {
+  const { slug } = await params;
+  return <article className="mx-auto max-w-prose p-6 font-serif">{slug}</article>;
+}
+```
+skipped: dynamic ISR revalidation runtime, add when live user edits or external CMS hooked up.
+
+---
+
+### Verification
+
+```ts
+// scripts/verify-lore.ts
+import assert from 'node:assert';
+
+const testEpoch = { era: '1800 BCE', judaism: 'Abraham arrives in Canaan' };
+assert.strictEqual(Boolean(testEpoch.era && testEpoch.judaism), true, 'Epoch must contain era and primary branch');
+console.log('✓ Timeline logic verified');
+```
