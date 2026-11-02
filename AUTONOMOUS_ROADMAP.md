@@ -3950,3 +3950,111 @@ export default async function Page({ params }: { params: Promise<{ slug: string 
 }
 ```
 `app/figures/[slug]/page.tsx` → skipped: runtime SSR DB fetch, add when lore content is wired to a remote CMS or SQLite store.
+
+
+### Cycle #63 Directive (2026-11-03 03:03)
+### 1. Zero-JS Semantic Lineage Tree
+
+Replace canvas/SVG graph engines with pure CSS pseudo-element connectors.
+
+```tsx
+// components/LineageTree.tsx
+interface FigureNode {
+  name: string;
+  title?: string;
+  children?: FigureNode[];
+}
+
+export function LineageTree({ members }: { members: FigureNode[] }) {
+  return (
+    <ul className="flex justify-center p-0 m-0 list-none [&_ul]:pt-4 [&_li]:relative [&_li]:px-1.5 [&_li]:text-center">
+      {members.map((m) => (
+        <li
+          key={m.name}
+          className="before:absolute before:top-0 before:right-1/2 before:w-1/2 before:h-4 before:border-t before:border-stone-300 dark:before:border-stone-700 after:absolute after:top-0 after:left-1/2 after:w-1/2 after:h-4 after:border-t after:border-l after:border-stone-300 dark:after:border-stone-700 first:before:border-none last:after:border-none"
+        >
+          {/* ponytail: CSS tree ceiling is strict hierarchical trees; add SVG canvas when cross-branch marriage cycles occur */}
+          <div className="inline-block rounded-md border border-stone-200/80 dark:border-stone-800 bg-stone-50/50 dark:bg-stone-900/50 px-2.5 py-1 text-xs font-serif text-stone-800 dark:text-stone-200">
+            {m.name}
+          </div>
+          {m.children && m.children.length > 0 && <LineageTree members={m.children} />}
+        </li>
+      ))}
+    </ul>
+  );
+}
+```
+→ skipped: Pan/zoom canvas libraries (`d3-hierarchy`, `reactflow`).  
+→ add when: Lineage graph requires bidirectional cross-links (e.g., cousin marriages).
+
+---
+
+### 2. Multi-Tradition Synchronized Timeline Axis
+
+Align Jewish, Christian, and Islamic parallels via native CSS subgrid/contents without scroll listeners.
+
+```tsx
+// components/ComparativeTimeline.tsx
+interface TimelineRow {
+  era: string;
+  jewish: string;
+  christian: string;
+  islamic: string;
+}
+
+export function ComparativeTimeline({ rows }: { rows: TimelineRow[] }) {
+  return (
+    <div className="grid grid-cols-[90px_repeat(3,minmax(0,1fr))] gap-x-4 border-t border-stone-200 dark:border-stone-800 text-xs">
+      <div className="sticky top-0 z-10 bg-stone-50/80 dark:bg-stone-950/80 backdrop-blur font-mono text-stone-400 py-3">Era</div>
+      {['Judaism', 'Christianity', 'Islam'].map((t) => (
+        <div key={t} className="sticky top-0 z-10 bg-stone-50/80 dark:bg-stone-950/80 backdrop-blur font-serif text-stone-700 dark:text-stone-300 py-3">{t}</div>
+      ))}
+      {rows.map((r, i) => (
+        <div key={i} className="contents border-b border-stone-100 dark:border-stone-900/50">
+          <span className="font-mono text-stone-400 py-2.5">{r.era}</span>
+          <div className="py-2.5 text-stone-700 dark:text-stone-300 leading-relaxed">{r.jewish || '—'}</div>
+          <div className="py-2.5 text-stone-700 dark:text-stone-300 leading-relaxed">{r.christian || '—'}</div>
+          <div className="py-2.5 text-stone-700 dark:text-stone-300 leading-relaxed">{r.islamic || '—'}</div>
+        </div>
+      ))}
+    </div>
+  );
+}
+```
+→ skipped: JS-driven synchronized scroll containers or virtualized tables.  
+→ add when: Dataset exceeds 300 rows and client FPS drops below 60 during scroll.
+
+---
+
+### 3. Production Build Hardening: Static Segment Exhaustion
+
+Lock dynamic routing to prevent Next.js 15 SSR runtime hydration failures and dynamic parameter bailouts.
+
+```tsx
+// app/lore/[slug]/page.tsx
+import { notFound } from 'next/navigation';
+import { LORE_RECORDS } from '@/data/lore';
+
+// ponytail: Static-only rendering. Add dynamic = 'force-dynamic' if live editing/CMS is introduced.
+export const dynamicParams = false;
+
+export function generateStaticParams() {
+  return Object.keys(LORE_RECORDS).map((slug) => ({ slug }));
+}
+
+export default async function LorePage({ params }: { params: Promise<{ slug: string }> }) {
+  const { slug } = await params;
+  const entry = LORE_RECORDS[slug];
+
+  if (!entry) notFound();
+
+  return (
+    <article className="max-w-xl mx-auto py-10 px-4 text-stone-900 dark:text-stone-100 font-serif">
+      <h1 className="text-xl font-normal tracking-tight">{entry.name}</h1>
+      <p className="mt-4 text-sm leading-relaxed text-stone-600 dark:text-stone-400">{entry.narrative}</p>
+    </article>
+  );
+}
+```
+→ skipped: Dynamic API fetches, suspense skeleton waterfalls, and fallback loading boundaries.  
+→ add when: Data source migrates from static bundles to a remote headless CMS.
