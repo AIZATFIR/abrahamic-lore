@@ -691,3 +691,77 @@ if (process.env.NODE_ENV !== 'production') {
 }
 ```
 `skipped: [D3 / ReactFlow dependencies], add when [lineage graph requires dynamic node dragging or interactive multi-parent routing].`
+
+
+### Cycle #21 Directive (2026-11-02 23:05)
+### 1. Pure CSS Lineage Tree (Zero-Bundle Graph)
+
+```tsx
+// components/lineage-tree.tsx
+export function LineageNode({ name, epithet, children }: { name: string; epithet?: string; children?: React.ReactNode }) {
+  // ponytail: Simple CSS branching handles strict patriarch lines; upgrade to SVG canvas if marriage cross-links are added.
+  return (
+    <li className="relative pl-5 before:absolute before:left-1.5 before:top-3 before:h-full before:w-px before:bg-stone-300 dark:before:bg-stone-700 last:before:hidden">
+      <div className="flex items-baseline gap-2 py-1">
+        <span className="h-1.5 w-1.5 rounded-full bg-amber-700/80 dark:bg-amber-400/80" />
+        <span className="font-serif text-sm text-stone-900 dark:text-stone-100">{name}</span>
+        {epithet && <span className="text-xs text-stone-400">({epithet})</span>}
+      </div>
+      {children && <ul className="ml-2">{children}</ul>}
+    </li>
+  );
+}
+```
+*   **Skipped**: React Flow / D3 layout engines and canvas dependencies.
+*   **Add when**: Lineages contain complex cyclical networks or inter-branch marriages.
+
+---
+
+### 2. CSS Grid Parallel Comparative Timeline
+
+```tsx
+// components/comparative-timeline.tsx
+type TimelineRow = { era: string; judaism: string; christianity: string; islam: string };
+
+export function Timeline({ rows }: { rows: TimelineRow[] }) {
+  return (
+    <div className="grid grid-cols-[80px_1fr_1fr_1fr] gap-x-4 border-t border-stone-200 dark:border-stone-800 text-sm">
+      {rows.map((r, i) => (
+        <div key={i} className="contents border-b border-stone-100 py-2 dark:border-stone-800/50">
+          <span className="sticky top-0 self-center font-mono text-xs text-stone-400">{r.era}</span>
+          <p className="py-2.5 font-serif text-stone-800 dark:text-stone-200">{r.judaism || "—"}</p>
+          <p className="py-2.5 font-serif text-stone-800 dark:text-stone-200">{r.christianity || "—"}</p>
+          <p className="py-2.5 font-serif text-stone-800 dark:text-stone-200">{r.islam || "—"}</p>
+        </div>
+      ))}
+    </div>
+  );
+}
+```
+*   **Skipped**: Scroll-sync JS event listeners and multi-column viewport hooks.
+*   **Add when**: Comparative entries require horizontal timeline panning across centuries.
+
+---
+
+### 3. Next.js 15 Async Route Params Guard
+
+```tsx
+// app/[tradition]/[figure]/page.tsx
+import { notFound } from "next/navigation";
+
+const TRADITIONS = ["judaism", "christianity", "islam"] as const;
+
+export async function generateStaticParams() {
+  // ponytail: Static seed paths; expand via local JSON lore manifest at build time.
+  return TRADITIONS.map((tradition) => ({ tradition, figure: "abraham" }));
+}
+
+export default async function Page({ params }: { params: Promise<{ tradition: string; figure: string }> }) {
+  const { tradition, figure } = await params;
+  if (!TRADITIONS.includes(tradition as (typeof TRADITIONS)[number])) notFound();
+
+  return <article className="mx-auto max-w-xl py-8 font-serif">{tradition}: {figure}</article>;
+}
+```
+*   **Skipped**: Middleware redirect cascades and runtime zod route schemas.
+*   **Add when**: Dynamic end-user lore contributions require runtime API route guards.
