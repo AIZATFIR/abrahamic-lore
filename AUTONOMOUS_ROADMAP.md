@@ -922,3 +922,83 @@ console.assert(generateStaticParams().length > 0, "Static routes missing");
 ```
 skipped: Middleware-level route interception and runtime SSR fallbacks.  
 add when: Tradition profiles are sourced via remote dynamic CMS at runtime.
+
+
+### Cycle #25 Directive (2026-11-02 23:28)
+### 1. Lineage View: Native CSS Tree Lines (Zero Graph Libs)
+
+```tsx
+// components/lineage-tree.tsx
+export function LineageNode({ name, role, children }: { name: string; role: string; children?: React.ReactNode }) {
+  // ponytail: DOM tree rendering; upgrade to virtualized SVG canvas if lineage exceeds 500 direct descendants.
+  return (
+    <li className="relative pl-5 before:absolute before:left-0 before:top-3 before:h-px before:w-4 before:bg-stone-300 dark:before:bg-stone-700">
+      <div className="inline-flex items-baseline gap-2 rounded-md border border-stone-200/80 bg-stone-50/50 px-2.5 py-1 text-xs dark:border-stone-800 dark:bg-stone-900/50">
+        <span className="font-serif font-medium text-stone-900 dark:text-stone-100">{name}</span>
+        <span className="text-stone-500 dark:text-stone-400">{role}</span>
+      </div>
+      {children && <ul className="relative ml-2 border-l border-stone-300 pl-2 dark:border-stone-700">{children}</ul>}
+    </li>
+  );
+}
+```
+skipped: ReactFlow / D3 layout engine.  
+add when: Freeform pan/zoom graph nodes or dynamic edge rerouting is explicitly needed.
+
+---
+
+### 2. Comparative Timeline: CSS Subgrid Alignment
+
+```tsx
+// components/comparative-timeline.tsx
+type EraRow = { era: string; traditions: Record<'judaism' | 'christianity' | 'islam', string[]> };
+
+export function ComparativeTimeline({ eras }: { eras: EraRow[] }) {
+  return (
+    <div className="overflow-x-auto [scrollbar-width:thin]">
+      <div className="grid min-w-[640px] grid-cols-[80px_repeat(3,1fr)] gap-x-4 border-t border-stone-200 py-3 text-xs dark:border-stone-800">
+        <div className="sticky left-0 bg-stone-50/90 font-mono text-stone-400 backdrop-blur dark:bg-stone-950/90">Era</div>
+        <div className="font-serif font-medium text-amber-900 dark:text-amber-200">Judaism</div>
+        <div className="font-serif font-medium text-rose-900 dark:text-rose-200">Christianity</div>
+        <div className="font-serif font-medium text-emerald-900 dark:text-emerald-200">Islam</div>
+        {eras.map(({ era, traditions }) => (
+          <div key={era} className="col-span-4 grid grid-cols-subgrid border-b border-stone-100 py-2.5 dark:border-stone-800/40">
+            <span className="sticky left-0 bg-stone-50/90 font-mono text-stone-500 backdrop-blur dark:bg-stone-950/90">{era}</span>
+            <div className="text-stone-700 dark:text-stone-300">{traditions.judaism.join(', ') || '—'}</div>
+            <div className="text-stone-700 dark:text-stone-300">{traditions.christianity.join(', ') || '—'}</div>
+            <div className="text-stone-700 dark:text-stone-300">{traditions.islam.join(', ') || '—'}</div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+```
+skipped: JS column-width listeners and multi-table synchronization wrappers.  
+add when: Older browser targets explicitly require legacy grid fallbacks.
+
+---
+
+### 3. Production Build Contract: Typed Static Routes (Next 15 Safe)
+
+```ts
+// app/lineage/[slug]/page.tsx
+import { notFound } from 'next/navigation';
+import { FIGURES, type FigureSlug } from '@/data/lore';
+
+export const dynamicParams = false; // ponytail: purely static exports; upgrade to ISR when cms integration arrives.
+
+export function generateStaticParams(): { slug: FigureSlug }[] {
+  return Object.keys(FIGURES).map((slug) => ({ slug: slug as FigureSlug }));
+}
+
+export default async function LineagePage({ params }: { params: Promise<{ slug: string }> }) {
+  const { slug } = await params;
+  const figure = FIGURES[slug as FigureSlug];
+  if (!figure) notFound();
+
+  return <main id="main-content">{/* Pure static lineage projection */}</main>;
+}
+```
+skipped: Middleware-based route rewriting and dynamic query validation layer.  
+add when: Lore data is sourced from an external CMS or headless DB at runtime.
