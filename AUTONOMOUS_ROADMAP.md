@@ -5255,3 +5255,104 @@ figures.forEach(f => {
 
 console.log("Lore sanity check passed: 0 build errors expected.");
 ```
+
+
+### Cycle #97 Directive (2026-11-03 06:12)
+### 1. Comparative Timeline: Zero-JS Synchronized CSS Grid
+
+Replaces custom scroll-syncing JS with a native multi-column grid layout aligned on shared eras.
+
+```tsx
+// components/ComparativeTimeline.tsx
+interface TimelineRowProps {
+  era: string;
+  judaism?: string;
+  christianity?: string;
+  islam?: string;
+}
+
+export function TimelineRow({ era, judaism, christianity, islam }: TimelineRowProps) {
+  return (
+    <div className="grid grid-cols-[100px_repeat(3,1fr)] gap-4 border-b border-stone-200/60 py-3 text-xs leading-relaxed dark:border-stone-800">
+      <span className="font-mono text-stone-400 select-none self-baseline">{era}</span>
+      <div className="text-stone-800 dark:text-stone-200">{judaism ?? '—'}</div>
+      <div className="text-stone-800 dark:text-stone-200">{christianity ?? '—'}</div>
+      <div className="text-stone-800 dark:text-stone-200">{islam ?? '—'}</div>
+    </div>
+  );
+}
+// ponytail: hardcoded to 3 Abrahamic columns; upgrade to CSS subgrid with dynamic columns if comparative scope expands.
+```
+→ skipped: heavy canvas/scroll-sync libraries, dynamic column layout engines.  
+→ add when: tradition counts exceed 3 or side-by-side arbitrary filtering is introduced.
+
+---
+
+### 2. Lineage View: Semantic CSS-Tree (No Graph Bloat)
+
+Replaces `react-flow` or D3 with clean, zen-warm native DOM tree connectors using standard flexbox and pseudo-elements.
+
+```tsx
+// components/LineageTree.tsx
+export interface LineagePerson {
+  id: string;
+  name: string;
+  children?: LineagePerson[];
+}
+
+export function LineageNode({ person }: { person: LineagePerson }) {
+  const hasChildren = Boolean(person.children?.length);
+  return (
+    <li className="relative flex flex-col items-center">
+      <div className="rounded-md border border-stone-200/80 bg-stone-50/80 px-2.5 py-1 text-xs font-serif tracking-wide text-stone-900 shadow-[0_1px_2px_rgba(0,0,0,0.03)] backdrop-blur dark:border-stone-800 dark:bg-stone-900 dark:text-stone-100">
+        {person.name}
+      </div>
+      {hasChildren && (
+        <ul className="flex gap-3 pt-3 before:absolute before:h-3 before:w-px before:bg-stone-300 dark:before:bg-stone-700">
+          {person.children!.map((child) => (
+            <LineageNode key={child.id} person={child} />
+          ))}
+        </ul>
+      )}
+    </li>
+  );
+}
+// ponytail: single-parent tree; upgrade to SVG bezier lines if rendering complex cross-cousin unions.
+```
+→ skipped: interactive node dragging, zoom-pan engines, canvas graphing.  
+→ add when: multi-parent intermarriage rendering causes overlapping DOM nodes.
+
+---
+
+### 3. Next.js Zero-Error Static Assurance
+
+Guarantees zero hydration errors and zero dynamic-route fallback misses during `next build`.
+
+```ts
+// app/[tradition]/[figure]/page.tsx
+import { getAllFigureSlugs, getFigureData } from '@/lib/lore';
+import { notFound } from 'next/navigation';
+
+export const dynamic = 'error';
+export const dynamicParams = false;
+
+export async function generateStaticParams() {
+  // Returns: Array<{ tradition: string; figure: string }>
+  return getAllFigureSlugs();
+}
+
+export default async function Page({
+  params,
+}: {
+  params: Promise<{ tradition: string; figure: string }>;
+}) {
+  const { tradition, figure } = await params;
+  const data = getFigureData(tradition, figure);
+  if (!data) notFound();
+
+  return <main className="mx-auto max-w-2xl px-6 py-12">{/* render */}</main>;
+}
+// ponytail: static pre-rendering only; upgrade to ISR (revalidate) if content is DB-driven.
+```
+→ skipped: runtime SSR fallback checks, dynamic caching tiers.  
+→ add when: user-generated commentary or dynamic content editing is integrated.
