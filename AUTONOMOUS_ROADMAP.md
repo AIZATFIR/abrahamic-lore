@@ -5478,3 +5478,88 @@ function _assertStaticGuard() {
 _assertStaticGuard();
 ```
 `skipped: [Dynamic CMS route handlers and external DB fetch wrappers], add when [traditions become runtime-configurable via external datastore].`
+
+
+### Cycle #99 Directive (2026-11-03 06:23)
+### 1. Static Route Guard for Next.js 15 Zero-Error Build
+
+```tsx
+// app/lore/[tradition]/[slug]/page.tsx
+import { notFound } from 'next/navigation';
+import { getFigure, getAllFigureSlugs } from '@/lib/lore';
+
+type Props = {
+  params: Promise<{ tradition: string; slug: string }>;
+};
+
+export async function generateStaticParams() {
+  // ponytail: Local static slugs; upgrade to dynamic DB fetch when migrating lore out of static JSON.
+  return getAllFigureSlugs();
+}
+
+export default async function LorePage({ params }: Props) {
+  const { tradition, slug } = await params;
+  const figure = getFigure(tradition, slug);
+  if (!figure) notFound();
+
+  return <main className="max-w-2xl mx-auto px-6 py-12">{/* View */}</main>;
+}
+```
+`app/lore/[tradition]/[slug]/page.tsx` → skipped: runtime SSR fallback, add when content is editor-generated via CMS.
+
+---
+
+### 2. Zero-Dependency Lineage Bezier Spline
+
+```tsx
+// components/lineage-path.tsx
+export function LineageLink({ from, to }: { from: [number, number]; to: [number, number] }) {
+  const [x1, y1] = from;
+  const [x2, y2] = to;
+  const midY = (y1 + y2) / 2;
+  // ponytail: Simple vertical tree curve; switch to d3-hierarchy when trees have multi-parent convergence.
+  const d = `M ${x1} ${y1} C ${x1} ${midY}, ${x2} ${midY}, ${x2} ${y2}`;
+
+  return <path d={d} fill="none" stroke="currentColor" strokeWidth="1.25" className="text-stone-300 dark:text-stone-700" />;
+}
+
+// Self-check
+if (process.env.NODE_ENV !== 'production') {
+  const [x1, y1, x2, y2] = [0, 0, 100, 200];
+  const expected = `M 0 0 C 0 100, 100 100, 100 200`;
+  const actual = `M ${x1} ${y1} C ${x1} ${(y1 + y2) / 2}, ${x2} ${(y1 + y2) / 2}, ${x2} ${y2}`;
+  console.assert(actual === expected, `Spline failed: ${actual}`);
+}
+```
+`components/lineage-path.tsx` → skipped: dagre/d3-shape layout engine, add when cross-branch marriages or split descents collide.
+
+---
+
+### 3. CSS Subgrid Comparative Timeline
+
+```tsx
+// components/comparative-timeline.tsx
+export function ComparativeTimeline({ epochs }: { epochs: { era: string; tracks: [string, string, string] }[] }) {
+  return (
+    <div className="grid grid-cols-[100px_repeat(3,minmax(260px,1fr))] overflow-x-auto divide-x divide-stone-200 dark:divide-stone-800 text-sm">
+      <div className="contents font-serif text-stone-500">
+        <span className="p-3 sticky left-0 bg-stone-50/80 dark:bg-stone-950/80 backdrop-blur">Era</span>
+        <span className="p-3">Judaism</span>
+        <span className="p-3">Christianity</span>
+        <span className="p-3">Islam</span>
+      </div>
+      {epochs.map(({ era, tracks }) => (
+        <div key={era} className="contents border-t border-stone-200 dark:border-stone-800">
+          <span className="p-3 font-mono text-xs sticky left-0 bg-stone-50/80 dark:bg-stone-950/80 backdrop-blur">{era}</span>
+          {tracks.map((event, i) => (
+            <div key={i} className="p-3 bg-stone-50/30 dark:bg-stone-900/10 hover:bg-stone-100/50 transition-colors">
+              {event || <span className="text-stone-400 select-none">—</span>}
+            </div>
+          ))}
+        </div>
+      ))}
+    </div>
+  );
+}
+```
+`components/comparative-timeline.tsx` → skipped: synchronized dual-axis scroll JS listeners, add when epoch ranges have non-linear duration scaling.
