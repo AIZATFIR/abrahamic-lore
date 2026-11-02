@@ -3623,3 +3623,125 @@ export default async function FigurePage({ params }: { params: Promise<{ slug: s
 ```
 → skipped: Remote CMS runtime fetching and fallback ISR revalidation.  
 → add when: lore datasets move from static versioned JSON into an external headless CMS.
+
+
+### Cycle #60 Directive (2026-11-03 02:46)
+### 1. Lineage View: Native CSS Tree (Zero-lib graph replacement)
+
+Replace heavy graph/canvas packages with a native semantic tree using CSS pseudo-elements.
+
+```css
+/* lineage.module.css */
+.tree, .tree ul {
+  display: flex;
+  padding-inline-start: 0;
+  margin: 0;
+  list-style: none;
+}
+.tree { justify-content: center; }
+.tree li {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+  padding: 1.25rem 0.75rem 0;
+}
+.tree li::before, .tree li::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 50%;
+  border-top: 1px solid var(--border-subtle, #e5e5e0);
+  width: 50%;
+  height: 1.25rem;
+}
+.tree li::after { right: auto; left: 50%; border-left: 1px solid var(--border-subtle, #e5e5e0); }
+.tree li:only-child::after, .tree li:only-child::before { display: none; }
+.tree li:only-child { padding-top: 0; }
+.tree li:first-child::before, .tree li:last-child::after { border: 0 none; }
+.tree li:last-child::before { border-right: 1px solid var(--border-subtle, #e5e5e0); border-radius: 0 4px 0 0; }
+.tree li:first-child::after { border-radius: 4px 0 0 0; }
+.tree ul::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 50%;
+  border-left: 1px solid var(--border-subtle, #e5e5e0);
+  width: 0;
+  height: 1.25rem;
+}
+/* ponytail: single-parent tree; upgrade to SVG paths when handling complex dual-lineage merges */
+```
+→ skipped: ReactFlow/D3 DAG layout engines.  
+→ add when: Lineages require cross-branch marriage cycles or non-hierarchical mesh joins.
+
+---
+
+### 2. Comparative Timeline: Sticky Subgrid Columns
+
+Synchronize Jewish, Christian, and Islamic narratives along one time axis using native CSS sticky subgrids without JS scroll-listeners.
+
+```tsx
+// components/ComparativeTimeline.tsx
+interface EpochRow {
+  era: string;
+  judaism: string;
+  christianity: string;
+  islam: string;
+}
+
+export function ComparativeTimeline({ rows }: { rows: EpochRow[] }) {
+  return (
+    <div className="grid grid-cols-[100px_repeat(3,minmax(240px,1fr))] gap-x-4 border-t border-stone-200 text-sm dark:border-stone-800">
+      <div className="sticky top-0 z-10 grid grid-cols-subgrid col-span-4 bg-stone-50/90 py-3 font-medium backdrop-blur dark:bg-stone-950/90">
+        <span>Era</span>
+        <span className="text-amber-900 dark:text-amber-400">Judaism</span>
+        <span className="text-sky-900 dark:text-sky-400">Christianity</span>
+        <span className="text-emerald-900 dark:text-emerald-400">Islam</span>
+      </div>
+      {rows.map((r, i) => (
+        <div key={i} className="grid grid-cols-subgrid col-span-4 py-4 border-b border-stone-100 dark:border-stone-900">
+          <span className="font-mono text-xs text-stone-400 self-start">{r.era}</span>
+          <p className="text-stone-700 dark:text-stone-300 leading-relaxed">{r.judaism}</p>
+          <p className="text-stone-700 dark:text-stone-300 leading-relaxed">{r.christianity}</p>
+          <p className="text-stone-700 dark:text-stone-300 leading-relaxed">{r.islam}</p>
+        </div>
+      ))}
+    </div>
+  );
+}
+```
+→ skipped: JS-based dual-scroll synchronization and dynamic height recalculations.  
+→ add when: Horizontal timeline orientation is explicitly requested.
+
+---
+
+### 3. Production Build Lock: Data Integrity Preflight
+
+Guarantees `next build` statically generates without missing-node 404s or circular lineage references.
+
+```js
+// scripts/verify-lore.mjs
+import assert from 'node:assert/strict';
+
+export function validateLoreData(nodes) {
+  const ids = new Set(nodes.map(n => n.id));
+  assert.equal(ids.size, nodes.length, 'Duplicate IDs detected in timeline data.');
+
+  for (const node of nodes) {
+    if (node.parentId) {
+      assert.ok(ids.has(node.parentId), `Dangling parentId "${node.parentId}" in node "${node.id}".`);
+    }
+    assert.ok(node.era, `Node "${node.id}" missing required era key.`);
+  }
+}
+
+// Self-check
+validateLoreData([
+  { id: 'abraham', era: 'c. 1800 BCE', parentId: null },
+  { id: 'isaac', era: 'c. 1750 BCE', parentId: 'abraham' },
+  { id: 'ishmael', era: 'c. 1760 BCE', parentId: 'abraham' }
+]);
+```
+→ skipped: Runtime Zod validation schemas across static pages.  
+→ add when: Timeline/lineage content is fetched dynamically from a headless CMS/external API.
