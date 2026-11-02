@@ -133,6 +133,22 @@ export const FEATURED_COMPARISONS = [
     slug: 'abraham-traditions',
   },
   {
+    id: 'moses-musa',
+    title: 'Moses / Moshe / Musa',
+    description:
+      'Lawgiver of Israel, predecessor of Christ, and Kalimullah who spoke to God directly.',
+    traditions: ['islam', 'judaism', 'christianity'] as Tradition[],
+    slug: 'moses-musa',
+  },
+  {
+    id: 'jesus-isa',
+    title: 'Jesus / Yeshua / Isa',
+    description:
+      'Messiah, Son of God, and honored prophet: comparing Christology and Tawhid.',
+    traditions: ['islam', 'christianity', 'judaism'] as Tradition[],
+    slug: 'jesus-isa',
+  },
+  {
     id: 'sacred-texts-differ',
     title: 'How Sacred Texts Differ',
     description:
@@ -141,16 +157,32 @@ export const FEATURED_COMPARISONS = [
     slug: 'sacred-texts-differ',
   },
   {
+    id: 'concept-covenant',
+    title: 'The Concept of Covenant (Brit & Mithaq)',
+    description:
+      'Divine promises, mutual bonds, and universal redemption across three traditions.',
+    traditions: ['islam', 'judaism', 'christianity'] as Tradition[],
+    slug: 'concept-covenant',
+  },
+  {
+    id: 'creation-and-fall',
+    title: 'Creation, Adam & Human Origins',
+    description:
+      'Original Sin vs. Fitrah: how humanity’s beginnings and nature are understood.',
+    traditions: ['islam', 'christianity', 'judaism'] as Tradition[],
+    slug: 'creation-and-fall',
+  },
+  {
     id: 'shared-figures',
     title: 'Shared Figures, Distinct Interpretations',
     description:
-      'Moses, Mary, Jesus, and others appear across traditions — often with very different roles.',
+      'Noah, Joseph, David, Solomon, and Mary across biblical and Quranic lenses.',
     traditions: ['islam', 'christianity', 'judaism'] as Tradition[],
     slug: 'shared-figures',
   },
   {
     id: 'historical-connections',
-    title: 'Historical Connections',
+    title: 'Historical Connections & Encounters',
     description:
       'How the three religions emerged, interacted, diverged, and shaped world history together.',
     traditions: ['islam', 'christianity', 'judaism'] as Tradition[],

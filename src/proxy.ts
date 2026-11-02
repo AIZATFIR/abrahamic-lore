@@ -4,9 +4,15 @@ import { NextResponse, type NextRequest } from 'next/server'
 export async function proxy(request: NextRequest) {
   let response = NextResponse.next({ request })
 
+  const rawUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || ''
+  if (!rawUrl || !rawUrl.startsWith('http')) {
+    // If Supabase is not configured yet, skip auth check so app works offline/local
+    return response
+  }
+
   const supabase = createServerClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+    rawUrl,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || 'placeholder',
     {
       cookies: {
         getAll: () => request.cookies.getAll(),
@@ -20,7 +26,11 @@ export async function proxy(request: NextRequest) {
   )
 
   // Refresh session — required for SSR auth to work
-  await supabase.auth.getUser()
+  try {
+    await supabase.auth.getUser()
+  } catch {
+    // Graceful fallback
+  }
 
   return response
 }

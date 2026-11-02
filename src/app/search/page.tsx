@@ -5,7 +5,7 @@ import Link from 'next/link'
 import Navbar from '@/components/layout/Navbar'
 import Footer from '@/components/layout/Footer'
 import { usePreferences } from '@/hooks/usePreferences'
-import { TOPIC_CARDS, FEATURED_COMPARISONS, TRADITION_LABELS } from '@/lib/content'
+import { TOPIC_CARDS, FEATURED_COMPARISONS } from '@/lib/content'
 
 const ALL_RESULTS = [
   ...TOPIC_CARDS.map((c) => ({ ...c, type: 'topic' as const })),
@@ -52,7 +52,7 @@ export default function SearchPage() {
         <div className="mx-auto max-w-2xl px-4 py-10 sm:px-6">
           {query && results.length === 0 && (
             <p className="text-sm text-stone-500">
-              No results for <strong>"{query}"</strong>. Try a different term.
+              No results for <strong>&ldquo;{query}&rdquo;</strong>. Try a different term.
             </p>
           )}
 

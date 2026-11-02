@@ -13,7 +13,9 @@ export function usePreferences() {
   const [ready, setReady] = useState(false)
 
   useEffect(() => {
-    setPrefs(getPreferences())
+    const p = getPreferences()
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setPrefs(p)
     setReady(true)
   }, [])
 
