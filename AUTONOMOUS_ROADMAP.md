@@ -2188,3 +2188,148 @@ for (const [slug, fig] of Object.entries(FIGURES)) {
 }
 console.log('✓ Lore integrity passed');
 ```
+
+
+### Cycle #47 Directive (2026-11-03 01:33)
+### 1. Zero-JS Semantic Lineage Tree (Pure CSS Connectors)
+
+Replace JS-calculated graph layouts with CSS pseudo-element connectors for genealogical branching.
+
+```css
+/* app/lineage/lineage.module.css */
+.tree, .tree ul {
+  display: flex;
+  justify-content: center;
+  padding-top: 20px;
+  position: relative;
+  list-style-type: none;
+  margin: 0;
+  padding-left: 0;
+}
+
+.tree li {
+  float: left;
+  text-align: center;
+  position: relative;
+  padding: 20px 8px 0 8px;
+}
+
+/* Connectors: horizontal & vertical */
+.tree li::before, .tree li::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 50%;
+  border-top: 1px solid var(--border-subtle, #e5e5e5);
+  width: 50%;
+  height: 20px;
+}
+.tree li::after {
+  right: auto;
+  left: 50%;
+  border-left: 1px solid var(--border-subtle, #e5e5e5);
+}
+.tree li:only-child::after, .tree li:only-child::before { display: none; }
+.tree li:only-child { padding-top: 0; }
+.tree li:first-child::before, .tree li:last-child::after { border: 0 none; }
+.tree li:last-child::before { border-right: 1px solid var(--border-subtle, #e5e5e5); border-radius: 0 6px 0 0; }
+.tree li:first-child::after { border-radius: 6px 0 0 0; }
+
+/* Downward stem from parent */
+.tree ul::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 50%;
+  border-left: 1px solid var(--border-subtle, #e5e5e5);
+  width: 0;
+  height: 20px;
+}
+```
+→ skipped: D3/Cytoscape canvas rendering, add when user-directed force-layout/free dragging is required.
+
+---
+
+### 2. Native Multi-Tradition Comparative Timeline
+
+Align Jewish, Christian, and Islamic traditions using CSS subgrid and scroll-snap without layout recalculation.
+
+```tsx
+// components/ComparativeTimeline.tsx
+interface TimelineEvent {
+  epoch: string;
+  judaism?: string;
+  christianity?: string;
+  islam?: string;
+}
+
+export function ComparativeTimeline({ events }: { events: TimelineEvent[] }) {
+  // ponytail: Flat array ceiling; add nested era groupings when multi-millennia zoom is needed.
+  return (
+    <div className="overflow-x-auto snap-x mandatory py-8">
+      <div className="grid grid-cols-[100px_repeat(3,minmax(260px,1fr))] gap-4 items-start min-w-[880px]">
+        <div className="sticky top-0 font-mono text-xs opacity-40">EPOCH</div>
+        <div className="sticky top-0 font-serif text-sm tracking-wide text-amber-900/80 dark:text-amber-200/80">JUDAISM</div>
+        <div className="sticky top-0 font-serif text-sm tracking-wide text-rose-900/80 dark:text-rose-200/80">CHRISTIANITY</div>
+        <div className="sticky top-0 font-serif text-sm tracking-wide text-emerald-900/80 dark:text-emerald-200/80">ISLAM</div>
+
+        {events.map((e) => (
+          <div key={e.epoch} className="contents group">
+            <span className="font-mono text-xs opacity-50 py-3 border-t border-stone-200 dark:border-stone-800">{e.epoch}</span>
+            <div className="p-3 bg-stone-50/50 dark:bg-stone-900/40 rounded border border-stone-200/60 dark:border-stone-800/60 text-sm leading-relaxed">{e.judaism || "—"}</div>
+            <div className="p-3 bg-stone-50/50 dark:bg-stone-900/40 rounded border border-stone-200/60 dark:border-stone-800/60 text-sm leading-relaxed">{e.christianity || "—"}</div>
+            <div className="p-3 bg-stone-50/50 dark:bg-stone-900/40 rounded border border-stone-200/60 dark:border-stone-800/60 text-sm leading-relaxed">{e.islam || "—"}</div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+```
+→ skipped: Intersecting timeline drag listeners, add when custom non-native touch scrubbing is requested.
+
+---
+
+### 3. Production Build Lock (Type-safe static generation)
+
+Eliminate `any` leaks and unhandled route params causing Next.js static generation failures.
+
+```typescript
+// app/figure/[slug]/page.tsx
+import { notFound } from "next/navigation";
+
+// Assumes canonical data access layer
+import { getFigureBySlug, getAllFigureSlugs } from "@/lib/lore";
+
+type Props = {
+  params: Promise<{ slug: string }>;
+};
+
+export async function generateStaticParams() {
+  const slugs = await getAllFigureSlugs();
+  return slugs.map((slug) => ({ slug }));
+}
+
+export default async function FigurePage({ params }: Props) {
+  const { slug } = await params;
+  const figure = await getFigureBySlug(slug);
+
+  if (!figure) notFound();
+
+  return (
+    <article className="max-w-xl mx-auto py-12 px-4">
+      <h1 className="text-2xl font-serif tracking-tight">{figure.name}</h1>
+      <p className="mt-4 text-stone-600 dark:text-stone-400 leading-relaxed">{figure.summary}</p>
+    </article>
+  );
+}
+```
+```typescript
+// self-check.ts (run via `tsx self-check.ts` or `node self-check.js`)
+import assert from "node:assert/strict";
+
+const sample = { epoch: "c. 1800 BCE", judaism: "Avraham", christianity: "Abraham", islam: "Ibrahim" };
+assert.equal(typeof sample.epoch, "string");
+assert.ok(sample.judaism && sample.christianity && sample.islam);
+```
+→ skipped: Dynamic SSR fallbacks/revalidation, add when CMS allows live un-rebuilt publishing.
