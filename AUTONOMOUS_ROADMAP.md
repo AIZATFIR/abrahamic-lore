@@ -5664,3 +5664,112 @@ export default async function FigurePage({ params }: { params: Promise<{ slug: s
 }
 ```
 `skipped: [External CMS/Database dynamic fetch checks], add when [content is author-managed outside repo].`
+
+
+### Cycle #101 Directive (2026-11-03 06:34)
+### 1. Comparative Timeline: CSS Grid `contents` Alignment
+
+Replace JS scroll-sync/alignment engines with a single CSS grid using `display: contents` to align cross-tradition figures chronologically across rows without layout wrappers.
+
+```tsx
+// components/ComparativeTimeline.tsx
+interface TimelineRow {
+  period: string;
+  judaism?: string;
+  christianity?: string;
+  islam?: string;
+}
+
+export function ComparativeTimeline({ rows }: { rows: TimelineRow[] }) {
+  // ponytail: fixed 3-tradition schema; upgrade to dynamic columns if traditions become user-configurable.
+  return (
+    <div className="grid grid-cols-[100px_repeat(3,1fr)] gap-x-4 gap-y-2 text-sm">
+      <div className="contents font-mono text-xs text-stone-400 border-b border-stone-200 pb-2">
+        <span>Period</span><span>Judaism</span><span>Christianity</span><span>Islam</span>
+      </div>
+      {rows.map((r) => (
+        <div key={r.period} className="contents group">
+          <span className="sticky top-6 self-start font-mono text-xs text-stone-400 group-hover:text-stone-900 transition-colors">
+            {r.period}
+          </span>
+          <div className="p-2.5 rounded bg-stone-50 border border-stone-100">{r.judaism ?? '—'}</div>
+          <div className="p-2.5 rounded bg-stone-50 border border-stone-100">{r.christianity ?? '—'}</div>
+          <div className="p-2.5 rounded bg-stone-50 border border-stone-100">{r.islam ?? '—'}</div>
+        </div>
+      ))}
+    </div>
+  );
+}
+```
+→ skipped: JS-based scroll synchronizers and D3 bands; add when canvas zooming/panning is strictly requested.
+
+---
+
+### 2. Lineage View: Native CSS Branch Tree
+
+Ditch ReactFlow/Canvas. Semantic nested HTML `<ul>`/`<li>` with native pseudo-element connector lines for pure-CSS genealogical trees.
+
+```css
+/* app/lineage/tree.module.css */
+.tree ul { display: flex; justify-content: center; padding-top: 1rem; position: relative; }
+.tree li { display: flex; flex-direction: column; align-items: center; position: relative; padding: 1rem 0.5rem 0; }
+.tree li::before, .tree li::after { content: ''; position: absolute; top: 0; right: 50%; border-top: 1px solid #d6d3d1; width: 50%; height: 1rem; }
+.tree li::after { right: auto; left: 50%; border-left: 1px solid #d6d3d1; }
+.tree li:only-child::after, .tree li:only-child::before { display: none; }
+.tree li:first-child::before, .tree li:last-child::after { border: 0 none; }
+.tree li:last-child::before { border-right: 1px solid #d6d3d1; border-radius: 0 4px 0 0; }
+.tree li:first-child::after { border-radius: 4px 0 0 0; }
+```
+```tsx
+// components/LineageNode.tsx
+import s from '@/app/lineage/tree.module.css';
+
+export interface Person { name: string; children?: Person[] }
+
+export function LineageNode({ person }: { person: Person }) {
+  // ponytail: max depth ~6 before horizontal scroll required; wrap in overflow-x-auto.
+  return (
+    <li className={s.tree}>
+      <span className="px-3 py-1.5 rounded-full border border-stone-300 bg-white text-stone-800 text-xs shadow-xs">
+        {person.name}
+      </span>
+      {person.children && person.children.length > 0 && (
+        <ul>
+          {person.children.map((c) => <LineageNode key={c.name} person={c} />)}
+        </ul>
+      )}
+    </li>
+  );
+}
+```
+→ skipped: `@xyflow/react` / graph libraries; add when nodes require arbitrary user drag-and-drop.
+
+---
+
+### 3. Next.js Zero-Error Build: Route Static Params & Suspense Guard
+
+Eliminate the two primary build-time bails (`useSearchParams` without boundary and dynamic server page missing params) causing `next build` export failures.
+
+```tsx
+// app/timeline/[id]/page.tsx
+import { Suspense } from 'react';
+
+// Enforce total static pre-rendering (zero-error SSR mismatch)
+export const dynamic = 'error';
+export const dynamicParams = false;
+
+export function generateStaticParams() {
+  // ponytail: hardcoded mock list; pull IDs from local static JSON dataset.
+  return [{ id: 'patriarchs' }, { id: 'prophets' }, { id: 'exile' }];
+}
+
+export default async function TimelinePage({ params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params; // Next.js 15 requires awaiting params
+  return (
+    <Suspense fallback={<div className="h-64 animate-pulse bg-stone-50 rounded" />}>
+      <h1 className="font-serif text-xl capitalize text-stone-900">{id} Timeline</h1>
+    </Suspense>
+  );
+}
+```
+→ skipped: Dynamic on-demand SSR runtime; add when private user authentication or mutative APIs are introduced.
