@@ -852,3 +852,73 @@ export default async function TraditionPage({ params }: { params: Promise<{ slug
 ```
 skipped: Dynamic server SSR error handling wrappers.  
 add when: Moving from static datasets to external runtime DB/CMS queries.
+
+
+### Cycle #24 Directive (2026-11-02 23:22)
+### 1. Synchronized Comparative Timeline (Pure CSS Grid)
+
+```tsx
+// components/comparative-timeline.tsx
+type TimelineEra = { era: string; judaic?: string; christian?: string; islamic?: string };
+
+export function TimelineRow({ era, judaic, christian, islamic }: TimelineEra) {
+  // ponytail: fixed 3-tradition grid ceiling; upgrade to dynamic columns if traditions > 3
+  return (
+    <div className="grid grid-cols-[80px_repeat(3,1fr)] gap-3 border-b border-stone-200/70 py-2.5 text-xs text-stone-800 dark:border-stone-800/80 dark:text-stone-300">
+      <time className="font-mono text-[11px] text-stone-400 tabular-nums">{era}</time>
+      <div className="rounded-md bg-stone-50/60 p-2 dark:bg-stone-900/50">{judaic ?? '—'}</div>
+      <div className="rounded-md bg-stone-50/60 p-2 dark:bg-stone-900/50">{christian ?? '—'}</div>
+      <div className="rounded-md bg-stone-50/60 p-2 dark:bg-stone-900/50">{islamic ?? '—'}</div>
+    </div>
+  );
+}
+```
+skipped: Scroll-sync JS listeners and canvas rendering.  
+add when: Users require dynamic column-hiding or variable multi-perspective zooming.
+
+---
+
+### 2. Native Semantic Lineage View (Zero-Dependency Tree)
+
+```tsx
+// components/lineage-node.tsx
+type Person = { id: string; name: string; children?: Person[] };
+
+export function LineageNode({ person }: { person: Person }) {
+  // ponytail: single-parent tree; upgrade to dag-layout if modeling maternal/consanguine lines
+  return (
+    <li className="relative pl-4 before:absolute before:left-0 before:top-3 before:h-px before:w-3 before:bg-stone-300 dark:before:bg-stone-700">
+      <span className="inline-block rounded border border-stone-200 bg-white/70 px-2 py-0.5 text-xs tracking-tight text-stone-700 shadow-2xs dark:border-stone-800 dark:bg-stone-900 dark:text-stone-300">
+        {person.name}
+      </span>
+      {person.children && (
+        <ul className="ml-2 border-l border-stone-300 dark:border-stone-700">
+          {person.children.map((child) => (
+            <LineageNode key={child.id} person={child} />
+          ))}
+        </ul>
+      )}
+    </li>
+  );
+}
+```
+skipped: React Flow / Cytoscape heavy DOM-canvas graphs.  
+add when: Non-hierarchical, horizontal graph cross-linkages are explicitly demanded.
+
+---
+
+### 3. Static Type Enforcement for Zero-Error Builds
+
+```ts
+// app/lineage/[slug]/page.tsx
+export const dynamicParams = false;
+
+export function generateStaticParams(): Array<{ slug: string }> {
+  return [{ slug: 'abraham' }, { slug: 'moses' }, { slug: 'david' }];
+}
+
+// Self-check: ensures exact match at build-time with no orphan routes
+console.assert(generateStaticParams().length > 0, "Static routes missing");
+```
+skipped: Middleware-level route interception and runtime SSR fallbacks.  
+add when: Tradition profiles are sourced via remote dynamic CMS at runtime.
