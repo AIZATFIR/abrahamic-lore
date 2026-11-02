@@ -3301,3 +3301,123 @@ export function validateLoreTree(nodes: readonly LoreNode[]): readonly LoreNode[
 console.assert(validateLoreTree([{ id: 'abraham', canonicalName: 'Abraham', traditionNames: {}, epoch: -1800 }]).length === 1);
 ```
 `lore-schema.ts` → skipped: Zod runtime bundle bloat, add when content arrives via untrusted external CMS/user APIs.
+
+
+### Cycle #57 Directive (2026-11-03 02:29)
+### 1. Pure CSS Lineage Tree Connectors (Kill Canvas/SVG Bloat)
+
+Replace third-party tree libraries with native semantic DOM and CSS pseudo-element connectors for prophet genealogy.
+
+```css
+/* app/lineage/tree.module.css */
+.tree ul {
+  display: flex;
+  justify-content: center;
+  padding-top: 1.25rem;
+  position: relative;
+}
+.tree li {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+  padding: 1.25rem 0.5rem 0;
+}
+.tree li::before, .tree li::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 50%;
+  width: 50%;
+  height: 1.25rem;
+  border-top: 1px solid var(--border-subtle, #e5e5e5);
+}
+.tree li::after {
+  right: auto;
+  left: 50%;
+  border-left: 1px solid var(--border-subtle, #e5e5e5);
+}
+.tree li:only-child::after, .tree li:only-child::before { display: none; }
+.tree li:first-child::before, .tree li:last-child::after { border: 0 none; }
+.tree li:last-child::before { border-right: 1px solid var(--border-subtle, #e5e5e5); border-radius: 0 4px 0 0; }
+.tree li:first-child::after { border-radius: 4px 0 0 0; }
+/* ponytail: tree max-depth 5 generations; add pan-zoom canvas when rendering >100 nodes */
+```
+→ skipped: D3/ReactFlow dependency and complex coordinate math.  
+→ add when: Interactive bi-directional cyclic graph exploration is explicitly required.
+
+---
+
+### 2. Multi-Tradition Comparative Timeline via CSS Grid
+
+Render comparative accounts (Judaism, Christianity, Islam) in lockstep across epochs without scroll-sync JavaScript listeners.
+
+```tsx
+// components/ComparativeTimeline.tsx
+interface Milestone {
+  epoch: string;
+  traditions: { faith: 'jewish' | 'christian' | 'islamic'; text: string }[];
+}
+
+export function ComparativeTimeline({ milestones }: { milestones: Milestone[] }) {
+  return (
+    <div className="grid grid-cols-[100px_repeat(3,minmax(240px,1fr))] gap-4 overflow-x-auto pb-4">
+      <div className="sticky left-0 font-mono text-xs text-neutral-400">Epoch</div>
+      <div className="text-sm font-medium text-amber-900/80">Judaism</div>
+      <div className="text-sm font-medium text-blue-900/80">Christianity</div>
+      <div className="text-sm font-medium text-emerald-900/80">Islam</div>
+
+      {milestones.map((m) => (
+        <div key={m.epoch} className="contents group border-b border-neutral-100">
+          <span className="sticky left-0 bg-stone-50/90 py-3 font-mono text-xs text-neutral-500 backdrop-blur-sm">
+            {m.epoch}
+          </span>
+          {m.traditions.map((t) => (
+            <div key={t.faith} className="rounded-lg bg-white/60 p-3 text-xs leading-relaxed text-neutral-700 shadow-sm border border-black/[0.04]">
+              {t.text || <span className="text-neutral-300">—</span>}
+            </div>
+          ))}
+        </div>
+      ))}
+    </div>
+  );
+}
+```
+→ skipped: JS-driven synchronized wheel event observers.  
+→ add when: Horizontal and vertical virtualization is required for thousands of events.
+
+---
+
+### 3. Build-Proof Static Params & Typed Null Boundaries
+
+Eliminate Next.js build-time static generation failures on dynamic routes (`/lineage/[figure]` or `/timeline/[era]`).
+
+```typescript
+// app/timeline/[era]/page.tsx
+import { notFound } from 'next/navigation';
+import { getEraSlugs, getTimelineData } from '@/lib/lore';
+
+export const dynamicParams = false;
+
+export async function generateStaticParams(): Promise<{ era: string }[]> {
+  const slugs = await getEraSlugs();
+  return slugs.map((era) => ({ era }));
+}
+
+export default async function Page({ params }: { params: Promise<{ era: string }> }) {
+  const { era } = await params;
+  const data = await getTimelineData(era);
+  
+  if (!data) notFound();
+
+  return <main className="max-w-4xl mx-auto p-6">{/* ... */}</main>;
+}
+
+// Self-check boundary
+(async function assertStaticWiring() {
+  const slugs = await getEraSlugs();
+  console.assert(Array.isArray(slugs) && slugs.length > 0, "generateStaticParams will fail build: empty era slugs");
+})();
+```
+→ skipped: Client-side loading spinners and runtime edge fallbacks.  
+→ add when: Lore entries update via live external CMS webhooks.
