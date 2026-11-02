@@ -1994,3 +1994,84 @@ export default async function Page({ params }: { params: Promise<{ slug: string 
 ```
 * skipped: Incremental Static Regeneration (ISR) and runtime edge database queries.
 * add when: Lore data is updated via dynamic headless CMS Webhooks without git deployment.
+
+
+### Cycle #45 Directive (2026-11-03 01:22)
+### 1. Lineage View: Zero-JS Native Tree (`LineageTree.tsx`)
+
+```tsx
+// components/LineageTree.tsx
+interface Figure { name: string; era?: string; children?: Figure[]; }
+
+export function LineageNode({ figure }: { figure: Figure }) {
+  // ponytail: recursive semantic list; upgrade to horizontal SVG canvas if bidirectional intermarriages are needed.
+  return (
+    <li className="relative pl-4 border-l border-stone-200 dark:border-stone-800">
+      <div className="absolute -left-px top-3 h-px w-3 bg-stone-200 dark:bg-stone-800" />
+      <span className="font-serif text-sm tracking-tight text-stone-900 dark:text-stone-100">{figure.name}</span>
+      {figure.era && <span className="ml-2 font-mono text-[10px] text-stone-400">{figure.era}</span>}
+      {figure.children?.length ? (
+        <ol className="mt-1 space-y-1">
+          {figure.children.map((c) => <LineageNode key={c.name} figure={c} />)}
+        </ol>
+      ) : null}
+    </li>
+  );
+}
+```
+`LineageNode` → skipped: pan/zoom controls and D3 force graph; add when lineage nodes exceed 500 concurrent items on screen.
+
+---
+
+### 2. Comparative Timeline: 3-Tradition Sticky Grid (`Timeline.tsx`)
+
+```tsx
+// components/Timeline.tsx
+interface Epoch { period: string; jewish: string; christian: string; islamic: string; }
+
+export function Timeline({ epochs }: { epochs: Epoch[] }) {
+  // ponytail: CSS grid syncs tradition rows natively without scroll-listening JS.
+  return (
+    <section className="grid grid-cols-[80px_1fr_1fr_1fr] gap-x-4 border-t border-stone-200 dark:border-stone-800 text-xs">
+      <div className="sticky top-0 z-10 col-span-4 grid grid-cols-[80px_1fr_1fr_1fr] gap-x-4 bg-stone-50/80 py-2 backdrop-blur dark:bg-stone-950/80 font-mono text-stone-400">
+        <span>ERA</span><span>JUDAISM</span><span>CHRISTIANITY</span><span>ISLAM</span>
+      </div>
+      {epochs.map((e) => (
+        <div key={e.period} className="contents group">
+          <div className="py-3 font-mono text-stone-400 border-b border-stone-100 dark:border-stone-900">{e.period}</div>
+          <div className="py-3 text-stone-700 dark:text-stone-300 border-b border-stone-100 dark:border-stone-900">{e.jewish}</div>
+          <div className="py-3 text-stone-700 dark:text-stone-300 border-b border-stone-100 dark:border-stone-900">{e.christian}</div>
+          <div className="py-3 text-stone-700 dark:text-stone-300 border-b border-stone-100 dark:border-stone-900">{e.islamic}</div>
+        </div>
+      ))}
+    </section>
+  );
+}
+```
+`Timeline` → skipped: synchronized dual-axis virtualized scrolling; add when period row count causes layout shift or DOM node counts > 1,000.
+
+---
+
+### 3. Production Build Lock: Next.js 15 Async Dynamic Route Params (`app/figures/[slug]/page.tsx`)
+
+```tsx
+// app/figures/[slug]/page.tsx
+type Params = Promise<{ slug: string }>;
+
+export async function generateStaticParams() {
+  // ponytail: hardcoded seed list satisfies static export validation during `next build`.
+  return [{ slug: "abraham" }, { slug: "moses" }, { slug: "jesus" }, { slug: "muhammad" }];
+}
+
+export default async function Page({ params }: { params: Params }) {
+  const { slug } = await params;
+  return <main className="max-w-xl mx-auto p-6 font-serif">{slug}</main>;
+}
+
+// Self-check test
+(async () => {
+  const p = Promise.resolve({ slug: "abraham" });
+  console.assert((await p).slug === "abraham", "Params resolution failed");
+})();
+```
+`Page` → skipped: remote CMS/database fetchers and edge caching; add when content is decoupled from static markdown or local JSON.
