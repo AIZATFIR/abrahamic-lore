@@ -4405,3 +4405,109 @@ export function LineageNode({ node }: { node: Node }) {
 ```
 → skipped: React Flow, ELKjs, and interactive graph zooming engines.  
 → add when: branches contain cyclic relationships or cross-tradition node merging.
+
+
+### Cycle #68 Directive (2026-11-03 03:31)
+### 1. Build Hardening: Exhaustive Static Routes & Build Shield
+
+```typescript
+// app/lore/[tradition]/[figure]/page.tsx
+import { notFound } from "next/navigation";
+import { ALL_FIGURES, Tradition, Figure } from "@/data/lineage";
+
+export const dynamic = "error";
+export const dynamicParams = false;
+
+export function generateStaticParams(): Array<{ tradition: Tradition; figure: string }> {
+  return ALL_FIGURES.map((f) => ({ tradition: f.tradition, figure: f.slug }));
+}
+
+interface PageProps {
+  params: Promise<{ tradition: Tradition; figure: string }>;
+}
+
+export default async function FigurePage({ params }: PageProps) {
+  const { tradition, figure: slug } = await params;
+  const data = ALL_FIGURES.find((f) => f.tradition === tradition && f.slug === slug);
+  if (!data) notFound();
+
+  // ponytail: inline view; extract component if shared with modal preview
+  return (
+    <article className="mx-auto max-w-xl p-8 font-serif text-stone-900 dark:text-stone-100">
+      <h1 className="text-2xl font-medium tracking-tight">{data.name}</h1>
+      <p className="mt-2 text-sm text-stone-500 dark:text-stone-400">{data.epithet}</p>
+    </article>
+  );
+}
+```
+`app/lore/[tradition]/[figure]/page.tsx` → skipped: dynamic server-side data fetching; add when figure lore is sourced from an external CMS or dynamic DB.
+
+---
+
+### 2. Comparative Timeline: Zero-JS Sticky Epoch Alignment
+
+```tsx
+// components/ComparativeTimeline.tsx
+interface Epoch {
+  era: string;
+  judaism: string[];
+  christianity: string[];
+  islam: string[];
+}
+
+export function ComparativeTimeline({ epochs }: { epochs: Epoch[] }) {
+  return (
+    <div className="relative divide-y divide-stone-200 overflow-x-auto border-y border-stone-200 dark:divide-stone-800 dark:border-stone-800">
+      <div className="sticky top-0 z-10 grid grid-cols-4 bg-stone-50/90 py-2.5 text-xs font-semibold tracking-wider text-stone-500 uppercase backdrop-blur-md dark:bg-stone-950/90 dark:text-stone-400">
+        <span className="pl-4">Era</span>
+        <span>Judaism</span>
+        <span>Christianity</span>
+        <span>Islam</span>
+      </div>
+      {epochs.map((e) => (
+        <section key={e.era} className="grid grid-cols-4 py-4 text-sm font-sans">
+          <span className="pl-4 font-mono text-xs text-stone-400">{e.era}</span>
+          <span className="text-stone-800 dark:text-stone-200">{e.judaism.join(", ") || "—"}</span>
+          <span className="text-stone-800 dark:text-stone-200">{e.christianity.join(", ") || "—"}</span>
+          <span className="text-stone-800 dark:text-stone-200">{e.islam.join(", ") || "—"}</span>
+        </section>
+      ))}
+    </div>
+  );
+}
+```
+`components/ComparativeTimeline.tsx` → skipped: JS-based scroll synchronizers and chart canvases; add when non-linear chronological scaling or zoom controls are required.
+
+---
+
+### 3. Lineage View: Native CSS Tree Connectors
+
+```tsx
+// components/LineageNode.tsx
+export interface Person {
+  id: string;
+  name: string;
+  title?: string;
+  children?: Person[];
+}
+
+export function LineageNode({ person }: { person: Person }) {
+  return (
+    <li className="relative pl-6 before:absolute before:top-3 before:left-0 before:h-px before:w-4 before:bg-stone-300 after:absolute after:top-0 after:bottom-0 after:left-0 after:w-px after:bg-stone-300 last:after:h-3 dark:before:bg-stone-700 dark:after:bg-stone-700">
+      <div className="inline-flex items-baseline gap-2 py-1">
+        <span className="font-serif text-sm font-medium text-stone-900 dark:text-stone-100">{person.name}</span>
+        {person.title && <span className="font-sans text-xs text-stone-400">({person.title})</span>}
+      </div>
+      {person.children && person.children.length > 0 && (
+        <ul className="ml-2">
+          {/* ponytail: single-lineage recursion; upgrade to SVG canvas if multi-parent graph cross-linking is introduced */}
+          {person.children.map((child) => (
+            <LineageNode key={child.id} person={child} />
+          ))}
+        </ul>
+      )}
+    </li>
+  );
+}
+```
+`components/LineageNode.tsx` → skipped: heavy graph visualization packages (D3/ReactFlow); add when genealogical links become a multi-parent directed acyclic graph.
