@@ -264,3 +264,114 @@ if (process.env.NODE_ENV === "test") {
 ```
 → skipped: On-demand incremental dynamic rendering (ISR) and fallback skeleton loaders.  
 → add when: Lore database moves from static markdown/JSON to an active remote CMS.
+
+
+### Cycle #3 Directive (2026-11-02 21:22)
+### 1. Lineage View: Native CSS Tree
+
+Zero canvas/D3 bloat. Pure recursive CSS layout with stone-palette zen styling.
+
+```tsx
+// components/LineageTree.tsx
+interface Figure {
+  id: string;
+  name: string;
+  epoch?: string;
+  children?: Figure[];
+}
+
+export function LineageTree({ members }: { members: Figure[] }) {
+  return (
+    <ul className="flex justify-center gap-4">
+      {members.map((m) => (
+        <li key={m.id} className="relative flex flex-col items-center">
+          <div className="rounded-md border border-stone-200/80 bg-stone-50/50 px-3 py-1.5 text-xs font-serif text-stone-800 shadow-[0_1px_3px_rgba(0,0,0,0.02)] backdrop-blur-sm">
+            {m.name}
+          </div>
+          {m.children && m.children.length > 0 && (
+            <>
+              <div className="h-4 w-px bg-stone-300" />
+              {/* ponytail: CSS-only branching line ceiling. Upgrade to SVG path overlay if cross-branch marriages occur */}
+              <LineageTree members={m.children} />
+            </>
+          )}
+        </li>
+      ))}
+    </ul>
+  );
+}
+```
+skipped: ReactFlow / SVG bezier graphing libraries.  
+add when: Non-hierarchical node cross-links or complex pan-zoom interactions are strictly required.
+
+---
+
+### 2. Comparative Timeline: Multi-Tradition Grid
+
+CSS `grid-flow-col` horizontal alignment with zero scroll-sync JS handlers.
+
+```tsx
+// components/ComparativeTimeline.tsx
+interface ComparativeEpoch {
+  epoch: string;
+  traditions: { tradition: 'jewish' | 'christian' | 'islamic'; text: string }[];
+}
+
+export function ComparativeTimeline({ epochs }: { epochs: ComparativeEpoch[] }) {
+  return (
+    <section className="overflow-x-auto pb-6 [scrollbar-width:none]">
+      <div className="grid grid-flow-col auto-cols-[minmax(240px,1fr)] gap-6 border-t border-stone-200 pt-4">
+        {epochs.map((e) => (
+          <article key={e.epoch} className="space-y-3">
+            <time className="font-mono text-[10px] tracking-widest text-stone-400 uppercase">{e.epoch}</time>
+            <div className="space-y-2">
+              {e.traditions.map((t) => (
+                <div key={t.tradition} className="rounded border-l-2 border-stone-300 pl-2.5 text-xs">
+                  <span className="block font-medium capitalize text-stone-500">{t.tradition}</span>
+                  <p className="text-stone-700 leading-relaxed">{t.text}</p>
+                </div>
+              ))}
+            </div>
+          </article>
+        ))}
+      </div>
+    </section>
+  );
+}
+```
+skipped: Framer Motion and intersection observer JS timeline-sync scripts.  
+add when: Dynamic bi-directional scrubbing or chronological scaling (years-to-pixels) is demanded.
+
+---
+
+### 3. Build-Time Graph & Static Export Safeguard
+
+Enforces reference integrity during `next build` / static generation to prevent prerender 500s.
+
+```ts
+// lib/lore-validator.ts
+import { assert } from 'node:assert/strict';
+
+export interface LoreNode {
+  id: string;
+  parentId?: string;
+  references?: string[];
+}
+
+export function validateLoreGraph(nodes: LoreNode[]): void {
+  const ids = new Set(nodes.map((n) => n.id));
+  for (const node of nodes) {
+    if (node.parentId) {
+      assert(ids.has(node.parentId), `Corrupt Lineage: ${node.id} references missing parent ${node.parentId}`);
+    }
+    node.references?.forEach((ref) => {
+      assert(ids.has(ref), `Dead Cross-Ref: ${node.id} references missing node ${ref}`);
+    });
+  }
+}
+
+// Self-check
+validateLoreGraph([{ id: 'abraham' }, { id: 'isaac', parentId: 'abraham' }]);
+```
+skipped: Zod runtime validation schema and custom build-step plugin.  
+add when: Lore data is ingested dynamically from an untrusted third-party CMS or dynamic user input.
