@@ -2976,3 +2976,114 @@ export default async function LineagePage({
 }
 ```
 → skipped: runtime database fetch with ISR revalidation, add when content is managed via remote CMS.
+
+
+### Cycle #54 Directive (2026-11-03 02:12)
+### 1. Comparative Timeline: Pure CSS Synchronized Grid
+
+Eliminate JS scroll listeners. Use sticky multi-column grid with native snap points for Judaism, Christianity, and Islam tracks.
+
+```tsx
+// components/ComparativeTimeline.tsx
+interface EraEvent {
+  epoch: string;
+  jewish: string;
+  christian: string;
+  islamic: string;
+}
+
+export function ComparativeTimeline({ events }: { events: EraEvent[] }) {
+  // ponytail: Flat array ceiling; add nested sub-eras when period density exceeds 50 nodes.
+  return (
+    <div className="overflow-x-auto select-none">
+      <div className="grid min-w-[720px] grid-cols-[120px_1fr_1fr_1fr] border-t border-stone-200 text-stone-900 dark:border-stone-800 dark:text-stone-100 font-serif">
+        <div className="sticky top-0 bg-stone-50/90 dark:bg-stone-950/90 p-3 text-xs tracking-widest uppercase text-stone-400">Epoch</div>
+        <div className="sticky top-0 bg-stone-50/90 dark:bg-stone-950/90 p-3 text-xs tracking-widest uppercase text-amber-800 dark:text-amber-200">Judaism</div>
+        <div className="sticky top-0 bg-stone-50/90 dark:bg-stone-950/90 p-3 text-xs tracking-widest uppercase text-sky-800 dark:text-sky-200">Christianity</div>
+        <div className="sticky top-0 bg-stone-50/90 dark:bg-stone-950/90 p-3 text-xs tracking-widest uppercase text-emerald-800 dark:text-emerald-200">Islam</div>
+        {events.map((e) => (
+          <div key={e.epoch} className="contents group border-b border-stone-100 dark:border-stone-900 text-sm">
+            <span className="p-3 text-xs text-stone-400 border-b border-stone-100 dark:border-stone-900">{e.epoch}</span>
+            <div className="p-3 border-b border-stone-100 dark:border-stone-900 group-hover:bg-stone-100/40 dark:group-hover:bg-stone-900/40">{e.jewish || "—"}</div>
+            <div className="p-3 border-b border-stone-100 dark:border-stone-900 group-hover:bg-stone-100/40 dark:group-hover:bg-stone-900/40">{e.christian || "—"}</div>
+            <div className="p-3 border-b border-stone-100 dark:border-stone-900 group-hover:bg-stone-100/40 dark:group-hover:bg-stone-900/40">{e.islamic || "—"}</div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+```
+→ skipped: JS-based cross-column sync scrolling & D3 layout engines.
+→ add when: Horizontal bi-directional multi-century scrubbing is explicitly required.
+
+---
+
+### 2. Lineage View: Zero-JS Semantic Branching
+
+Replace heavy canvas/graph libraries with recursive CSS borders and semantic nesting.
+
+```tsx
+// components/LineageNode.tsx
+export interface Patriarch {
+  name: string;
+  titles?: { hebrew?: string; arabic?: string };
+  children?: Patriarch[];
+}
+
+export function LineageNode({ node }: { node: Patriarch }) {
+  // ponytail: Unidirectional parent-child ceiling; add matrix dag resolution if cross-marriages must render.
+  return (
+    <li className="relative pl-6 before:absolute before:left-0 before:top-3 before:h-px before:w-4 before:bg-stone-300 dark:before:bg-stone-700">
+      <div className="inline-flex items-baseline gap-2 py-1 text-sm font-serif">
+        <span className="font-medium text-stone-900 dark:text-stone-100">{node.name}</span>
+        {node.titles?.hebrew && <span className="text-xs text-stone-400 font-sans">({node.titles.hebrew} / {node.titles.arabic})</span>}
+      </div>
+      {node.children && node.children.length > 0 && (
+        <ul className="relative ml-2 border-l border-stone-300 dark:border-stone-700 space-y-1">
+          {node.children.map((child) => (
+            <LineageNode key={child.name} node={child} />
+          ))}
+        </ul>
+      )}
+    </li>
+  );
+}
+```
+→ skipped: ReactFlow / SVG bezier curve layout pipelines.
+→ add when: Users require pan-zoom coordinates and non-hierarchical cross-links.
+
+---
+
+### 3. Next.js 15 Async Params & Static Guarantee
+
+Fix `params` Promise deprecation errors preventing static build extraction under Next.js 15.
+
+```tsx
+// app/figure/[slug]/page.tsx
+import { notFound } from "next/navigation";
+
+interface PageProps {
+  params: Promise<{ slug: string }>;
+}
+
+export const dynamicParams = false;
+
+export async function generateStaticParams() {
+  // ponytail: In-memory constant; swap to fs/readFile if figures move to raw markdown files.
+  return [{ slug: "abraham" }, { slug: "moses" }, { slug: "jesus" }, { slug: "muhammad" }];
+}
+
+export default async function FigurePage(props: PageProps) {
+  const { slug } = await props.params;
+  if (!slug) notFound();
+
+  return (
+    <main className="mx-auto max-w-xl py-12 px-6">
+      <h1 className="text-2xl font-serif tracking-tight capitalize text-stone-900 dark:text-stone-50">{slug}</h1>
+    </main>
+  );
+}
+```
+→ skipped: Dynamic runtime fallback handling (`fallback: "blocking"`).
+→ add when: Figure catalog is authored dynamically via CMS instead of static records.
