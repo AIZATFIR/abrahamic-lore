@@ -1587,3 +1587,100 @@ figures.forEach((f) => {
 });
 console.log(`✓ ${figures.length} figures validated for zero-error static export.`);
 ```
+
+
+### Cycle #36 Directive (2026-11-03 00:31)
+### 1. Comparative Timeline: Native Snap Columns
+
+```tsx
+// components/ComparativeTimeline.tsx
+export function ComparativeTimeline({
+  eras,
+}: {
+  eras: { id: string; name: string; traditions: Record<'jewish' | 'christian' | 'islamic', string> }[];
+}) {
+  return (
+    <div className="flex overflow-x-auto snap-x snap-mandatory divide-x divide-stone-200 border-y border-stone-200 bg-stone-50/40 scrollbar-none">
+      {eras.map((era) => (
+        <section key={era.id} className="min-w-[280px] sm:min-w-[340px] snap-start p-5 shrink-0">
+          <span className="sticky left-0 font-serif text-xs uppercase tracking-wider text-stone-500">{era.name}</span>
+          <div className="mt-4 space-y-3 font-sans text-xs leading-relaxed text-stone-800">
+            <p><strong className="font-serif text-amber-900">Torah:</strong> {era.traditions.jewish}</p>
+            <p><strong className="font-serif text-sky-900">Gospel:</strong> {era.traditions.christian}</p>
+            <p><strong className="font-serif text-emerald-900">Quran:</strong> {era.traditions.islamic}</p>
+          </div>
+        </section>
+      ))}
+    </div>
+  );
+}
+```
+skipped: Timeline libraries (VisJS, D3) & JS pan/zoom handlers.  
+add when: Users require continuous non-linear zoom across millennium-scale gaps.
+
+---
+
+### 2. Lineage View: Zero-JS CSS Tree
+
+```tsx
+// components/LineageTree.tsx
+export type Figure = { name: string; title?: string; children?: Figure[] };
+
+export function LineageNode({ node }: { node: Figure }) {
+  return (
+    <li className="relative pl-6 before:absolute before:left-0 before:top-3.5 before:w-4 before:border-t before:border-stone-300">
+      <div className="inline-flex items-baseline gap-1.5 rounded border border-stone-200 bg-white px-2 py-1 shadow-[0_1px_2px_rgba(0,0,0,0.03)]">
+        <span className="font-serif text-xs font-medium text-stone-900">{node.name}</span>
+        {node.title && <span className="text-[10px] text-stone-600">({node.title})</span>}
+      </div>
+      {node.children && node.children.length > 0 && (
+        <ul className="ml-2 mt-2 space-y-2 border-l border-stone-300 pl-2">
+          {node.children.map((child) => (
+            <LineageNode key={child.name} node={child} />
+          ))}
+        </ul>
+      )}
+    </li>
+  );
+}
+```
+skipped: React Flow / Canvas rendering engines.  
+add when: Graph introduces cyclic relationships (cross-marriages) or horizontal multi-parent splits.
+
+---
+
+### 3. Next.js Static Params: Zero-Bailout Build Fix
+
+```tsx
+// app/traditions/[slug]/page.tsx
+import { notFound } from 'next/navigation';
+
+const VALID_SLUGS = ['judaism', 'christianity', 'islam'] as const;
+type Slug = (typeof VALID_SLUGS)[number];
+
+export const dynamicParams = false;
+
+export function generateStaticParams() {
+  return VALID_SLUGS.map((slug) => ({ slug }));
+}
+
+// ponytail: direct Promise<{ slug: string }> for Next.js 15+ async params standard
+export default async function TraditionPage({ params }: { params: Promise<{ slug: string }> }) {
+  const { slug } = await params;
+  if (!VALID_SLUGS.includes(slug as Slug)) notFound();
+
+  return <main className="mx-auto max-w-xl py-12 px-6">{/* tradition content */}</main>;
+}
+```
+
+```ts
+// __tests__/build-check.ts (Run with: tsx __tests__/build-check.ts)
+import assert from 'node:assert';
+import { generateStaticParams } from '../app/traditions/[slug]/page';
+
+const routes = generateStaticParams();
+assert.strictEqual(routes.length, 3);
+assert.deepStrictEqual(routes.map(r => r.slug), ['judaism', 'christianity', 'islam']);
+```
+skipped: Middleware-based route rewrites and runtime dynamic fallbacks.  
+add when: Lore content moves from static code bundles to an external headless CMS.
