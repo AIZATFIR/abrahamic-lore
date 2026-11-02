@@ -2422,3 +2422,84 @@ export default async function FigurePage({ params }: PageProps) {
 ```
 → skipped: `generateMetadata` dynamic fetching, runtime boundary fallbacks.  
 → add when: Lore figures migrate from static data modules to a remote database.
+
+
+### Cycle #49 Directive (2026-11-03 01:44)
+### 1. Zero-Error Build: Await Dynamic Params & Static Hoisting
+Fixes Next.js 15 production build failures on dynamic timeline/lineage routes.
+
+```tsx
+// app/lineage/[id]/page.tsx
+import { notFound } from "next/navigation";
+import { FIGURES } from "@/data/lineage";
+
+export function generateStaticParams() {
+  return FIGURES.map((f) => ({ id: f.id }));
+}
+
+export default async function LineagePage({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}) {
+  const { id } = await params;
+  const figure = FIGURES.find((f) => f.id === id);
+  if (!figure) notFound();
+
+  return <LineageTree root={figure} />;
+}
+```
+→ skipped: `dynamic DB lookups and Suspense boundary scaffolding`, add when `figures are authored in an external headless CMS`.
+
+---
+
+### 2. Comparative Timeline: Pure CSS Sticky Epoch Grid
+Synchronizes Jewish, Christian, and Islamic traditions horizontally without scroll-sync JavaScript listeners.
+
+```css
+/* styles/timeline.css */
+.timeline-sync {
+  display: grid;
+  grid-template-columns: 5rem repeat(3, minmax(260px, 1fr));
+  overflow-x: auto;
+  scroll-snap-type: x proximity;
+  background: #fbfbf9; /* zen warm canvas */
+}
+
+.timeline-epoch-marker {
+  position: sticky;
+  left: 0;
+  background: rgba(251, 251, 249, 0.92);
+  backdrop-filter: blur(8px);
+  border-right: 1px solid rgba(0, 0, 0, 0.06);
+  z-index: 10;
+}
+```
+→ skipped: `virtualized pan/zoom canvas engine`, add when `event density exceeds 300 nodes per era`.
+
+---
+
+### 3. Lineage View: Zero-Dep Native Branch Connectors
+Replaces heavy graph libraries (`react-flow`, `d3`) with native CSS tree rails for genealogical descent.
+
+```tsx
+// components/LineageNode.tsx
+export function LineageNode({ figure }: { figure: FigureNode }) {
+  // ponytail: recursive flex tree; upgrade to SVG bezier paths if cross-line marriages intersect
+  return (
+    <div className="flex flex-col items-center">
+      <div className="rounded-lg border border-stone-200 bg-white/70 px-3.5 py-2 text-xs font-serif text-stone-900 shadow-sm backdrop-blur">
+        {figure.name}
+      </div>
+      {figure.children?.length > 0 && (
+        <div className="relative mt-4 flex gap-6 pt-4 before:absolute before:top-0 before:left-1/2 before:h-4 before:w-px before:-translate-x-1/2 before:bg-stone-300 after:absolute after:top-0 after:left-[calc(50%/var(--child-count))] after:right-[calc(50%/var(--child-count))] after:h-px after:bg-stone-300">
+          {figure.children.map((child) => (
+            <LineageNode key={child.id} figure={child} />
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+```
+→ skipped: `force-directed graph physics`, add when `rendering multi-parent non-linear biblical unions`.
