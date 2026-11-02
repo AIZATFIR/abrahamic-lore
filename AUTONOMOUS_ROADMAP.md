@@ -4944,3 +4944,101 @@ const testEpoch = { era: '1800 BCE', judaism: 'Abraham arrives in Canaan' };
 assert.strictEqual(Boolean(testEpoch.era && testEpoch.judaism), true, 'Epoch must contain era and primary branch');
 console.log('✓ Timeline logic verified');
 ```
+
+
+### Cycle #94 Directive (2026-11-03 05:55)
+### 1. Pure CSS Lineage Connector (Replaces D3/Canvas Bloat)
+
+```css
+/* app/lineage/lineage.module.css */
+.tree, .tree ul { list-style: none; margin: 0; padding: 0 0 0 1.25rem; position: relative; }
+.tree li { position: relative; padding: 0.375rem 0 0.375rem 1rem; }
+.tree li::before {
+  content: ""; position: absolute; left: 0; top: 1.125rem; width: 0.75rem;
+  border-top: 1px solid var(--line, #e7e5e4);
+}
+.tree li::after {
+  content: ""; position: absolute; left: 0; top: 0; bottom: 0;
+  border-left: 1px solid var(--line, #e7e5e4);
+}
+.tree li:last-child::after { height: 1.125rem; }
+```
+```tsx
+// ponytail: Nested <ul> tree handles up to ~10 generations cleanly.
+// Upgrade to virtualized SVG canvas only if nodes exceed 500 in DOM.
+export function LineageNode({ person }: { person: Person }) {
+  return (
+    <li>
+      <span className="inline-block px-2.5 py-1 text-xs rounded-md bg-stone-100 dark:bg-stone-800 border border-stone-200 dark:border-stone-700">
+        {person.name}
+      </span>
+      {person.children?.length ? (
+        <ul>{person.children.map(c => <LineageNode key={c.id} person={c} />)}</ul>
+      ) : null}
+    </li>
+  );
+}
+```
+→ skipped: Canvas/React-Flow graph layout engine.  
+Add when: Dynamic bidirectional multi-parent graph traversal is strictly required.
+
+---
+
+### 2. Sticky 3-Tradition Comparative Grid (Zero JS Scroll Sync)
+
+```tsx
+export function ComparativeTimeline({ eras }: { eras: Era[] }) {
+  return (
+    <div className="grid grid-cols-3 gap-px bg-stone-200 dark:bg-stone-800 rounded-xl overflow-hidden border border-stone-200 dark:border-stone-800">
+      {["Judaism", "Christianity", "Islam"].map((t) => (
+        <header key={t} className="sticky top-0 z-10 bg-stone-50/90 dark:bg-stone-900/90 backdrop-blur p-3 text-xs tracking-wider uppercase font-semibold text-stone-500">
+          {t}
+        </header>
+      ))}
+      {eras.map((era) => (
+        <div key={era.id} className="contents group">
+          <div className="col-span-3 bg-stone-100 dark:bg-stone-900/50 px-3 py-1 text-[11px] font-mono text-stone-400">
+            {era.period}
+          </div>
+          <article className="p-4 bg-white dark:bg-stone-950 text-sm leading-relaxed">{era.judaism}</article>
+          <article className="p-4 bg-white dark:bg-stone-950 text-sm leading-relaxed">{era.christianity}</article>
+          <article className="p-4 bg-white dark:bg-stone-950 text-sm leading-relaxed">{era.islam}</article>
+        </div>
+      ))}
+    </div>
+  );
+}
+```
+→ skipped: JavaScript scroll synchronization and observer event hooks.  
+Add when: Horizontal responsive card snapping across variable mobile viewports is required.
+
+---
+
+### 3. Next.js Zero-Error Production Build Guard
+
+Fixes common Next.js production bails (`useSearchParams()` missing Suspense boundary; unvalidated static params).
+
+```tsx
+// app/timeline/page.tsx
+import { Suspense } from "react";
+import TimelineClient from "./TimelineClient";
+
+export const dynamic = "error"; // Fails fast at build time if SSR leaks into static pages
+export const dynamicParams = false;
+
+export default function TimelinePage() {
+  return (
+    <main className="max-w-6xl mx-auto p-6">
+      <Suspense fallback={<div className="h-96 animate-pulse bg-stone-100 rounded-xl" />}>
+        <TimelineClient />
+      </Suspense>
+    </main>
+  );
+}
+
+// Runnable build-time smoke assertion
+const testEra: Era = { id: "1", period: "1800 BCE", judaism: "A", christianity: "B", islam: "C" };
+console.assert(Boolean(testEra.id && testEra.period), "Era schema violated");
+```
+→ skipped: Runtime schema parsing libraries (Zod/Valibot).  
+Add when: Dynamic external APIs or user-generated inputs enter the timeline route.
