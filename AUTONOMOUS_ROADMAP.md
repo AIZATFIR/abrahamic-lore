@@ -623,3 +623,71 @@ if (process.env.NODE_ENV === 'test') {
 ```
 skipped: On-demand fallback SSR rendering and dynamic API fetching.  
 add when: lore data is fetched from an external headless CMS at request-time instead of compile-time Markdown/JSON.
+
+
+### Cycle #8 Directive (2026-11-02 21:51)
+### 1. Next.js App Router Dynamic Build Guard (`app/figure/[id]/page.tsx`)
+
+```tsx
+// Fix Next 15 build failure: params is now an async Promise
+type Props = { params: Promise<{ id: string }> };
+
+export default async function FigurePage({ params }: Props) {
+  const { id } = await params;
+  // ponytail: Direct lookup ceiling; upgrade to DB query when data exceeds static JSON.
+  return <main className="max-w-2xl mx-auto p-8 font-serif text-stone-900">{id}</main>;
+}
+
+export const dynamicParams = false;
+export async function generateStaticParams() {
+  return [{ id: 'abraham' }, { id: 'moses' }, { id: 'jesus' }, { id: 'muhammad' }];
+}
+```
+`skipped: [Database fetch / dynamic fallbacks], add when [migrating lore corpus out of static files].`
+
+---
+
+### 2. Zero-JS Comparative Timeline Track (`components/Timeline.tsx`)
+
+```tsx
+export function ComparativeTimeline({ eras }: { eras: { label: string; tracks: [string, string, string] }[] }) {
+  return (
+    <div className="grid grid-cols-[100px_repeat(3,minmax(200px,1fr))] gap-3 overflow-x-auto p-4 border border-stone-200/60 rounded-2xl bg-[#faf9f6]">
+      {eras.map(({ label, tracks }) => (
+        <div key={label} className="contents">
+          <span className="text-xs font-mono text-stone-600 tracking-wider sticky left-0 self-center">{label}</span>
+          {tracks.map((text, i) => (
+            <div key={i} className="p-3 text-sm bg-white border border-stone-200/40 rounded-xl shadow-[0_1px_2px_rgba(0,0,0,0.02)]">
+              {text || '—'}
+            </div>
+          ))}
+        </div>
+      ))}
+    </div>
+  );
+}
+```
+`skipped: [Canvas virtualization / drag gesture engines], add when [timeline spans >200 concurrent eras].`
+
+---
+
+### 3. Native SVG Lineage Connector (`components/LineageEdge.tsx`)
+
+```tsx
+export function getLineageCurve([x1, y1]: [number, number], [x2, y2]: [number, number]): string {
+  const midY = (y1 + y2) / 2;
+  return `M ${x1} ${y1} C ${x1} ${midY}, ${x2} ${midY}, ${x2} ${y2}`;
+}
+
+// ponytail: Cubic Bezier ceiling; switch to dagre/elkjs layout when graph allows cross-generational loops.
+export function LineageEdge({ from, to }: { from: [number, number]; to: [number, number] }) {
+  return <path d={getLineageCurve(from, to)} fill="none" className="stroke-stone-300 stroke-[1.5]" />;
+}
+
+// Single runnable verification check
+if (process.env.NODE_ENV !== 'production') {
+  const p = getLineageCurve([0, 0], [100, 200]);
+  console.assert(p === 'M 0 0 C 0 100, 100 100, 100 200', `Curve generator failed: ${p}`);
+}
+```
+`skipped: [D3 / ReactFlow dependencies], add when [lineage graph requires dynamic node dragging or interactive multi-parent routing].`
