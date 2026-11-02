@@ -5958,3 +5958,127 @@ export function LineageNode({ node }: { node: Member }) {
 }
 ```
 → skipped: Canvas/D3/React Flow layout engine; add when lineage requirements evolve from hierarchical trees to cyclic/bidirectional graphs.
+
+
+### Cycle #105 Directive (2026-11-03 06:57)
+### 1. Cross-Tradition Timeline: Pure CSS Sticky Era Grid (Zero-Lib)
+
+Align Jewish, Christian, and Islamic traditions side-by-side using native CSS grid and scroll snap instead of a heavy JS timeline library.
+
+```tsx
+// components/ComparativeTimeline.tsx
+interface TimelineEra {
+  era: string;
+  judaism: string[];
+  christianity: string[];
+  islam: string[];
+}
+
+export function ComparativeTimeline({ eras }: { eras: TimelineEra[] }) {
+  // ponytail: Flat array rendering; upgrade to virtualized windowing only if eras > 100
+  return (
+    <div className="overflow-x-auto scroll-smooth border-y border-stone-200 dark:border-stone-800">
+      <div className="grid min-w-[760px] grid-cols-[140px_1fr_1fr_1fr] divide-x divide-stone-200 text-sm dark:divide-stone-850">
+        <div className="sticky left-0 bg-stone-50/95 p-3 font-mono text-xs uppercase tracking-wider text-stone-500 backdrop-blur dark:bg-stone-900/95">Era</div>
+        <div className="p-3 font-serif font-medium text-amber-900 dark:text-amber-200">Judaism</div>
+        <div className="p-3 font-serif font-medium text-sky-900 dark:text-sky-200">Christianity</div>
+        <div className="p-3 font-serif font-medium text-emerald-900 dark:text-emerald-200">Islam</div>
+
+        {eras.map(({ era, judaism, christianity, islam }) => (
+          <div key={era} className="contents border-t border-stone-150 dark:border-stone-850">
+            <div className="sticky left-0 bg-stone-50/95 p-4 font-mono text-xs text-stone-600 backdrop-blur dark:bg-stone-900/95 dark:text-stone-400">{era}</div>
+            <div className="p-4 space-y-1">{judaism.map((n) => <div key={n} className="rounded bg-amber-500/10 px-2 py-1 text-xs">{n}</div>)}</div>
+            <div className="p-4 space-y-1">{christianity.map((n) => <div key={n} className="rounded bg-sky-500/10 px-2 py-1 text-xs">{n}</div>)}</div>
+            <div className="p-4 space-y-1">{islam.map((n) => <div key={n} className="rounded bg-emerald-500/10 px-2 py-1 text-xs">{n}</div>)}</div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+```
+`skipped: Vis.js/D3 canvas rendering, dynamic zoom levels.`  
+`add when: Dataset exceeds 500 overlapping figures or requires continuous pinch-to-zoom.`
+
+---
+
+### 2. Lineage View: Semantic Tree via CSS Pseudo-Elements (No Graph Lib)
+
+Replace canvas/SVG tree overhead with semantic nested HTML and border connectors.
+
+```tsx
+// components/LineageNode.tsx
+export interface PersonNode {
+  name: string;
+  title?: string;
+  children?: PersonNode[];
+}
+
+export function LineageTree({ node }: { node: PersonNode }) {
+  // ponytail: Unidirectional parent->children only; add bidirectional marriage links if inter-clan unions must be mapped
+  return (
+    <div className="inline-flex flex-col items-center">
+      <div className="rounded-md border border-stone-300 bg-white px-3 py-1.5 text-center shadow-xs dark:border-stone-700 dark:bg-stone-900">
+        <p className="font-serif text-sm font-semibold text-stone-900 dark:text-stone-100">{node.name}</p>
+        {node.title && <p className="font-sans text-[10px] text-stone-500">{node.title}</p>}
+      </div>
+
+      {node.children && node.children.length > 0 && (
+        <>
+          <div className="h-4 w-px bg-stone-300 dark:bg-stone-700" />
+          <div className="flex items-start gap-4 border-t border-stone-300 pt-4 dark:border-stone-700">
+            {node.children.map((child) => (
+              <LineageTree key={child.name} node={child} />
+            ))}
+          </div>
+        </>
+      )}
+    </div>
+  );
+}
+```
+`skipped: React Flow/Cytoscape layout engines and drag-pan viewports.`  
+`add when: Lineages contain multi-parent cross-links or circular descent loops.`
+
+---
+
+### 3. Production Build: Strict Static Params & Null-Safe Slugs
+
+Fixes typical Next.js production build crashes (`generateStaticParams` returning unhandled keys or empty sets).
+
+```tsx
+// app/lore/[tradition]/[figure]/page.tsx
+import { notFound } from "next/navigation";
+import { getAllFigures, getFigureData } from "@/lib/lore";
+
+export const dynamicParams = false;
+
+export async function generateStaticParams() {
+  const figures = await getAllFigures();
+  // ponytail: Flat synchronous param extraction; upgrade to paginated batching if static pages > 2000
+  return figures.map((f) => ({
+    tradition: encodeURIComponent(f.tradition.toLowerCase()),
+    figure: encodeURIComponent(f.slug.toLowerCase()),
+  }));
+}
+
+export default async function FigurePage({
+  params,
+}: {
+  params: Promise<{ tradition: string; figure: string }>;
+}) {
+  const { tradition, figure } = await params;
+  const data = await getFigureData(decodeURIComponent(tradition), decodeURIComponent(figure));
+
+  if (!data) notFound();
+
+  return (
+    <article className="mx-auto max-w-2xl px-4 py-8">
+      <h1 className="font-serif text-2xl font-bold">{data.canonicalName}</h1>
+      <p className="mt-2 text-stone-600 dark:text-stone-400">{data.summary}</p>
+    </article>
+  );
+}
+```
+`skipped: Dynamic on-demand SSR fallback handlers.`  
+`add when: Lore content is edited via live CMS without triggering a GitHub deployment build.`
