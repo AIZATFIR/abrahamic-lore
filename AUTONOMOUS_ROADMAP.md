@@ -4058,3 +4058,94 @@ export default async function LorePage({ params }: { params: Promise<{ slug: str
 ```
 → skipped: Dynamic API fetches, suspense skeleton waterfalls, and fallback loading boundaries.  
 → add when: Data source migrates from static bundles to a remote headless CMS.
+
+
+### Cycle #64 Directive (2026-11-03 03:08)
+### 1. Comparative Timeline: Zero-JS Sticky Synchronized Lanes
+
+Replace JS scroll-listeners and sync libraries with native CSS Grid sticky headers and subgrid tracks.
+
+```tsx
+// components/ComparativeTimeline.tsx
+export function ComparativeTimeline({ eras }: { eras: Era[] }) {
+  return (
+    <div className="grid grid-cols-[120px_repeat(3,minmax(280px,1fr))] overflow-x-auto border border-stone-200/60 rounded-xl bg-stone-50/50">
+      <div className="sticky top-0 z-20 col-span-4 grid grid-cols-subgrid bg-stone-100/90 backdrop-blur-md border-b border-stone-200 text-xs font-serif font-medium text-stone-600 px-4 py-2">
+        <span>Era / BCE-CE</span>
+        <span>Judaism</span>
+        <span>Christianity</span>
+        <span>Islam</span>
+      </div>
+      {eras.map((era) => (
+        <div key={era.id} className="col-span-4 grid grid-cols-subgrid border-b border-stone-150 py-4 px-4 hover:bg-stone-100/40 transition-colors">
+          <span className="font-mono text-xs text-stone-400 sticky left-0">{era.period}</span>
+          <div className="text-sm text-stone-800 pr-4">{era.judaism}</div>
+          <div className="text-sm text-stone-800 pr-4">{era.christianity}</div>
+          <div className="text-sm text-stone-800 pr-4">{era.islam}</div>
+        </div>
+      ))}
+    </div>
+  );
+}
+// ponytail: Flat subgrid assumes 3 fixed traditions; upgrade to dynamic CSS cols if traditions exceed 3.
+```
+*skipped: Heavy virtualization / JS sync-scroll engines.*
+*add when: Timeline records exceed 500 DOM nodes simultaneously.*
+
+---
+
+### 2. Lineage View: Zero-Lib CSS Branching Tree
+
+Drop heavy canvas/graph packages (ReactFlow/D3). Render clean genealogical hierarchy using semantic HTML lists and CSS pseudo-elements.
+
+```tsx
+// components/LineageNode.tsx
+interface Figure { name: string; title?: string; children?: Figure[]; }
+
+export function LineageNode({ figure }: { figure: Figure }) {
+  return (
+    <li className="relative flex flex-col items-center pt-6">
+      <div className="z-10 rounded-lg border border-stone-250 bg-stone-50 px-3 py-1.5 shadow-xs text-center">
+        <p className="font-serif text-sm font-medium text-stone-900">{figure.name}</p>
+        {figure.title && <p className="text-[10px] text-stone-500">{figure.title}</p>}
+      </div>
+      {figure.children && figure.children.length > 0 && (
+        <ul className="flex justify-center gap-4 relative pt-6 before:absolute before:top-0 before:left-1/2 before:h-6 before:w-px before:bg-stone-300">
+          {figure.children.map((child) => (
+            <LineageNode key={child.name} figure={child} />
+          ))}
+        </ul>
+      )}
+    </li>
+  );
+}
+// ponytail: Simple downward single-parent tree; upgrade to SVG canvas layout if multi-parent unions are needed.
+```
+*skipped: Canvas-based node graphing libraries.*
+*add when: Cross-generational complex cross-links (e.g., cousin intermarriages) break strict tree hierarchy.*
+
+---
+
+### 3. Next.js Production Build Safeguard
+
+Eliminate SSG bailout, SSR hydration mismatches, and route typing breaks across dynamic lore slugs.
+
+```ts
+// app/lore/[tradition]/[slug]/page.tsx
+export const dynamicParams = false;
+export const dynamic = 'error';
+
+export async function generateStaticParams() {
+  const figures = await getLoreSlugs(); // local JSON or typed DB manifest
+  return figures.map(({ tradition, slug }) => ({ tradition, slug }));
+}
+
+export default async function LorePage({ params }: { params: Promise<{ tradition: string; slug: string }> }) {
+  const { tradition, slug } = await params;
+  const lore = getLoreData(tradition, slug);
+  if (!lore) notFound();
+  return <LoreArticle data={lore} />;
+}
+```
+*skipped: Runtime SSR fallback handling and ISR revalidation overhead.*
+*add when: Content is moved to an external headless CMS requiring runtime revalidation.*
