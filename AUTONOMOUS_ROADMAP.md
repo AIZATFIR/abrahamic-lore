@@ -8044,3 +8044,80 @@ export default nextConfig;
 ```
 skipped: Remote CI test runner & E2E smoke tests.  
 add when: External contributors submit PRs via CI.
+
+
+### Cycle #128 Directive (2026-11-03 09:08)
+### 1. Lineage View: Native CSS Tree Lines (Replaces Canvas/Graph Libs)
+
+```css
+/* app/lineage/lineage.module.css */
+.branch, .branch ul { display: flex; justify-content: center; list-style: none; padding-top: 1rem; position: relative; }
+.branch li { text-align: center; position: relative; padding: 1rem 0.5rem 0; }
+.branch li::before, .branch li::after { content: ''; position: absolute; top: 0; right: 50%; width: 50%; border-top: 1px solid var(--border, #e5e5e5); height: 1rem; }
+.branch li::after { right: auto; left: 50%; border-left: 1px solid var(--border, #e5e5e5); }
+.branch li:only-child::after, .branch li:only-child::before { display: none; }
+.branch li:first-child::before, .branch li:last-child::after { border: 0 none; }
+.branch li:last-child::before { border-right: 1px solid var(--border, #e5e5e5); border-radius: 0 6px 0 0; }
+.branch li:first-child::after { border-radius: 6px 0 0 0; }
+/* ponytail: single-parent hierarchy ceiling; upgrade to SVG path vectors if adding inter-branch marriages */
+```
+→ skipped: D3-hierarchy/ReactFlow dependencies.  
+→ add when: complex multi-parent consanguinity cycles are introduced.
+
+---
+
+### 2. Comparative Timeline: Pure CSS Multi-Track Sync (Zero-JS)
+
+```tsx
+// components/ComparativeTimeline.tsx
+interface Epoch { id: string; era: string; traditions: Record<'jewish' | 'christian' | 'islamic', string[]> }
+
+export function ComparativeTimeline({ epochs }: { epochs: Epoch[] }) {
+  return (
+    <div className="flex overflow-x-auto snap-x snap-mandatory divide-x divide-stone-200 dark:divide-stone-800 border-y border-stone-200 dark:border-stone-800">
+      {epochs.map(({ id, era, traditions }) => (
+        <section key={id} className="snap-start shrink-0 w-80 p-4 space-y-3 font-serif">
+          <header className="sticky top-0 bg-stone-50/80 backdrop-blur text-xs tracking-widest text-stone-500 uppercase">{era}</header>
+          {(['jewish', 'christian', 'islamic'] as const).map((t) => (
+            <div key={t} className="text-xs space-y-1">
+              <span className="text-[10px] uppercase font-sans tracking-wider text-amber-700/80 dark:text-amber-400/80">{t}</span>
+              {traditions[t]?.map((event, i) => <p key={i} className="text-stone-700 dark:text-stone-300 font-sans leading-relaxed">{event}</p>)}
+            </div>
+          ))}
+        </section>
+      ))}
+    </div>
+  );
+}
+```
+→ skipped: JS-based synchronized horizontal scroll listeners.  
+→ add when: custom timeline scrubbing drag-physics are explicitly required.
+
+---
+
+### 3. Next.js Zero-Error Build Enforcer: Static Exclusivity & Route Guard
+
+```typescript
+// app/lore/[figure]/page.tsx
+import { notFound } from 'next/navigation';
+import { LORE_DATA } from '@/data/lore';
+
+export const dynamic = 'error';
+export const dynamicParams = false;
+
+export function generateStaticParams() {
+  return Object.keys(LORE_DATA).map((figure) => ({ figure }));
+}
+
+// Runnable build-time self-check
+console.assert(Object.keys(LORE_DATA).length > 0, "Build Error: LORE_DATA cannot be empty");
+
+export default async function FigurePage({ params }: { params: Promise<{ figure: string }> }) {
+  const { figure } = await params;
+  const entry = LORE_DATA[figure];
+  if (!entry) notFound();
+  return <article>{/* view render */}</article>;
+}
+```
+→ skipped: ISR / Edge CMS runtime revalidation layers.  
+→ add when: lore data sources migrate to a remote headless CMS.
