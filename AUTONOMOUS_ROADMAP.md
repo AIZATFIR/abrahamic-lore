@@ -8785,3 +8785,113 @@ export default async function LorePage({ params }: PageProps) {
 }
 ```
 → skipped: Runtime dynamic fallback wrappers, add when user-generated lore entries require on-demand ISR.
+
+
+### Cycle #136 Directive (2026-11-03 09:53)
+### 1. Pure CSS Lineage Tree (Zero-JS Canvas/D3 bloat)
+
+Replace third-party tree/graph renderers with native semantic HTML and CSS pseudo-elements for lineage nodes:
+
+```tsx
+// components/LineageNode.tsx
+interface Figure {
+  name: string;
+  traditionNames: { hebrew?: string; arabic?: string };
+  children?: Figure[];
+}
+
+export function LineageTree({ node }: { node: Figure }) {
+  return (
+    <li className="relative flex flex-col items-center">
+      <div className="z-10 rounded-lg border border-stone-200/60 bg-stone-50/80 px-3.5 py-2 text-center backdrop-blur-sm transition-colors hover:border-amber-600/40 dark:border-stone-800 dark:bg-stone-900/80">
+        <p className="font-serif text-sm font-medium tracking-tight text-stone-900 dark:text-stone-100">{node.name}</p>
+        <p className="text-[11px] text-stone-500 dark:text-stone-400">
+          {[node.traditionNames.hebrew, node.traditionNames.arabic].filter(Boolean).join(' • ')}
+        </p>
+      </div>
+      {node.children && node.children.length > 0 && (
+        <ul className="flex pt-6 before:absolute before:top-0 before:left-1/2 before:h-6 before:w-px before:bg-stone-300 dark:before:bg-stone-700">
+          {node.children.map((child) => (
+            <LineageTree key={child.name} node={child} />
+          ))}
+        </ul>
+      )}
+    </li>
+  );
+}
+```
+`LineageTree` → skipped: Pan/zoom canvas & dynamic layout engines, add when lineage exceeds 6 generations depth.
+
+---
+
+### 2. Multi-Tradition Timeline Synced Columns (Native CSS Grid)
+
+Anchor Judaism, Christianity, and Islam chronologies into synchronized native grid tracks without scroll-syncing JS libraries:
+
+```tsx
+// components/ComparativeTimeline.tsx
+interface EpochEvent {
+  epoch: string;
+  judaism?: string;
+  christianity?: string;
+  islam?: string;
+}
+
+export function ComparativeTimeline({ events }: { events: EpochEvent[] }) {
+  return (
+    <div className="grid grid-cols-[100px_repeat(3,1fr)] gap-x-6 border-l border-stone-200 dark:border-stone-800">
+      <div className="sticky top-0 z-20 col-span-4 grid grid-cols-[100px_repeat(3,1fr)] gap-x-6 bg-stone-50/95 py-3 backdrop-blur dark:bg-stone-950/95">
+        <span className="text-xs font-mono uppercase tracking-widest text-stone-400">Period</span>
+        <span className="font-serif text-xs font-semibold text-stone-700 dark:text-stone-300">Judaism</span>
+        <span className="font-serif text-xs font-semibold text-stone-700 dark:text-stone-300">Christianity</span>
+        <span className="font-serif text-xs font-semibold text-stone-700 dark:text-stone-300">Islam</span>
+      </div>
+      {events.map((e) => (
+        <div key={e.epoch} className="contents border-t border-stone-150 dark:border-stone-900">
+          <time className="py-4 font-mono text-xs text-stone-400">{e.epoch}</time>
+          <div className="py-4 text-xs leading-relaxed text-stone-800 dark:text-stone-200">{e.judaism || '—'}</div>
+          <div className="py-4 text-xs leading-relaxed text-stone-800 dark:text-stone-200">{e.christianity || '—'}</div>
+          <div className="py-4 text-xs leading-relaxed text-stone-800 dark:text-stone-200">{e.islam || '—'}</div>
+        </div>
+      ))}
+    </div>
+  );
+}
+```
+`ComparativeTimeline` → skipped: Synchronized horizontal bi-directional virtual scrollers, add when event density causes layout thrashing (>200 events).
+
+---
+
+### 3. Next.js Static Dynamic Route Guard (`app/[slug]/page.tsx`)
+
+Prevent build-time failure (`Export encountered errors on /lore/[slug]`) with strict param typing and static generation:
+
+```tsx
+// app/lore/[slug]/page.tsx
+import { notFound } from 'next/navigation';
+import { getAllLoreSlugs, getLoreBySlug } from '@/lib/lore';
+
+interface PageProps {
+  params: Promise<{ slug: string }>;
+}
+
+export async function generateStaticParams() {
+  const slugs = await getAllLoreSlugs();
+  return slugs.map((slug) => ({ slug }));
+}
+
+export default async function LorePage({ params }: PageProps) {
+  const { slug } = await params;
+  const entry = await getLoreBySlug(slug);
+
+  if (!entry) notFound();
+
+  return (
+    <article className="mx-auto max-w-2xl px-6 py-12">
+      <h1 className="font-serif text-3xl font-light tracking-tight text-stone-900 dark:text-stone-50">{entry.title}</h1>
+      <div className="prose prose-stone mt-6 dark:prose-invert" dangerouslySetInnerHTML={{ __html: entry.content }} />
+    </article>
+  );
+}
+```
+`LorePage` → skipped: Middleware rewriting and runtime fallbacks, add when dynamic user-generated records require SSR outside build-time export.
