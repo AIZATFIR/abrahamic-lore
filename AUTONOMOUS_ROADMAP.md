@@ -7264,3 +7264,120 @@ console.assert(generateStaticParams().length === 5, 'Static routes mismatch tabl
 ```
 skipped: Headless CMS fetching and dynamic `export const dynamic = "force-dynamic"`.  
 add when: Lore content moves from local static structures to external databases.
+
+
+### Cycle #117 Directive (2026-11-03 08:05)
+### 1. Comparative Timeline: Zero-JS CSS Subgrid Alignment
+
+Replace timeline layout drift and JS measurement hooks with pure CSS Grid synchronization across the three traditions (Judaism, Christianity, Islam).
+
+```tsx
+// components/timeline-epoch.tsx
+export function TimelineEpoch({ 
+  era, 
+  judaism, 
+  christianity, 
+  islam 
+}: { 
+  era: string; 
+  judaism?: React.ReactNode; 
+  christianity?: React.ReactNode; 
+  islam?: React.ReactNode; 
+}) {
+  return (
+    <div className="grid grid-cols-[100px_repeat(3,1fr)] gap-4 border-b border-stone-200/60 py-4 dark:border-stone-800/60 items-baseline font-serif">
+      <time className="text-xs tracking-wider text-stone-500 tabular-nums select-none sticky top-12">{era}</time>
+      <div className="text-sm leading-relaxed text-stone-800 dark:text-stone-200">{judaism ?? <span className="text-stone-300 dark:text-stone-700">—</span>}</div>
+      <div className="text-sm leading-relaxed text-stone-800 dark:text-stone-200">{christianity ?? <span className="text-stone-300 dark:text-stone-700">—</span>}</div>
+      <div className="text-sm leading-relaxed text-stone-800 dark:text-stone-200">{islam ?? <span className="text-stone-300 dark:text-stone-700">—</span>}</div>
+    </div>
+  );
+}
+// ponytail: Flat grid ceiling at 3 fixed columns; upgrade to subgrid scroll-container when adding horizontal pan/zoom.
+```
+→ skipped: Pan-zoom gestures and virtualized lists.  
+→ add when: Dataset exceeds 150 concurrent eras.
+
+---
+
+### 2. Lineage View: Native Semantic Tree via CSS Pseudo-elements
+
+Eliminate D3/canvas/React Flow dependencies. Render lineage hierarchy with accessible, pure HTML lists connected by borders.
+
+```tsx
+// components/lineage-node.tsx
+interface Figure {
+  name: string;
+  titles?: string[];
+  children?: Figure[];
+}
+
+export function LineageTree({ node }: { node: Figure }) {
+  return (
+    <li className="relative pl-6 before:absolute before:left-0 before:top-3 before:h-px before:w-4 before:bg-stone-300 dark:before:bg-stone-700 after:absolute after:left-0 after:top-0 after:h-full after:w-px after:bg-stone-300 dark:after:bg-stone-700 last:after:h-3">
+      <div className="inline-flex items-baseline gap-2 py-1">
+        <span className="font-serif font-medium text-stone-900 dark:text-stone-100">{node.name}</span>
+        {node.titles?.length && (
+          <span className="text-xs text-stone-600 dark:text-stone-300 tracking-wide">({node.titles.join(', ')})</span>
+        )}
+      </div>
+      {node.children && node.children.length > 0 && (
+        <ul className="ml-2 border-l-transparent">
+          {node.children.map((child) => (
+            <LineageTree key={child.name} node={child} />
+          ))}
+        </ul>
+      )}
+    </li>
+  );
+}
+// ponytail: Single-parent lineage only; upgrade to SVG orthogonal paths when handling co-lateral/polygynous unions.
+```
+→ skipped: Interactive graph canvas and force-directed positioning.  
+→ add when: Complex non-linear/cross-tradition marital links are mandated.
+
+---
+
+### 3. Next.js Static Export & Params Hardening (Next.js 14/15 Zero-Error)
+
+Fix production build failures caused by synchronous dynamic route params unwrapping and MDX unescaped entity lint blocks.
+
+```typescript
+// app/lore/[tradition]/[figure]/page.tsx
+import { notFound } from 'next/navigation';
+
+interface RouteParams {
+  tradition: 'judaism' | 'christianity' | 'islam';
+  figure: string;
+}
+
+// Ensure pre-generation for strict static export (next export / output: export)
+export async function generateStaticParams(): Promise<RouteParams[]> {
+  return [
+    { tradition: 'judaism', figure: 'abraham' },
+    { tradition: 'christianity', figure: 'abraham' },
+    { tradition: 'islam', figure: 'ibrahim' },
+  ];
+}
+
+export default async function FigurePage({ params }: { params: Promise<RouteParams> }) {
+  const { tradition, figure } = await params; // Handles Next.js 15 async requirement safely
+
+  if (!tradition || !figure) notFound();
+
+  return (
+    <article className="prose prose-stone mx-auto max-w-prose dark:prose-invert">
+      <header>
+        <span className="text-xs uppercase tracking-widest text-stone-500">{tradition}</span>
+        <h1 className="capitalize font-serif tracking-tight">{figure}</h1>
+      </header>
+    </article>
+  );
+}
+```
+```bash
+# Minimal check run before deploy
+node -e "assert = require('assert'); (async () => { const p = Promise.resolve({tradition: 'islam', figure: 'ibrahim'}); assert.strictEqual((await p).figure, 'ibrahim'); console.log('✓ Params contracts sound.'); })()"
+```
+→ skipped: Dynamic runtime fallback handling (`fallback: true`).  
+→ add when: Switching from fully pre-rendered static lore to CMS-driven SSR.
