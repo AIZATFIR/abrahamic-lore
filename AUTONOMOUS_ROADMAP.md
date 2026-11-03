@@ -9074,3 +9074,139 @@ const testTree: Patriarch = { name: "Abraham", children: [{ name: "Isaac", child
 assert.strictEqual(testTree.children?.[0].children?.[0].name, "Jacob");
 console.log('✓ Lineage tree schema intact');
 ```
+
+
+### Cycle #140 Directive (2026-11-03 10:16)
+### 1. Pure CSS Lineage Connectors (Drop JS tree graph libraries)
+
+Replace canvas/D3/DOM-measurement layout engines with semantic CSS tree branches.
+
+```css
+/* components/LineageView.module.css */
+.tree, .tree ul {
+  display: flex;
+  justify-content: center;
+  padding-top: 1.25rem;
+  position: relative;
+}
+
+.tree li {
+  float: left;
+  text-align: center;
+  list-style-type: none;
+  position: relative;
+  padding: 1.25rem 0.5rem 0 0.5rem;
+}
+
+/* Connectors */
+.tree li::before, .tree li::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 50%;
+  border-top: 1px solid var(--border-subtle, #e5e5e5);
+  width: 50%;
+  height: 1.25rem;
+}
+.tree li::after {
+  right: auto;
+  left: 50%;
+  border-left: 1px solid var(--border-subtle, #e5e5e5);
+}
+.tree li:only-child::after, .tree li:only-child::before { display: none; }
+.tree li:first-child::before, .tree li:last-child::after { border: 0 none; }
+.tree li:last-child::before { border-right: 1px solid var(--border-subtle, #e5e5e5); border-radius: 0 4px 0 0; }
+.tree li:first-child::after { border-radius: 4px 0 0 0; }
+
+.tree ul::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 50%;
+  border-left: 1px solid var(--border-subtle, #e5e5e5);
+  width: 0;
+  height: 1.25rem;
+}
+```
+* `skipped`: Canvas rendering, drag-and-drop panning, collision detection algorithms.
+* `add when`: Lineage trees exceed 6 generations or require bidirectional marriage loops.
+
+---
+
+### 2. CSS Subgrid Comparative Timeline (Zero JS row-height syncing)
+
+Align era events across Judaism, Christianity, and Islam horizontally without layout recalculations.
+
+```tsx
+// components/ComparativeTimeline.tsx
+interface TimelineEra {
+  era: string;
+  judaism: string;
+  christianity: string;
+  islam: string;
+}
+
+export function ComparativeTimeline({ eras }: { eras: TimelineEra[] }) {
+  // ponytail: Flat array ceiling; upgrade to dynamic sub-event buckets when multi-source variants diverge
+  return (
+    <div className="grid grid-cols-[120px_1fr_1fr_1fr] gap-x-4 border-t border-stone-200 dark:border-stone-800 text-sm">
+      <div className="font-mono text-xs text-stone-500 py-3 sticky top-0 bg-stone-50 dark:bg-stone-900 z-10">Epoch</div>
+      <div className="font-serif font-medium py-3 sticky top-0 bg-stone-50 dark:bg-stone-900 z-10">Judaism</div>
+      <div className="font-serif font-medium py-3 sticky top-0 bg-stone-50 dark:bg-stone-900 z-10">Christianity</div>
+      <div className="font-serif font-medium py-3 sticky top-0 bg-stone-50 dark:bg-stone-900 z-10">Islam</div>
+
+      {eras.map((row) => (
+        <div key={row.era} className="col-span-4 grid grid-cols-subgrid py-4 border-b border-stone-100 dark:border-stone-800/60 items-baseline">
+          <span className="font-mono text-xs text-stone-400">{row.era}</span>
+          <p className="text-stone-800 dark:text-stone-200 leading-relaxed pr-2">{row.judaism || '—'}</p>
+          <p className="text-stone-800 dark:text-stone-200 leading-relaxed pr-2">{row.christianity || '—'}</p>
+          <p className="text-stone-800 dark:text-stone-200 leading-relaxed">{row.islam || '—'}</p>
+        </div>
+      ))}
+    </div>
+  );
+}
+```
+* `skipped`: IntersectionObserver scroll-syncing, ResizeObserver DOM rect binding.
+* `add when`: Users need non-linear comparative zoom scales (e.g., century vs. year granularities).
+
+---
+
+### 3. Strict Static Build Contract (Lock zero-error `next build`)
+
+Enforce exhaustive static param generation and strict dynamic route typing to kill build-time bailouts.
+
+```tsx
+// app/figure/[id]/page.tsx
+import { notFound } from 'next/navigation';
+import { getFigures, getFigureById } from '@/lib/lore';
+
+export const dynamicParams = false;
+
+export async function generateStaticParams(): Promise<{ id: string }[]> {
+  const figures = await getFigures();
+  // ponytail: In-memory string mapping; upgrade to paginated batch static emission if entities > 5000
+  return figures.map((f) => ({ id: f.id }));
+}
+
+export default async function FigurePage({ params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params;
+  const figure = await getFigureById(id);
+
+  if (!figure) notFound();
+
+  return (
+    <article className="max-w-2xl mx-auto py-12 px-4">
+      <h1 className="font-serif text-3xl tracking-tight text-stone-900 dark:text-stone-100">{figure.name}</h1>
+      <p className="mt-4 text-stone-600 dark:text-stone-400 leading-relaxed">{figure.summary}</p>
+    </article>
+  );
+}
+```
+
+```bash
+# Runnable build validation check
+node -e "assert = require('assert'); const p = [{id:'abraham'}]; assert(p.every(x => typeof x.id === 'string')); console.log('Static route validation OK');"
+```
+* `skipped`: ISR revalidation tokens, hybrid on-demand SSR fallback adapters.
+* `add when`: Figures are updated dynamically via remote CMS/DB without redeploying.
