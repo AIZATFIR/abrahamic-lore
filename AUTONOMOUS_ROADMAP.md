@@ -6545,3 +6545,106 @@ export default async function FigurePage({
 ```
 skipped: Remote CMS dynamic fetch layer, custom revalidation tags.  
 add when: Lore data is decoupled into an external database or CMS.
+
+
+### Cycle #110 Directive (2026-11-03 07:25)
+### 1. Comparative Timeline: Pure CSS Multi-Track Sync
+
+Replace scroll-listener JS with native sticky headers and CSS scroll-snap for comparing traditions (Jewish, Christian, Islamic).
+
+```tsx
+// components/ComparativeTimeline.tsx
+export function ComparativeTimeline({ eras }: { eras: Array<{ era: string; traditions: Record<string, string> }> }) {
+  // ponytail: static 3-column track; upgrade to subgrid dynamic keys if traditions exceed 4
+  return (
+    <div className="relative overflow-x-auto snap-x snap-mandatory rounded-2xl border border-stone-200/80 bg-stone-50/50 p-4 dark:border-stone-800 dark:bg-stone-950/40">
+      <div className="grid min-w-[720px] grid-cols-[140px_1fr_1fr_1fr] gap-3 text-sm">
+        <div className="sticky left-0 z-10 bg-inherit font-medium text-stone-500">Era</div>
+        <div className="font-semibold text-amber-900 dark:text-amber-200">Judaism</div>
+        <div className="font-semibold text-sky-900 dark:text-sky-200">Christianity</div>
+        <div className="font-semibold text-emerald-900 dark:text-emerald-200">Islam</div>
+        {eras.map((row) => (
+          <div key={row.era} className="contents group border-t border-stone-200/60 dark:border-stone-800/60">
+            <span className="sticky left-0 z-10 bg-inherit py-3 font-mono text-xs tabular-nums text-stone-400 group-hover:text-stone-700 dark:group-hover:text-stone-200">
+              {row.era}
+            </span>
+            <div className="snap-start py-3 pr-2 text-stone-700 dark:text-stone-300">{row.traditions.judaism || '—'}</div>
+            <div className="snap-start py-3 pr-2 text-stone-700 dark:text-stone-300">{row.traditions.christianity || '—'}</div>
+            <div className="snap-start py-3 pr-2 text-stone-700 dark:text-stone-300">{row.traditions.islam || '—'}</div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+```
+→ skipped: JS-based synchronized virtual scrolling.  
+→ add when: timeline items exceed 500 rows and cause DOM layout thrashing.
+
+---
+
+### 2. Lineage View: Zero-Dep CSS Branch Connectors
+
+Eliminate heavy canvas/SVG graph libraries. Render genealogical descent via native tree pseudo-connectors.
+
+```tsx
+// components/LineageNode.tsx
+type Figure = { id: string; name: string; title?: string; children?: Figure[] };
+
+export function LineageNode({ figure }: { figure: Figure }) {
+  return (
+    <li className="relative flex flex-col items-center">
+      <div className="z-10 rounded-xl border border-stone-200/80 bg-white/80 px-3.5 py-2 text-center shadow-xs backdrop-blur-xs dark:border-stone-800 dark:bg-stone-900/80">
+        <p className="font-serif text-sm font-medium text-stone-900 dark:text-stone-100">{figure.name}</p>
+        {figure.title && <p className="text-[11px] text-stone-400">{figure.title}</p>}
+      </div>
+      {figure.children && figure.children.length > 0 && (
+        <ul className="relative flex gap-4 pt-6 before:absolute before:top-0 before:left-1/2 before:h-6 before:w-px before:-translate-x-1/2 before:bg-stone-300 dark:before:bg-stone-700">
+          {figure.children.map((child) => (
+            <LineageNode key={child.id} figure={child} />
+          ))}
+        </ul>
+      )}
+    </li>
+  );
+}
+```
+→ skipped: Pan/zoom canvas and force-directed graph math.  
+→ add when: Lineage displays cross-branch marriages or cyclical descent structures.
+
+---
+
+### 3. Production Build: Route Param Typing & Static Pre-render Contract
+
+Prevent Next.js static generation bailouts and type mismatch errors during `next build`.
+
+```typescript
+// app/figures/[slug]/page.tsx
+import { notFound } from 'next/navigation';
+
+interface PageProps {
+  params: Promise<{ slug: string }>;
+}
+
+export const dynamicParams = false;
+
+export async function generateStaticParams(): Promise<Array<{ slug: string }>> {
+  // ponytail: static list ceiling; wire to lore DB source array
+  return [{ slug: 'abraham' }, { slug: 'moses' }, { slug: 'jesus' }, { slug: 'muhammad' }];
+}
+
+export default async function FigurePage({ params }: PageProps) {
+  const { slug } = await params;
+  if (!slug) notFound();
+
+  return (
+    <main className="mx-auto max-w-2xl px-6 py-12">
+      <h1 className="font-serif text-3xl font-light tracking-tight capitalize text-stone-900 dark:text-stone-100">
+        {slug}
+      </h1>
+    </main>
+  );
+}
+```
+→ skipped: Dynamic SSR fallbacks and runtime revalidation headers.  
+→ add when: Figures are loaded from an external live-edited headless CMS instead of local static sets.
