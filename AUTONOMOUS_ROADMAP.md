@@ -6417,3 +6417,131 @@ console.assert(generateStaticParams().length === CANONICAL_SLUGS.length, 'SSG pa
 ```
 skipped: Contentful/CMS fetch adapters and remote schema validation.
 add when: Lore content moves from local markdown/consts to a remote headless CMS.
+
+
+### Cycle #109 Directive (2026-11-03 07:20)
+### 1. Comparative Timeline: Zero-JS Sticky Synchronized Tracks
+
+Replace JS scroll listeners and heavy timeline libraries with native CSS sticky column tracks and CSS grid alignment. Eliminates runtime hydration desync.
+
+```tsx
+// components/ComparativeTimeline.tsx
+interface TimelineEvent {
+  era: string;
+  judaism?: string;
+  christianity?: string;
+  islam?: string;
+}
+
+export function ComparativeTimeline({ events }: { events: TimelineEvent[] }) {
+  return (
+    <div className="w-full overflow-x-auto border-neutral-200 dark:border-neutral-800">
+      <div className="grid min-w-[640px] grid-cols-[100px_repeat(3,1fr)] gap-px bg-neutral-200 dark:bg-neutral-800 text-xs">
+        <div className="sticky top-0 z-10 bg-neutral-50 p-2 font-mono font-medium dark:bg-neutral-950">Era</div>
+        <div className="sticky top-0 z-10 bg-neutral-50 p-2 font-serif font-medium dark:bg-neutral-950">Judaism</div>
+        <div className="sticky top-0 z-10 bg-neutral-50 p-2 font-serif font-medium dark:bg-neutral-950">Christianity</div>
+        <div className="sticky top-0 z-10 bg-neutral-50 p-2 font-serif font-medium dark:bg-neutral-950">Islam</div>
+
+        {events.map((e, idx) => (
+          <div key={idx} className="contents group">
+            <div className="bg-white p-3 font-mono text-neutral-400 dark:bg-black">{e.era}</div>
+            <div className="bg-white p-3 dark:bg-black">{e.judaism || <span className="text-neutral-300 dark:text-neutral-700">—</span>}</div>
+            <div className="bg-white p-3 dark:bg-black">{e.christianity || <span className="text-neutral-300 dark:text-neutral-700">—</span>}</div>
+            <div className="bg-white p-3 dark:bg-black">{e.islam || <span className="text-neutral-300 dark:text-neutral-700">—</span>}</div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+```
+skipped: IntersectionObserver active-era highlight, bidirectional zoom.  
+add when: Timeline data exceeds 50 distinct historical eras.
+
+---
+
+### 2. Lineage View: Native CSS Tree Connectors (No D3/Canvas)
+
+Semantic, accessible lineage branch structure rendered with pure CSS pseudo-elements and horizontal scroll-snap.
+
+```tsx
+// components/LineageNode.tsx
+interface Figure {
+  name: string;
+  title?: string;
+  children?: Figure[];
+}
+
+export function LineageNode({ figure }: { figure: Figure }) {
+  // ponytail: recursive flex tree caps at 10 depth levels; upgrade to virtualized SVG if tree > 500 nodes
+  return (
+    <li className="flex flex-col items-center relative pt-4">
+      <div className="z-10 rounded-lg border border-neutral-200 bg-white/80 px-3 py-1.5 backdrop-blur-sm dark:border-neutral-800 dark:bg-neutral-900/80 shadow-xs">
+        <span className="font-serif text-sm font-medium tracking-tight">{figure.name}</span>
+        {figure.title && <span className="block text-[10px] text-neutral-400 uppercase tracking-widest">{figure.title}</span>}
+      </div>
+
+      {figure.children && figure.children.length > 0 && (
+        <ul className="flex justify-center gap-4 pt-4 relative before:absolute before:top-0 before:left-1/2 before:h-4 before:w-px before:bg-neutral-300 dark:before:bg-neutral-700">
+          {figure.children.map((child) => (
+            <LineageNode key={child.name} figure={child} />
+          ))}
+        </ul>
+      )}
+    </li>
+  );
+}
+```
+skipped: Interactive node collapsible state, pan-and-zoom controls.  
+add when: Lineage depth causes horizontal viewport clipping on mobile (> 4 generations).
+
+---
+
+### 3. Next.js Static Export & Dynamic Routes Type-Safety Guard
+
+Eliminate production dynamic route prerender errors (`Type error` / `Page is missing generateStaticParams`) with strictly typed static params.
+
+```tsx
+// app/[tradition]/[figure]/page.tsx
+import { notFound } from 'next/navigation';
+
+export const dynamicParams = false;
+
+const VALID_LORE_INDEX = {
+  abrahamic: ['ibrahim', 'abraham', 'moses', 'musa'],
+} as const;
+
+type Tradition = keyof typeof VALID_LORE_INDEX;
+
+export function generateStaticParams() {
+  return Object.entries(VALID_LORE_INDEX).flatMap(([tradition, figures]) =>
+    figures.map((figure) => ({ tradition, figure }))
+  );
+}
+
+export default async function FigurePage({
+  params,
+}: {
+  params: Promise<{ tradition: string; figure: string }>;
+}) {
+  const { tradition, figure } = await params;
+  const figures = VALID_LORE_INDEX[tradition as Tradition];
+  if (!figures || !figures.includes(figure as never)) notFound();
+
+  return (
+    <main className="mx-auto max-w-xl py-12 px-4">
+      <h1 className="font-serif text-2xl capitalize tracking-tight">{figure}</h1>
+      <p className="text-xs text-neutral-400 capitalize">{tradition} Lore</p>
+    </main>
+  );
+}
+
+// Self-check
+(() => {
+  const params = generateStaticParams();
+  console.assert(params.length === 4, 'Static params count mismatch');
+  console.assert(params.some(p => p.figure === 'ibrahim'), 'Missing static route');
+})();
+```
+skipped: Remote CMS dynamic fetch layer, custom revalidation tags.  
+add when: Lore data is decoupled into an external database or CMS.
