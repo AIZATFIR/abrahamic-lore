@@ -6959,3 +6959,103 @@ export function LineageNode({ name, title, children }: { name: string; title?: s
 }
 ```
 → skipped: `interactive pan/zoom canvas and React Flow dependencies`, add when `lineage needs bidirectional cross-branch graph traversal (DAG)`.
+
+
+### Cycle #114 Directive (2026-11-03 07:48)
+### 1. Comparative Timeline: Pure CSS Subgrid (No JS Sync)
+
+```tsx
+// components/ComparativeTimeline.tsx
+interface TimelineRow {
+  period: string;
+  judaism: string;
+  christianity: string;
+  islam: string;
+}
+
+export function ComparativeTimeline({ rows }: { rows: TimelineRow[] }) {
+  return (
+    <div className="grid grid-cols-[100px_repeat(3,1fr)] gap-x-4 border-t border-stone-200 dark:border-stone-800 font-serif">
+      <div className="contents text-xs font-sans text-stone-400 uppercase py-3 border-b">
+        <span>Era</span><span>Judaism</span><span>Christianity</span><span>Islam</span>
+      </div>
+      {rows.map((r) => (
+        // ponytail: plain grid-cols contents ceiling; upgrade to display:subgrid when baseline Safari 16 fully deprecated
+        <div key={r.period} className="contents text-sm text-stone-800 dark:text-stone-300">
+          <span className="py-3 font-sans text-xs text-stone-500">{r.period}</span>
+          <span className="py-3 border-t border-stone-100 dark:border-stone-900">{r.judaism}</span>
+          <span className="py-3 border-t border-stone-100 dark:border-stone-900">{r.christianity}</span>
+          <span className="py-3 border-t border-stone-100 dark:border-stone-900">{r.islam}</span>
+        </div>
+      ))}
+    </div>
+  );
+}
+```
+skipped: IntersectionObservers and horizontal JS drag libraries.  
+add when: Users need continuous pinch-to-zoom across millennia.
+
+---
+
+### 2. Lineage View: Native HTML/CSS Hierarchy (No D3 / React-Flow)
+
+```tsx
+// components/LineageNode.tsx
+export interface Person {
+  id: string;
+  name: string;
+  namesake?: { hebrew?: string; arabic?: string };
+  children?: Person[];
+}
+
+export function LineageNode({ node }: { node: Person }) {
+  return (
+    <li className="relative pl-6 before:absolute before:left-0 before:top-3 before:h-px before:w-4 before:bg-stone-300 dark:before:bg-stone-700">
+      <div className="inline-flex items-baseline gap-2 rounded-md px-2 py-1 text-sm bg-stone-50 dark:bg-stone-900 border border-stone-200 dark:border-stone-800">
+        <span className="font-medium text-stone-900 dark:text-stone-100">{node.name}</span>
+        {node.namesake && (
+          <span className="text-xs text-stone-400">
+            {node.namesake.hebrew} / {node.namesake.arabic}
+          </span>
+        )}
+      </div>
+      {node.children && node.children.length > 0 && (
+        <ul className="ml-2 border-l border-stone-300 dark:border-stone-700 space-y-2 mt-2">
+          {node.children.map((child) => (
+            <LineageNode key={child.id} node={child} />
+          ))}
+        </ul>
+      )}
+    </li>
+  );
+}
+```
+skipped: Canvas/SVG force-directed layout computation.  
+add when: Graph requires multiple shared ancestries (non-hierarchical DAGs).
+
+---
+
+### 3. Build Hardening: Static Type Guard & Route Config
+
+```ts
+// app/lore/[figure]/page.tsx
+import { notFound } from "next/navigation";
+
+export const dynamic = "error";
+export const dynamicParams = false;
+
+// Single static check to ensure valid build-time validation
+export function generateStaticParams(): { figure: string }[] {
+  const figures = ["abraham", "moses", "noah", "jesus", "muhammad"];
+  console.assert(figures.length > 0, "Static figures list must not be empty");
+  return figures.map((figure) => ({ figure }));
+}
+
+export default async function Page({ params }: { params: Promise<{ figure: string }> }) {
+  const { figure } = await params;
+  if (!figure) notFound();
+  return <main className="max-w-2xl mx-auto p-6">{figure}</main>;
+}
+```
+skipped: Dynamic SSR query resolvers and fallbacks.  
+add when: Content is moved to a remote CMS with non-build webhooks.
