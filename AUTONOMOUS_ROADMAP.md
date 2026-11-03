@@ -9699,3 +9699,104 @@ export function LineageNode({ person }: { person: Person }) {
 }
 ```
 `LineageNode.tsx` → skipped: heavy graph engines (ReactFlow/D3), add when rendering bi-directional graph cycles.
+
+
+### Cycle #146 Directive (2026-11-03 10:50)
+### 1. Comparative Timeline: Pure CSS Multi-Track Sync
+
+Replace scroll-sync JS with native CSS subgrid/columns and sticky headers for the 3 traditions (Judaism, Christianity, Islam).
+
+```tsx
+// components/timeline/ComparativeTrack.tsx
+export function ComparativeTrack({ epochs }: { epochs: Array<{ era: string; traditions: Record<'jewish' | 'christian' | 'islamic', string[]> }> }) {
+  return (
+    <div className="relative divide-y divide-stone-200/60 dark:divide-stone-800/60">
+      {epochs.map(({ era, traditions }) => (
+        <div key={era} className="grid grid-cols-[100px_repeat(3,1fr)] gap-4 py-6 items-baseline">
+          <span className="sticky top-16 text-xs font-mono font-medium text-stone-600 dark:text-stone-300 select-none">
+            {era}
+          </span>
+          {(['jewish', 'christian', 'islamic'] as const).map((t) => (
+            <div key={t} className="space-y-2 rounded-lg bg-stone-50/50 dark:bg-stone-900/30 p-3 border border-stone-200/40 dark:border-stone-850">
+              {traditions[t]?.map((event, i) => (
+                <p key={i} className="text-sm leading-relaxed text-stone-800 dark:text-stone-200 font-serif">{event}</p>
+              )) || <span className="text-xs text-stone-600 dark:text-stone-300 italic">—</span>}
+            </div>
+          ))}
+        </div>
+      ))}
+    </div>
+  );
+}
+// ponytail: Static 3-tradition grid ceiling; upgrade to dynamic tradition-select via CSS grid-cols-[auto_repeat(var(--cols),1fr)] if adding Baha'i/Druze.
+```
+* Skipped: Canvas/virtualized timeline libraries (Vis.js, D3).
+* Add when: Milestone count per era exceeds 100 concurrent nodes.
+
+---
+
+### 2. Lineage View: Semantic Tree with Native CSS Connectors
+
+Eliminate SVG/canvas layout engines for parent-child prophetic lineage. Use semantic nesting with pseudo-element connectors.
+
+```css
+/* styles/lineage.css */
+.lineage-tree, .lineage-tree ul {
+  display: flex;
+  justify-content: center;
+  padding-top: 1.25rem;
+  position: relative;
+}
+.lineage-tree li {
+  float: left; text-align: center; list-style-type: none; position: relative; padding: 1.25rem 0.5rem 0 0.5rem;
+}
+.lineage-tree li::before, .lineage-tree li::after {
+  content: ''; position: absolute; top: 0; right: 50%; width: 50%; height: 1.25rem;
+  border-top: 1px solid var(--line-color, #d6d3d1);
+}
+.lineage-tree li::after { right: auto; left: 50%; border-left: 1px solid var(--line-color, #d6d3d1); }
+.lineage-tree li:only-child::after, .lineage-tree li:only-child::before { display: none; }
+.lineage-tree li:only-child { padding-top: 0; }
+.lineage-tree li:first-child::before, .lineage-tree li:last-child::after { border: 0 none; }
+.lineage-tree li:last-child::before { border-right: 1px solid var(--line-color, #d6d3d1); border-radius: 0 6px 0 0; }
+.lineage-tree li:first-child::after { border-radius: 6px 0 0 0; }
+.lineage-tree ul::before {
+  content: ''; position: absolute; top: 0; left: 50%; border-left: 1px solid var(--line-color, #d6d3d1); width: 0; height: 1.25rem;
+}
+```
+* Skipped: Graph layout engine dependencies (`react-flow`, `dagre`).
+* Add when: Complex lineage graphs with multi-parent convergent marriages occur.
+
+---
+
+### 3. Next.js Production Build Hardening
+
+Lock route types and suppress timezone/locale hydration mismatches in SSG builds.
+
+```typescript
+// next.config.mjs
+/** @type {import('next').NextConfig} */
+const nextConfig = {
+  output: 'export', // Enforces zero runtime-server bugs for purely static lore content
+  trailingSlash: true,
+  images: { unoptimized: true },
+  typescript: { tsconfigPath: './tsconfig.json' },
+  eslint: { ignoreDuringBuilds: false },
+};
+
+export default nextConfig;
+```
+
+```typescript
+// lib/test-production-build.ts (assert-check: runnable via `node lib/test-production-build.ts`)
+import assert from 'node:assert';
+
+function formatEpochSafe(yearBCE: number): string {
+  return yearBCE < 0 ? `${Math.abs(yearBCE)} BCE` : `${yearBCE} CE`;
+}
+
+assert.strictEqual(formatEpochSafe(-1446), '1446 BCE');
+assert.strictEqual(formatEpochSafe(622), '622 CE');
+```
+* Skipped: Complex temporal/date formatting libraries (`date-fns`, `dayjs`).
+* Add when: Astronomical / multi-calendar conversions (Hebrew/Hijri astronomical lunations) are required.
