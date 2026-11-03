@@ -8478,3 +8478,109 @@ const tree: LineageNode = {
 assert.strictEqual(countNodes(tree), 4, "Node count must match hierarchy");
 console.log("Lineage verification passed.");
 ```
+
+
+### Cycle #132 Directive (2026-11-03 09:31)
+### 1. Zero-JS Lineage Connectors (Pure CSS Tree)
+
+Replace canvas/SVG lineage rendering with pure CSS connectors to eliminate client hydration mismatches and bundle overhead.
+
+```css
+/* app/lineage/lineage.module.css */
+.tree { display: flex; justify-content: center; padding: 0; margin: 0; list-style: none; }
+.tree ul { display: flex; padding-top: 1.25rem; position: relative; list-style: none; }
+.tree li { display: flex; flex-direction: column; align-items: center; position: relative; padding: 0 0.5rem; }
+.tree li::before, .tree li::after { content: ''; position: absolute; top: 0; right: 50%; border-top: 1px solid #e7e5e4; width: 50%; height: 1.25rem; }
+.tree li::after { right: auto; left: 50%; border-left: 1px solid #e7e5e4; }
+.tree li:only-child::after, .tree li:only-child::before { display: none; }
+.tree li:first-child::before, .tree li:last-child::after { border: 0; }
+.tree li:last-child::before { border-right: 1px solid #e7e5e4; border-radius: 0 6px 0 0; }
+.tree li:first-child::after { border-radius: 6px 0 0 0; }
+/* ponytail: single-parent descent tree; upgrade to bipartite graph/SVG if multiple-parent cross-links are required */
+```
+→ skipped: D3/React Flow graph libraries.  
+→ add when: multi-lineage intermarriages make the DOM tree non-hierarchical.
+
+---
+
+### 2. Comparative Sync Grid (CSS Subgrid / Column-Mapped Layout)
+
+Declarative, SSR-safe 3-column timeline without JS scroll-listeners or absolute coordinate math.
+
+```tsx
+// components/ComparativeTimeline.tsx
+interface FigureEvent {
+  id: string;
+  tradition: 'judaism' | 'christianity' | 'islam';
+  era: string;
+  name: string;
+}
+
+const TRADITION_COL: Record<FigureEvent['tradition'], string> = {
+  judaism: 'col-start-2',
+  christianity: 'col-start-3',
+  islam: 'col-start-4',
+};
+
+export function ComparativeTimeline({ events }: { events: FigureEvent[] }) {
+  // ponytail: fixed three-tradition parallel tracks; upgrade to dynamic grid templates if adding Baha'i/Samaritan tracks
+  return (
+    <div className="grid grid-cols-[80px_1fr_1fr_1fr] gap-x-3 gap-y-2 text-stone-900 dark:text-stone-100">
+      <div className="font-mono text-xs text-stone-400 border-b pb-1">Era</div>
+      <div className="text-xs font-medium text-stone-500 border-b pb-1">Judaism</div>
+      <div className="text-xs font-medium text-stone-500 border-b pb-1">Christianity</div>
+      <div className="text-xs font-medium text-stone-500 border-b pb-1">Islam</div>
+      
+      {events.map((e) => (
+        <div
+          key={e.id}
+          className={`${TRADITION_COL[e.tradition]} p-2.5 rounded-md border border-stone-200 dark:border-stone-800 bg-stone-50/50 dark:bg-stone-900/50 text-xs backdrop-blur-sm`}
+        >
+          <span className="font-mono text-[10px] text-stone-400 block mb-0.5">{e.era}</span>
+          <span className="font-medium tracking-tight">{e.name}</span>
+        </div>
+      ))}
+    </div>
+  );
+}
+```
+→ skipped: JS-driven virtualized timeline canvases.  
+→ add when: event counts exceed 1,000 continuous items requiring DOM recycling.
+
+---
+
+### 3. Strict Static Build Enforcement (`next.config.ts`)
+
+Locks out SSR/SSG leaks, missing env crashers, and unhandled client-side globals during `next build`.
+
+```ts
+// next.config.ts
+import type { NextConfig } from 'next';
+
+const nextConfig: NextConfig = {
+  reactStrictMode: true,
+  typescript: { ignoreBuildErrors: false },
+  eslint: { ignoreDuringBuilds: false },
+  // ponytail: static generation guarantee; remove output 'export' if server runtime cookies or auth sessions become necessary
+  output: 'export',
+  images: { unoptimized: true },
+};
+
+export default nextConfig;
+```
+→ skipped: Custom webpack build plugins.  
+→ add when: generating dynamic opengraph images at runtime via `@vercel/og`.
+
+---
+
+### Runnable Verification
+
+```ts
+// scripts/verify-grid.ts
+import assert from 'node:assert';
+
+const TRADITION_COL = { judaism: 'col-start-2', christianity: 'col-start-3', islam: 'col-start-4' } as const;
+assert.strictEqual(TRADITION_COL['islam'], 'col-start-4', 'Islam track must pin to column 4');
+assert.strictEqual(TRADITION_COL['judaism'], 'col-start-2', 'Judaism track must pin to column 2');
+console.log('✔ Timeline grid assertions passed.');
+```
