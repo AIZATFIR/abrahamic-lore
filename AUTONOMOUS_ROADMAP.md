@@ -7677,3 +7677,97 @@ export default async function Page({ params }: { params: Promise<{ figureId: str
 ```
 → skipped: Runtime DB lookups and remote content fetchers.  
 → add when: Migrating figure data from static registries to an external headless CMS.
+
+
+### Cycle #122 Directive (2026-11-03 08:33)
+### 1. Lineage View: Native CSS Branch Tree
+
+```tsx
+// components/LineageTree.tsx
+interface Figure { id: string; name: string; title?: string; children?: Figure[]; }
+
+export function LineageTree({ node }: { node: Figure }) {
+  // ponytail: recursive DOM tree. Ceiling is ~100 visible nodes before virtualization needed.
+  return (
+    <li className="relative pl-5 before:absolute before:left-0 before:top-3 before:h-px before:w-3.5 before:bg-stone-300">
+      <div className="inline-flex items-baseline gap-2 rounded px-1.5 py-0.5 text-xs transition-colors hover:bg-stone-100">
+        <span className="font-medium text-stone-900">{node.name}</span>
+        {node.title && <span className="font-serif italic text-stone-500">{node.title}</span>}
+      </div>
+      {node.children?.length ? (
+        <ul className="relative ml-2 border-l border-stone-200 pl-1">
+          {node.children.map(child => <LineageTree key={child.id} node={child} />)}
+        </ul>
+      ) : null}
+    </li>
+  );
+}
+```
+→ skipped: D3 / React Flow, canvas transforms, node-dragging.  
+→ add when: users need non-hierarchical cross-links or 2D pan/zoom on >500 nodes.
+
+---
+
+### 2. Comparative Timeline: Zero-JS CSS Subgrid
+
+```tsx
+// components/ComparativeTimeline.tsx
+interface SyncEvent { era: string; judaic?: string; christian?: string; islamic?: string; }
+
+export function ComparativeTimeline({ events }: { events: SyncEvent[] }) {
+  return (
+    <div className="grid grid-cols-[80px_repeat(3,minmax(200px,1fr))] gap-x-4 gap-y-3 font-sans text-xs">
+      <div className="sticky top-0 z-10 border-b border-stone-200 bg-stone-50/90 py-2 font-mono text-stone-400 backdrop-blur-sm">Era</div>
+      <div className="sticky top-0 z-10 border-b border-stone-200 bg-stone-50/90 py-2 font-semibold text-stone-700 backdrop-blur-sm">Judaism</div>
+      <div className="sticky top-0 z-10 border-b border-stone-200 bg-stone-50/90 py-2 font-semibold text-stone-700 backdrop-blur-sm">Christianity</div>
+      <div className="sticky top-0 z-10 border-b border-stone-200 bg-stone-50/90 py-2 font-semibold text-stone-700 backdrop-blur-sm">Islam</div>
+      {events.map((e, i) => (
+        <div key={i} className="contents border-b border-stone-100">
+          <span className="py-1.5 font-mono text-stone-400">{e.era}</span>
+          <p className="rounded bg-stone-100/50 p-2 leading-relaxed text-stone-800">{e.judaic || '—'}</p>
+          <p className="rounded bg-stone-100/50 p-2 leading-relaxed text-stone-800">{e.christian || '—'}</p>
+          <p className="rounded bg-stone-100/50 p-2 leading-relaxed text-stone-800">{e.islamic || '—'}</p>
+        </div>
+      ))}
+    </div>
+  );
+}
+```
+→ skipped: synchronized scroll listeners, complex column-matching state.  
+→ add when: individual tradition timelines need independent non-linear scrubbing.
+
+---
+
+### 3. Production Build Guard: Next.js 15 Async Params Contract
+
+```tsx
+// app/lore/[slug]/page.tsx
+import { notFound } from 'next/navigation';
+import figuresData from '@/data/figures.json';
+
+export const dynamicParams = false; // ponytail: static-first export. Upgrade to true if DB goes dynamic.
+
+export function generateStaticParams() {
+  return figuresData.map((f) => ({ slug: f.slug }));
+}
+
+export default async function FigurePage({ params }: { params: Promise<{ slug: string }> }) {
+  const { slug } = await params;
+  const figure = figuresData.find((f) => f.slug === slug);
+  if (!figure) notFound();
+
+  return <article className="prose prose-stone prose-sm mx-auto py-8"><h1>{figure.name}</h1></article>;
+}
+```
+```ts
+// scripts/check-lore-data.ts (run via: tsx scripts/check-lore-data.ts)
+import assert from 'node:assert';
+import figures from '../data/figures.json';
+
+figures.forEach(f => {
+  assert(typeof f.slug === 'string' && f.slug.length > 0, `Figure missing valid slug: ${JSON.stringify(f)}`);
+});
+console.log(`✓ Lore data valid (${figures.length} slugs)`);
+```
+→ skipped: CMS fetch layers, Zod schemas, runtime client validation.  
+→ add when: figure data moves from checked-in JSON to a remote editable DB.
