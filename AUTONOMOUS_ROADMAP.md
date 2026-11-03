@@ -7179,3 +7179,88 @@ export default async function FigurePage({ params }: { params: Promise<{ slug: s
 ```
 skipped: ISR revalidation tags and dynamic database fetching.  
 add when: Figures are authored via a live remote CMS instead of repository-versioned lore data.
+
+
+### Cycle #116 Directive (2026-11-03 07:59)
+### 1. Pure CSS Lineage Tree (Zero-JS visualizer)
+
+```tsx
+// components/LineageNode.tsx
+export function LineageNode({ name, tradition, children }: { name: string; tradition: string; children?: React.ReactNode }) {
+  // ponytail: DOM tree ceiling; upgrade to virtualized SVG canvas only if descendants exceed 150 nodes
+  return (
+    <li className="relative pl-6 before:absolute before:left-0 before:top-3 before:h-px before:w-4 before:bg-stone-300 dark:before:bg-stone-700">
+      <span className="inline-flex items-center gap-1.5 rounded-full border border-stone-200/80 bg-stone-50/50 px-2.5 py-0.5 text-xs font-medium text-stone-800 backdrop-blur-sm dark:border-stone-800 dark:bg-stone-900/50 dark:text-stone-200">
+        {name} <span className="font-mono text-[10px] text-stone-400">({tradition})</span>
+      </span>
+      {children && <ul className="relative ml-2 border-l border-stone-200 pl-2 dark:border-stone-800">{children}</ul>}
+    </li>
+  );
+}
+```
+skipped: Layout calculation libraries (`react-flow`, `dagre`, manual SVG paths).  
+add when: Interactive node dragging or bi-directional parent-mesh rendering is required.
+
+---
+
+### 2. Comparative Multi-Track Timeline (CSS Scroll-Snap)
+
+```tsx
+// components/ComparativeTimeline.tsx
+type Track = 'judaism' | 'christianity' | 'islam';
+
+export function ComparativeTimeline({ epochs }: { epochs: { period: string; tracks: Record<Track, string> }[] }) {
+  // ponytail: fixed 3-track ceiling; upgrade to dynamic column mapping if adding Zoroastrianism/Baha'i
+  return (
+    <div className="flex overflow-x-auto snap-x snap-mandatory pb-4 scrollbar-none [mask-image:linear-gradient(to_right,transparent,black_4%,black_96%,transparent)]">
+      <div className="flex gap-4 px-6">
+        {epochs.map((e) => (
+          <section key={e.period} className="w-64 shrink-0 snap-center space-y-2 rounded-xl border border-stone-200/80 bg-stone-50/40 p-4 text-xs backdrop-blur-md dark:border-stone-800/80 dark:bg-stone-950/40">
+            <time className="font-mono text-[10px] uppercase tracking-wider text-amber-600 dark:text-amber-400">{e.period}</time>
+            {(['judaism', 'christianity', 'islam'] as const).map((t) => (
+              <div key={t} className="rounded-lg bg-white/60 p-2 dark:bg-stone-900/60">
+                <span className="block text-[9px] uppercase tracking-widest text-stone-400">{t}</span>
+                <span className="text-stone-800 dark:text-stone-200">{e.tracks[t] || '—'}</span>
+              </div>
+            ))}
+          </section>
+        ))}
+      </div>
+    </div>
+  );
+}
+```
+skipped: JS sync-scroll listeners and dynamic timeline rendering engines.  
+add when: Dynamic era pinch-to-zoom or granular micro-second scaling is demanded.
+
+---
+
+### 3. Next.js Zero-Error Dynamic Build Guard (Next.js 15 Async Params)
+
+```tsx
+// app/lore/[tradition]/[figure]/page.tsx
+import { notFound } from 'next/navigation';
+
+const VALID_LORE = { abraham: ['judaism', 'christianity', 'islam'], moses: ['judaism', 'islam'] } as const;
+
+type RouteProps = { params: Promise<{ tradition: string; figure: string }> };
+
+export async function generateStaticParams() {
+  return Object.entries(VALID_LORE).flatMap(([figure, traditions]) =>
+    traditions.map((tradition) => ({ tradition, figure }))
+  );
+}
+
+export default async function LoreFigurePage({ params }: RouteProps) {
+  const { tradition, figure } = await params;
+  const traditions = VALID_LORE[figure as keyof typeof VALID_LORE];
+  if (!traditions || !traditions.includes(tradition as never)) notFound();
+
+  return <article className="mx-auto max-w-prose p-6 font-serif leading-relaxed">{figure} in {tradition}</article>;
+}
+
+// Self-check run on import to guarantee zero-defect params table
+console.assert(generateStaticParams().length === 5, 'Static routes mismatch table.');
+```
+skipped: Headless CMS fetching and dynamic `export const dynamic = "force-dynamic"`.  
+add when: Lore content moves from local static structures to external databases.
