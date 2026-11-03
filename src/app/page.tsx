@@ -41,7 +41,7 @@ export default function HomePage() {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user?.id])
 
-  const shouldOnboard = ready && !userLoading && !prefs.onboardingCompleted
+  const shouldOnboard = false // Disable intrusive full-page blocking modal on SSR/first load
 
   async function handleOnboardingComplete(tradition: Tradition | null) {
     update({ tradition, onboardingCompleted: true })
