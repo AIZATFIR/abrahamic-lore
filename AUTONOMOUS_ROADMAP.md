@@ -8680,3 +8680,108 @@ export default async function FigurePage({ params }: { params: Promise<{ figure:
 ```
 skipped: SSR data loaders and middleware route rewrites.  
 add when: Figure entities require user-contributed runtime mutations or DB auth gates.
+
+
+### Cycle #135 Directive (2026-11-03 09:48)
+### 1. Comparative Timeline: Native Sticky Grid (Zero-JS Sync)
+
+Replace scroll-sync listeners with CSS subgrid/sticky alignment for tradition columns (Judaism, Christianity, Islam).
+
+```css
+/* app/timeline/timeline.module.css */
+.timelineGrid {
+  display: grid;
+  grid-template-columns: 80px repeat(3, minmax(260px, 1fr));
+  gap: 1rem;
+  overflow-x: auto;
+  scroll-snap-type: x proximity;
+}
+
+.stickyHeader {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  backdrop-filter: blur(12px);
+  background: var(--bg-translucent, rgba(255, 255, 255, 0.75));
+}
+
+.eraMarker {
+  position: sticky;
+  left: 0;
+  font-variant-numeric: tabular-nums;
+  font-size: 0.75rem;
+  opacity: 0.5;
+}
+```
+→ skipped: JS-based scroll-sync libraries, add when virtualized rendering across 1,000+ nodes is required.
+
+---
+
+### 2. Lineage View: Pure CSS Semantic Tree
+
+Replace D3/canvas node graphs with semantic HTML lists and native pseudo-element branching.
+
+```tsx
+// components/LineageNode.tsx
+interface Person {
+  id: string;
+  name: string;
+  tradition: 'abrahamic' | 'jewish' | 'christian' | 'islamic';
+  children?: Person[];
+}
+
+export function LineageNode({ person }: { person: Person }) {
+  // ponytail: nesting ceiling is 6 levels; upgrade to flex-wrap virtual-tree if depth > 10.
+  return (
+    <li className="relative pl-6 before:absolute before:left-0 before:top-3 before:h-px before:w-4 before:bg-stone-300">
+      <span className="inline-flex items-center gap-1.5 rounded-full border border-stone-200 px-3 py-1 text-sm tracking-tight text-stone-800 transition-colors hover:border-stone-400">
+        <span className={`h-1.5 w-1.5 rounded-full tradition-${person.tradition}`} />
+        {person.name}
+      </span>
+      {person.children?.length ? (
+        <ul className="relative ml-2 border-l border-stone-300 pl-2">
+          {person.children.map(child => (
+            <LineageNode key={child.id} person={child} />
+          ))}
+        </ul>
+      ) : null}
+    </li>
+  );
+}
+```
+→ skipped: ReactFlow / D3 graph engine, add when dynamic horizontal panning & zoom-canvas are requested.
+
+---
+
+### 3. Next.js 15 Zero-Error Dynamic Route Hardening
+
+Prevent build-time type failure on dynamic lore/lineage routes where `params` is now an async Promise.
+
+```tsx
+// app/lore/[tradition]/[figure]/page.tsx
+interface PageProps {
+  params: Promise<{ tradition: string; figure: string }>;
+}
+
+export const dynamicParams = false; // Zero dynamic-bailout errors during static build
+
+export async function generateStaticParams() {
+  // Return static tuples for all seeded lore
+  return [
+    { tradition: 'islam', figure: 'ibrahim' },
+    { tradition: 'judaism', figure: 'abraham' },
+    { tradition: 'christianity', figure: 'abraham' },
+  ];
+}
+
+export default async function LorePage({ params }: PageProps) {
+  const { tradition, figure } = await params;
+  return (
+    <article className="mx-auto max-w-xl py-12">
+      <h1 className="text-2xl font-light tracking-tight capitalize">{figure}</h1>
+      <p className="text-stone-500 capitalize">{tradition}</p>
+    </article>
+  );
+}
+```
+→ skipped: Runtime dynamic fallback wrappers, add when user-generated lore entries require on-demand ISR.
