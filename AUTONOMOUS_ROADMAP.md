@@ -8895,3 +8895,92 @@ export default async function LorePage({ params }: PageProps) {
 }
 ```
 `LorePage` → skipped: Middleware rewriting and runtime fallbacks, add when dynamic user-generated records require SSR outside build-time export.
+
+
+### Cycle #137 Directive (2026-11-03 09:59)
+### 1. Comparative Timeline: Native Sticky Grid (Zero-JS Sync)
+
+```tsx
+// components/ComparativeTimeline.tsx
+export function ComparativeTimeline({ eras }: { eras: Array<{ period: string; traditions: Record<'judaism' | 'christianity' | 'islam', string> }> }) {
+  return (
+    <div className="grid grid-cols-4 gap-4 border-l border-stone-200 dark:border-stone-800 text-sm">
+      <div className="sticky top-0 bg-stone-50/90 dark:bg-stone-900/90 backdrop-blur font-mono text-xs p-2">Period</div>
+      <div className="sticky top-0 bg-stone-50/90 dark:bg-stone-900/90 backdrop-blur font-serif p-2">Judaism</div>
+      <div className="sticky top-0 bg-stone-50/90 dark:bg-stone-900/90 backdrop-blur font-serif p-2">Christianity</div>
+      <div className="sticky top-0 bg-stone-50/90 dark:bg-stone-900/90 backdrop-blur font-serif p-2">Islam</div>
+
+      {eras.map(({ period, traditions }) => (
+        <div key={period} className="contents group">
+          {/* ponytail: flat grid layout handles row sync; add subgrid if item heights require internal flex */}
+          <span className="font-mono text-xs text-stone-500 py-3 pl-2 border-t border-stone-150">{period}</span>
+          <p className="py-3 px-2 border-t border-stone-150 text-stone-800 dark:text-stone-200">{traditions.judaism || '—'}</p>
+          <p className="py-3 px-2 border-t border-stone-150 text-stone-800 dark:text-stone-200">{traditions.christianity || '—'}</p>
+          <p className="py-3 px-2 border-t border-stone-150 text-stone-800 dark:text-stone-200">{traditions.islam || '—'}</p>
+        </div>
+      ))}
+    </div>
+  );
+}
+```
+→ skipped: JS scroll-listener sync & canvas layout.  
+→ add when: Horizontal timeline track syncing or bi-directional free-pan is explicitly requested.
+
+---
+
+### 2. Lineage View: Native Semantic CSS Tree
+
+```tsx
+// components/LineageNode.tsx
+type Node = { name: string; epithet?: string; children?: Node[] };
+
+export function LineageNode({ node }: { node: Node }) {
+  return (
+    <li className="relative pl-6 before:absolute before:left-0 before:top-3 before:h-px before:w-4 before:bg-stone-300 dark:before:bg-stone-700">
+      <div className="inline-flex items-baseline gap-2 py-1">
+        <span className="font-serif text-stone-900 dark:text-stone-100">{node.name}</span>
+        {node.epithet && <span className="text-xs text-stone-500 italic">({node.epithet})</span>}
+      </div>
+      {node.children && node.children.length > 0 && (
+        <ul className="relative ml-2 border-l border-stone-300 dark:border-stone-700">
+          {node.children.map((child) => (
+            <LineageNode key={child.name} node={child} />
+          ))}
+        </ul>
+      )}
+    </li>
+  );
+}
+```
+→ skipped: React Flow / D3 graph engine.  
+→ add when: Lineage requires multi-parent cycles (non-tree pedigree collapses).
+
+---
+
+### 3. Next.js Static Export Build Hardening
+
+```ts
+// app/figures/[tradition]/[slug]/page.tsx
+import { notFound } from 'next/navigation';
+import { LORE_DATA } from '@/data/lore';
+
+type Props = { params: Promise<{ tradition: string; slug: string }> };
+
+export function generateStaticParams() {
+  return Object.entries(LORE_DATA).flatMap(([tradition, figures]) =>
+    figures.map((fig) => ({ tradition, slug: fig.slug }))
+  );
+}
+
+export const dynamicParams = false; // ponytail: strict 404 on ungenerated routes prevents build/runtime mismatches
+
+export default async function FigurePage({ params }: Props) {
+  const { tradition, slug } = await params;
+  const figure = LORE_DATA[tradition]?.find((f) => f.slug === slug);
+  if (!figure) notFound();
+
+  return <article className="prose prose-stone mx-auto p-6">{figure.name}</article>;
+}
+```
+→ skipped: Dynamic on-demand SSR fallback handling.  
+→ add when: Lore corpus is moved to a remote CMS requiring on-demand ISR.
