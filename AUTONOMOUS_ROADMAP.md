@@ -9453,3 +9453,79 @@ export default async function FigurePage({ params }: { params: Promise<{ slug: s
 ```
 → skipped: dynamic runtime database fetches during build.  
 → add when: data moves from local JSON/static stores to a remote CMS.
+
+
+### Cycle #143 Directive (2026-11-03 10:33)
+### 1. Comparative Timeline: Native Sticky 3-Tradition Grid
+
+```css
+/* components/timeline.module.css */
+.timelineGrid {
+  display: grid;
+  grid-template-columns: 7rem repeat(3, minmax(280px, 1fr));
+  column-gap: 1.5rem;
+  row-gap: 2rem;
+  overflow-x: auto;
+}
+.epochHeader {
+  position: sticky;
+  left: 0;
+  align-self: start;
+  font-feature-settings: "tnum";
+  background: var(--background);
+  z-index: 10;
+}
+.traditionCell {
+  border-left: 1px solid var(--border-subtle, rgba(0,0,0,0.08));
+  padding-left: 1rem;
+}
+```
+* Skipped: Heavy JS-based timeline/canvas libs (vis-timeline, react-chrono).
+* Add when: User requires interactive multi-tier zooming or pinch-to-scale dates.
+
+---
+
+### 2. Lineage View: Zero-JS Semantic Tree Connectors
+
+```css
+/* components/lineage.module.css */
+.tree, .tree ul { display: flex; justify-content: center; padding: 1.25rem 0 0; position: relative; }
+.tree li { list-style: none; position: relative; padding: 1.25rem 0.75rem 0; }
+.tree li::before, .tree li::after {
+  content: ''; position: absolute; top: 0; right: 50%; width: 50%; height: 1.25rem;
+  border-top: 1px solid var(--line-color, rgba(120, 110, 90, 0.25));
+}
+.tree li::after { right: auto; left: 50%; border-left: 1px solid var(--line-color, rgba(120, 110, 90, 0.25)); }
+.tree li:only-child::before, .tree li:only-child::after { display: none; }
+.tree li:first-child::before, .tree li:last-child::after { border: none; }
+```
+* Skipped: D3-hierarchy or react-flow dependencies.
+* Add when: Graph transitions from strict tree lineage to a cyclic network.
+
+---
+
+### 3. Build Hardening: Next.js 15 Async Dynamic Route Params
+
+```tsx
+// app/figure/[slug]/page.tsx
+import { notFound } from 'next/navigation';
+import { FIGURES } from '@/data/figures';
+
+type Props = { params: Promise<{ slug: string }> };
+
+export const dynamicParams = false;
+
+export async function generateStaticParams() {
+  // ponytail: static registry; upgrade to contentlayer/mdx loader when files grow > 50
+  return Object.keys(FIGURES).map((slug) => ({ slug }));
+}
+
+export default async function FigurePage({ params }: Props) {
+  const { slug } = await params;
+  const figure = FIGURES[slug];
+  if (!figure) notFound();
+  return <main>{/* render */}</main>;
+}
+```
+* Skipped: Dynamic fallback handling and server-side DB querying.
+* Add when: Figures are loaded from an external headless CMS at request time.
