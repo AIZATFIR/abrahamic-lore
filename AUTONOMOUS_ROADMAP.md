@@ -7059,3 +7059,123 @@ export default async function Page({ params }: { params: Promise<{ figure: strin
 ```
 skipped: Dynamic SSR query resolvers and fallbacks.  
 add when: Content is moved to a remote CMS with non-build webhooks.
+
+
+### Cycle #115 Directive (2026-11-03 07:54)
+### 1. Pure CSS Lineage Tree (Zero D3/Canvas Bloat)
+
+Replace external graph engines with semantic nested lists and native pseudo-element branching.
+
+```tsx
+// components/LineageTree.tsx
+interface FigureNode {
+  id: string;
+  name: string;
+  tradition?: 'judaism' | 'christianity' | 'islam' | 'shared';
+  children?: FigureNode[];
+}
+
+export function LineageTree({ root }: { root: FigureNode }) {
+  return (
+    <ul className="flex justify-center p-4">
+      <TreeNode node={root} />
+    </ul>
+  );
+}
+
+function TreeNode({ node }: { node: FigureNode }) {
+  const hasChildren = Boolean(node.children?.length);
+  // ponytail: recursive flex-tree caps out at ~6 depth before horizontal overflow; add virtualized canvas when handling >200 nodes.
+  return (
+    <li className="relative flex flex-col items-center px-2 pt-5">
+      <div className="z-10 rounded-full border border-stone-200/80 bg-stone-50/90 px-3 py-1 text-xs font-serif text-stone-800 shadow-sm backdrop-blur-sm dark:border-stone-800 dark:bg-stone-900/90 dark:text-stone-200">
+        {node.name}
+      </div>
+
+      {hasChildren && (
+        <ul className="relative flex pt-5 before:absolute before:left-1/2 before:top-0 before:h-5 before:w-px before:-translate-x-1/2 before:bg-stone-300 dark:before:bg-stone-700">
+          {node.children!.map((child) => (
+            <TreeNode key={child.id} node={child} />
+          ))}
+        </ul>
+      )}
+    </li>
+  );
+}
+```
+skipped: Pan/zoom canvas & D3 force-directed layouts.  
+add when: Graph exceeds viewport bounds or cyclic unions (e.g., cross-cousin marriages) require non-hierarchical edges.
+
+---
+
+### 2. Native CSS Subgrid Comparative Timeline Tracks
+
+Aligns comparative perspectives (Hebrew Bible, New Testament, Quran/Hadith) horizontally per era without runtime JS measurement loops.
+
+```tsx
+// components/ComparativeTimeline.tsx
+interface EraRow {
+  era: string;
+  judaism?: string;
+  christianity?: string;
+  islam?: string;
+}
+
+export function ComparativeTimeline({ eras }: { eras: EraRow[] }) {
+  return (
+    <div className="grid grid-cols-[80px_repeat(3,minmax(0,1fr))] gap-x-6 border-l border-stone-200 text-xs dark:border-stone-800">
+      {/* Header */}
+      <div className="font-mono text-stone-400">Era</div>
+      <div className="font-serif font-medium text-stone-600 dark:text-stone-400">Judaism</div>
+      <div className="font-serif font-medium text-stone-600 dark:text-stone-400">Christianity</div>
+      <div className="font-serif font-medium text-stone-600 dark:text-stone-400">Islam</div>
+
+      {eras.map((row) => (
+        <div key={row.era} className="col-span-4 grid grid-cols-subgrid items-baseline border-t border-stone-100 py-3 dark:border-stone-800/50">
+          <span className="sticky top-2 font-mono text-[10px] text-stone-400">{row.era}</span>
+          <div className="text-stone-700 dark:text-stone-300">{row.judaism ?? '—'}</div>
+          <div className="text-stone-700 dark:text-stone-300">{row.christianity ?? '—'}</div>
+          <div className="text-stone-700 dark:text-stone-300">{row.islam ?? '—'}</div>
+        </div>
+      ))}
+    </div>
+  );
+}
+```
+skipped: Virtualized scrolling and synchronized dual-timeline scrubbers.  
+add when: Dataset exceeds 300 chronological milestone events.
+
+---
+
+### 3. Next.js Zero-Bail Static Route Hardening
+
+Prevents 404/500 dynamic route mismatches and dynamic server usage during `next build` by enforcing static params and strict path typing.
+
+```tsx
+// app/figures/[slug]/page.tsx
+import { notFound } from 'next/navigation';
+
+export const dynamicParams = false; // Guarantee 0 runtime misses in prod build
+
+export async function generateStaticParams() {
+  // Replace with static registry or direct JSON import; no external network fetches during build
+  const figures = await import('@/data/figures.json').then((m) => m.default);
+  return figures.map((f) => ({ slug: f.slug }));
+}
+
+export default async function FigurePage({ params }: { params: Promise<{ slug: string }> }) {
+  const { slug } = await params;
+  const figures = await import('@/data/figures.json').then((m) => m.default);
+  const figure = figures.find((item) => item.slug === slug);
+
+  if (!figure) notFound();
+
+  return (
+    <article className="mx-auto max-w-prose py-12">
+      <h1 className="font-serif text-2xl font-light text-stone-900 dark:text-stone-100">{figure.name}</h1>
+    </article>
+  );
+}
+```
+skipped: ISR revalidation tags and dynamic database fetching.  
+add when: Figures are authored via a live remote CMS instead of repository-versioned lore data.
