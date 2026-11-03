@@ -8121,3 +8121,110 @@ export default async function FigurePage({ params }: { params: Promise<{ figure:
 ```
 → skipped: ISR / Edge CMS runtime revalidation layers.  
 → add when: lore data sources migrate to a remote headless CMS.
+
+
+### Cycle #129 Directive (2026-11-03 09:14)
+### 1. Comparative Timeline: Native Multi-Track Sticky Grid
+
+```tsx
+// components/ComparativeTimeline.tsx
+interface TimelineRow {
+  era: string;
+  judaism?: string;
+  christianity?: string;
+  islam?: string;
+}
+
+export function ComparativeTimeline({ rows }: { rows: TimelineRow[] }) {
+  // ponytail: standard CSS grid; upgrade to virtualized rows if dataset exceeds 500 eras
+  return (
+    <div className="w-full overflow-x-auto border border-stone-200 dark:border-stone-800 rounded-lg">
+      <div className="grid grid-cols-[100px_repeat(3,minmax(200px,1fr))] gap-px bg-stone-200 dark:bg-stone-800 text-xs sm:text-sm">
+        <div className="sticky top-0 z-10 bg-stone-100 dark:bg-stone-900 p-3 font-mono font-medium text-stone-500">Era</div>
+        <div className="sticky top-0 z-10 bg-stone-100 dark:bg-stone-900 p-3 font-medium text-amber-900 dark:text-amber-200">Judaism</div>
+        <div className="sticky top-0 z-10 bg-stone-100 dark:bg-stone-900 p-3 font-medium text-sky-900 dark:text-sky-200">Christianity</div>
+        <div className="sticky top-0 z-10 bg-stone-100 dark:bg-stone-900 p-3 font-medium text-emerald-900 dark:text-emerald-200">Islam</div>
+
+        {rows.map((r) => (
+          <div key={r.era} className="contents">
+            <span className="bg-stone-50/50 dark:bg-stone-900/50 p-3 font-mono text-stone-400">{r.era}</span>
+            <div className="bg-stone-50 dark:bg-stone-900 p-3 leading-relaxed">{r.judaism ?? '—'}</div>
+            <div className="bg-stone-50 dark:bg-stone-900 p-3 leading-relaxed">{r.christianity ?? '—'}</div>
+            <div className="bg-stone-50 dark:bg-stone-900 p-3 leading-relaxed">{r.islam ?? '—'}</div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+```
+skipped: Timeline JS libraries (vis.js/timelinejs).
+add when: Dynamic scale zooming or scrubbing across millennia intervals is required.
+
+---
+
+### 2. Lineage View: CSS-Only Tree Branching
+
+```css
+/* app/lineage/lineage.module.css */
+.tree, .tree ul {
+  list-style: none;
+  padding-left: 1.25rem;
+  margin: 0;
+}
+
+.tree li {
+  position: relative;
+  padding: 0.35rem 0 0.35rem 1rem;
+  border-left: 1px solid var(--line, #d6d3d1);
+}
+
+.tree li::before {
+  content: "";
+  position: absolute;
+  top: 1rem;
+  left: 0;
+  width: 0.75rem;
+  border-top: 1px solid var(--line, #d6d3d1);
+}
+
+.tree li:last-child {
+  border-left: 1px solid transparent;
+}
+
+.tree li:last-child::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 1rem;
+  border-left: 1px solid var(--line, #d6d3d1);
+}
+```
+skipped: Graph layout engines (ReactFlow/D3).
+add when: Lineages require multi-parent convergence or non-hierarchical network graphs.
+
+---
+
+### 3. Next.js Zero-Error Build Enforcer: Static Boundary & Route Guard
+
+```typescript
+// app/figures/[slug]/page.tsx
+import assert from 'node:assert';
+import { figures } from '@/data/figures';
+
+export const dynamic = 'error';
+export const dynamicParams = false;
+
+export function generateStaticParams() {
+  // ponytail: in-memory array assertion; upgrade to Zod schema if fed by CMS
+  assert(Array.isArray(figures) && figures.length > 0, 'Build target failed: empty figure dataset.');
+
+  return figures.map((item) => {
+    assert(typeof item.slug === 'string' && item.slug.length > 0, `Figure missing valid slug: ${JSON.stringify(item)}`);
+    return { slug: item.slug };
+  });
+}
+```
+skipped: Heavy schema validation libraries (Zod/Yup).
+add when: Dataset is retrieved over the wire from an untrusted external CMS during build.
