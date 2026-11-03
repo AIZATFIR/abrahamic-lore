@@ -6880,3 +6880,82 @@ function runSelfCheck() {
 runSelfCheck();
 ```
 skipped: Custom lunar/solar calendar conversion modules; add when astronomical precision is requested.
+
+
+### Cycle #113 Directive (2026-11-03 07:43)
+### 1. Route Param Typing & Static Pre-render (Fixes Next.js 15 Build Failures)
+
+```tsx
+// app/timeline/[tradition]/page.tsx
+type Props = { params: Promise<{ tradition: 'judaism' | 'christianity' | 'islam' }> };
+
+export const dynamicParams = false;
+
+export async function generateStaticParams() {
+  return [{ tradition: 'judaism' }, { tradition: 'christianity' }, { tradition: 'islam' }];
+}
+
+export default async function TimelinePage({ params }: Props) {
+  const { tradition } = await params;
+  // ponytail: static slice ceiling; upgrade to query pipeline when DB added
+  return <main className="max-w-4xl mx-auto px-6 py-12">{tradition}</main>;
+}
+```
+→ skipped: `dynamic fetch handlers and client route listeners`, add when `content is queried from an external CMS`.
+
+---
+
+### 2. Comparative Sync Timeline (CSS Grid + Sticky Axis, Zero JS)
+
+```css
+/* app/timeline/comparative.module.css */
+.grid {
+  display: grid;
+  grid-template-columns: 7rem repeat(3, minmax(260px, 1fr));
+  column-gap: 1.5rem;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+}
+.epochSticky {
+  position: sticky;
+  left: 0;
+  background: var(--background);
+  backdrop-filter: blur(12px);
+  z-index: 20;
+}
+```
+```tsx
+// components/comparative-row.tsx
+export function ComparativeRow({ era, records }: { era: string; records: [React.ReactNode, React.ReactNode, React.ReactNode] }) {
+  return (
+    <div className="grid grid-cols-[7rem_repeat(3,minmax(260px,1fr))] gap-6 border-b border-stone-200/60 dark:border-stone-800/60 py-4 items-baseline">
+      <span className="sticky left-0 text-xs font-mono text-stone-500 uppercase tracking-widest">{era}</span>
+      {records.map((item, i) => (
+        <div key={i} className="text-sm font-serif leading-relaxed text-stone-800 dark:text-stone-200">{item}</div>
+      ))}
+    </div>
+  );
+}
+```
+→ skipped: `JS scroll synchronizers and layout recalculation hooks`, add when `columns require dynamic re-ordering via drag-and-drop`.
+
+---
+
+### 3. Native CSS Tree Lineage Node (Bypasses D3/Canvas Bloat)
+
+```tsx
+// components/lineage-node.tsx
+export function LineageNode({ name, title, children }: { name: string; title?: string; children?: React.ReactNode }) {
+  return (
+    <div className="relative pl-6 border-l border-stone-300 dark:border-stone-700 ml-3 my-2">
+      <div className="absolute -left-[5px] top-2 h-2.5 w-2.5 rounded-full border border-stone-400 bg-stone-50 dark:bg-stone-900" />
+      <div className="flex items-baseline gap-2">
+        <span className="font-serif text-stone-900 dark:text-stone-100">{name}</span>
+        {title && <span className="text-xs text-stone-600 dark:text-stone-400 font-sans tracking-wide">{title}</span>}
+      </div>
+      {children && <div className="mt-1">{children}</div>}
+    </div>
+  );
+}
+```
+→ skipped: `interactive pan/zoom canvas and React Flow dependencies`, add when `lineage needs bidirectional cross-branch graph traversal (DAG)`.
