@@ -9210,3 +9210,119 @@ node -e "assert = require('assert'); const p = [{id:'abraham'}]; assert(p.every(
 ```
 * `skipped`: ISR revalidation tokens, hybrid on-demand SSR fallback adapters.
 * `add when`: Figures are updated dynamically via remote CMS/DB without redeploying.
+
+
+### Cycle #141 Directive (2026-11-03 10:21)
+### 1. Zero-JS Parallel Comparative Timeline (CSS Grid + Sticky Eras)
+
+```tsx
+// components/ComparativeTimeline.tsx
+interface TimelineEvent {
+  year: string;
+  tradition: 'jewish' | 'christian' | 'islamic';
+  text: string;
+}
+
+export function ComparativeTimeline({ era, events }: { era: string; events: TimelineEvent[] }) {
+  // ponytail: Flat array sorted by era ceiling. Upgrade to virtualized list if > 200 nodes.
+  return (
+    <section className="border-t border-stone-200/60 dark:border-stone-800/60 py-6">
+      <div className="sticky top-0 z-10 bg-stone-50/80 dark:bg-stone-950/80 backdrop-blur-md py-2">
+        <span className="font-serif text-xs uppercase tracking-widest text-stone-500">{era}</span>
+      </div>
+      <div className="grid grid-cols-3 gap-4 pt-4 font-serif text-sm">
+        {(['jewish', 'christian', 'islamic'] as const).map((t) => (
+          <div key={t} className="space-y-3">
+            {events.filter((e) => e.tradition === t).map((e, idx) => (
+              <div key={idx} className="p-3 rounded-lg bg-stone-100/50 dark:bg-stone-900/50 border border-stone-200/40 dark:border-stone-800/40">
+                <span className="block font-mono text-[10px] text-stone-400">{e.year}</span>
+                <p className="text-stone-800 dark:text-stone-200 mt-1">{e.text}</p>
+              </div>
+            ))}
+          </div>
+        ))}
+      </div>
+    </section>
+  );
+}
+```
+skipped: IntersectionObserver-based sync scrolling, custom canvas rendering, and animated line connectors.  
+add when: Dynamic cross-tradition drag-and-drop comparison or dense multi-century scrubbers are explicitly requested.
+
+---
+
+### 2. Lineage View via Native Semantic CSS Tree
+
+```tsx
+// components/LineageView.tsx
+export interface LineageNode {
+  name: string;
+  epithet?: string;
+  children?: LineageNode[];
+}
+
+export function LineageView({ root }: { root: LineageNode }) {
+  // ponytail: Pure CSS tree branches. Max depth 6 before horizontal overflow. Upgrade to Pan/Zoom canvas on deep mobile.
+  return (
+    <div className="overflow-x-auto py-8">
+      <ul className="flex justify-center p-0 m-0 list-none [&_ul]:flex [&_ul]:pt-5 [&_ul]:relative [&_li]:relative [&_li]:px-2 [&_li]:pt-5 [&_li]:text-center [&_li::before]:content-[''] [&_li::before]:absolute [&_li::before]:top-0 [&_li::before]:right-1/2 [&_li::before]:border-t [&_li::before]:border-stone-300 [&_li::before]:w-1/2 [&_li::before]:h-5 [&_li::after]:content-[''] [&_li::after]:absolute [&_li::after]:top-0 [&_li::after]:right-1/2 [&_li::after]:border-l [&_li::after]:border-stone-300 [&_li::after]:h-5 [&_li:first-child::before]:border-none [&_li:last-child::after]:border-none">
+        <NodeItem node={root} />
+      </ul>
+    </div>
+  );
+}
+
+function NodeItem({ node }: { node: LineageNode }) {
+  return (
+    <li>
+      <div className="inline-block px-3 py-1.5 rounded border border-stone-200 dark:border-stone-800 bg-white dark:bg-stone-900 shadow-sm">
+        <div className="font-serif text-xs font-medium text-stone-900 dark:text-stone-100">{node.name}</div>
+        {node.epithet && <div className="text-[10px] text-stone-400">{node.epithet}</div>}
+      </div>
+      {node.children && node.children.length > 0 && (
+        <ul>
+          {node.children.map((child) => (
+            <NodeItem key={child.name} node={child} />
+          ))}
+        </ul>
+      )}
+    </li>
+  );
+}
+```
+skipped: React-Flow, D3 tree layout, and HTML canvas SVG rendering.  
+add when: Bidirectional inter-family node cycles (e.g., cousin marriages) break strict hierarchical trees.
+
+---
+
+### 3. Static Type-Safe Next.js Route Guard
+
+```tsx
+// app/figures/[slug]/page.tsx
+import { notFound } from 'next/navigation';
+import { getAllSlugs, getFigureBySlug } from '@/lib/lore';
+
+export const dynamicParams = false;
+export const dynamic = 'error';
+
+export async function generateStaticParams(): Promise<{ slug: string }[]> {
+  const slugs = await getAllSlugs();
+  return slugs.map((slug) => ({ slug }));
+}
+
+export default async function Page({ params }: { params: Promise<{ slug: string }> }) {
+  const { slug } = await params;
+  const figure = await getFigureBySlug(slug);
+
+  if (!figure) notFound();
+
+  return (
+    <article className="max-w-2xl mx-auto px-6 py-12">
+      <h1 className="font-serif text-2xl tracking-tight text-stone-900 dark:text-stone-100">{figure.name}</h1>
+      <p className="mt-4 font-serif text-stone-700 dark:text-stone-300 leading-relaxed">{figure.bio}</p>
+    </article>
+  );
+}
+```
+skipped: ISR revalidate timers, edge-runtime switching, and client fetch fallbacks.  
+add when: Lore content moves from static markdown/JSON to an external mutating CMS.
