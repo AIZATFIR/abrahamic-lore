@@ -7381,3 +7381,90 @@ node -e "assert = require('assert'); (async () => { const p = Promise.resolve({t
 ```
 → skipped: Dynamic runtime fallback handling (`fallback: true`).  
 → add when: Switching from fully pre-rendered static lore to CMS-driven SSR.
+
+
+### Cycle #119 Directive (2026-11-03 08:16)
+### 1. Pure CSS Lineage Tree Connectors (Eliminate Graph Libs)
+
+```tsx
+// components/LineageNode.tsx
+interface Figure { name: string; title?: string; children?: Figure[]; }
+
+export function LineageNode({ figure }: { figure: Figure }) {
+  // ponytail: recursive flex-tree caps at ~6 nested generations; upgrade to canvas if rendering >100 nodes simultaneously.
+  return (
+    <div className="flex flex-col items-center">
+      <div className="rounded-lg border border-stone-200/80 bg-stone-50/50 px-3 py-1.5 text-xs tracking-wide text-stone-800 shadow-sm backdrop-blur">
+        <span className="font-medium">{figure.name}</span>
+        {figure.title && <span className="ml-1.5 text-stone-400">({figure.title})</span>}
+      </div>
+      {figure.children && figure.children.length > 0 && (
+        <div className="relative flex pt-6 before:absolute before:top-0 before:left-1/2 before:h-6 before:w-px before:bg-stone-300">
+          {figure.children.map((child, i) => (
+            <div key={child.name} className="relative px-3 before:absolute before:top-0 before:left-0 before:right-0 before:h-px before:bg-stone-300 first:before:left-1/2 last:before:right-1/2">
+              <LineageNode figure={child} />
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+```
+`LineageNode.tsx` → skipped: React Flow / D3 tree layout, add when user drags nodes or needs bi-directional cross-links.
+
+---
+
+### 2. Comparative Timeline Grid (Native CSS Sync)
+
+```tsx
+// components/ComparativeTimeline.tsx
+interface Event { tradition: 'jewish' | 'christian' | 'islamic'; title: string; era: string; }
+
+export function ComparativeTimeline({ events }: { events: Event[] }) {
+  const traditions = ['jewish', 'christian', 'islamic'] as const;
+  
+  return (
+    <div className="grid grid-cols-3 divide-x divide-stone-200/60 border-t border-b border-stone-200 text-sm">
+      {traditions.map((t) => (
+        <div key={t} className="p-4 space-y-4">
+          <header className="sticky top-0 bg-stone-50/90 py-1 text-xs uppercase tracking-widest text-stone-400 backdrop-blur">
+            {t}
+          </header>
+          {events.filter((e) => e.tradition === t).map((e) => (
+            <article key={e.title} className="rounded-md bg-white/60 p-2.5 shadow-[0_1px_2px_rgba(0,0,0,0.04)] border border-stone-200/40">
+              <span className="font-mono text-[10px] text-amber-700/80">{e.era}</span>
+              <p className="mt-0.5 text-stone-800">{e.title}</p>
+            </article>
+          ))}
+        </div>
+      ))}
+    </div>
+  );
+}
+```
+`ComparativeTimeline.tsx` → skipped: JS scroll-sync observers and canvas markers, add when synchronizing variable-scale absolute BCE/CE years across zoom levels.
+
+---
+
+### 3. Build-Time Static Params Hardening (`next build` Zero-Error Guard)
+
+```tsx
+// app/figures/[slug]/page.tsx
+import { notFound } from 'next/navigation';
+
+export const dynamicParams = false; // ponytail: rejects runtime dynamic fetches; upgrade if figures become user-generated at runtime.
+
+export async function generateStaticParams() {
+  const figures = ['abraham', 'moses', 'jesus', 'muhammad']; // Replace with static data keys
+  return figures.map((slug) => ({ slug }));
+}
+
+export default async function Page({ params }: { params: Promise<{ slug: string }> }) {
+  const { slug } = await params;
+  if (!slug) notFound();
+
+  return <main className="mx-auto max-w-xl py-12 text-stone-900">{slug}</main>;
+}
+```
+`app/figures/[slug]/page.tsx` → skipped: dynamic DB fetching and ISR, add when figures are fetched from a headless CMS or external API.
