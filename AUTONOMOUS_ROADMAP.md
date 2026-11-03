@@ -6193,3 +6193,118 @@ export async function generateStaticParams() {
 ```
 → skipped: Incremental Static Regeneration (ISR) and Edge middleware.  
 → add when: Lore content moves from local repository/JSON to a live CMS API.
+
+
+### Cycle #107 Directive (2026-11-03 07:08)
+### 1. Zero-Dependency Lineage View (Pure CSS Connectors)
+
+```css
+/* app/lineage/lineage.module.css */
+.tree, .tree ul {
+  display: flex;
+  justify-content: center;
+  padding-top: 1.25rem;
+  position: relative;
+}
+
+.tree li {
+  text-align: center;
+  list-style-type: none;
+  position: relative;
+  padding: 1.25rem 0.75rem 0;
+}
+
+.tree li::before, .tree li::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 50%;
+  border-top: 1px solid var(--border, #e5e5e5);
+  width: 50%;
+  height: 1.25rem;
+}
+
+.tree li::after {
+  right: auto;
+  left: 50%;
+  border-left: 1px solid var(--border, #e5e5e5);
+}
+
+.tree li:only-child::after, .tree li:only-child::before { display: none; }
+.tree li:only-child { padding-top: 0; }
+.tree li:first-child::before, .tree li:last-child::after { border: 0 none; }
+.tree li:last-child::before {
+  border-right: 1px solid var(--border, #e5e5e5);
+  border-radius: 0 6px 0 0;
+}
+.tree li:first-child::after { border-radius: 6px 0 0 0; }
+```
+`skipped: React Flow / D3 graph engine, add when: lineage nodes exceed screen density and need interactive pan/zoom canvas controls.`
+
+---
+
+### 2. Comparative Timeline (CSS Subgrid Synchronizer)
+
+```tsx
+// components/comparative-timeline.tsx
+type Event = { era: string; tradition: 'judaism' | 'christianity' | 'islam'; title: string };
+
+export function ComparativeTimeline({ events }: { events: Event[] }) {
+  const eras = Array.from(new Set(events.map((e) => e.era)));
+  const traditions = ['judaism', 'christianity', 'islam'] as const;
+
+  return (
+    <div className="grid grid-cols-[100px_repeat(3,1fr)] gap-x-4 border-l border-neutral-200 dark:border-neutral-800">
+      <div className="font-mono text-xs opacity-40 sticky top-0 py-2">ERA</div>
+      {traditions.map((t) => (
+        <div key={t} className="font-mono text-xs uppercase opacity-60 sticky top-0 py-2 capitalize">{t}</div>
+      ))}
+      {eras.map((era) => (
+        <div key={era} className="contents border-t border-neutral-100 dark:border-neutral-900">
+          <span className="font-mono text-xs text-neutral-400 py-3 sticky left-0">{era}</span>
+          {traditions.map((t) => (
+            <div key={t} className="py-2 space-y-1.5">
+              {events
+                .filter((e) => e.era === era && e.tradition === t)
+                .map((e, i) => (
+                  <div key={i} className="text-xs p-2 rounded-md bg-stone-50/80 dark:bg-stone-900/40 border border-stone-200/50 dark:border-stone-800/50">
+                    {e.title}
+                  </div>
+                ))}
+            </div>
+          ))}
+        </div>
+      ))}
+    </div>
+  );
+}
+```
+`skipped: layout calculation hooks & virtualized scroll, add when: event counts exceed 500 items per era.`
+
+---
+
+### 3. Production Build Lock (Static Verification & Suspense Boundary)
+
+```tsx
+// app/timeline/page.tsx
+import { Suspense } from 'react';
+
+// ponytail: static generation guarantee; upgrade to 'auto' only when user-authenticated routes exist
+export const dynamic = 'error';
+
+export default async function TimelinePage(props: {
+  searchParams: Promise<{ tradition?: string }>;
+}) {
+  const searchParams = await props.searchParams;
+
+  return (
+    <main className="max-w-5xl mx-auto px-6 py-12">
+      <Suspense fallback={<div className="h-64 animate-pulse bg-neutral-100 dark:bg-neutral-900 rounded-lg" />}>
+        {/* Render timeline content with validated searchParams */}
+        <section data-active-filter={searchParams.tradition ?? 'all'} />
+      </Suspense>
+    </main>
+  );
+}
+```
+`skipped: client-side search state routing, add when: search parameters require multi-facet URL updates without page refreshes.`
