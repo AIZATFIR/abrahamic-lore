@@ -9326,3 +9326,130 @@ export default async function Page({ params }: { params: Promise<{ slug: string 
 ```
 skipped: ISR revalidate timers, edge-runtime switching, and client fetch fallbacks.  
 add when: Lore content moves from static markdown/JSON to an external mutating CMS.
+
+
+### Cycle #142 Directive (2026-11-03 10:27)
+### 1. Comparative Timeline: Zero-JS Sticky Swimlanes
+
+Replace timeline scroll synchronization libraries with native CSS scroll-snap and sticky headers across the 3 traditions (Judaic, Christian, Islamic).
+
+```tsx
+// components/ComparativeTimeline.tsx
+export function ComparativeTimeline({ eras }: { eras: Array<{ id: string; period: string; traditions: Record<string, string[]> }> }) {
+  return (
+    <div className="relative overflow-x-auto snap-x snap-mandatory">
+      <div className="grid min-w-[720px] grid-cols-[120px_repeat(3,1fr)] gap-px bg-stone-200/60 dark:bg-stone-800/60">
+        <div className="sticky top-0 z-20 bg-stone-50 p-3 text-xs font-medium tracking-wide text-stone-500 uppercase dark:bg-stone-900">Era</div>
+        {['Judaism', 'Christianity', 'Islam'].map(t => (
+          <div key={t} className="sticky top-0 z-20 bg-stone-50/95 p-3 text-xs font-semibold backdrop-blur-md dark:bg-stone-900/95">{t}</div>
+        ))}
+        {eras.map(era => (
+          <div key={era.id} className="contents group">
+            <div className="sticky left-0 z-10 bg-stone-50 p-4 font-mono text-xs text-stone-600 select-none dark:bg-stone-900">{era.period}</div>
+            {['judaism', 'christianity', 'islam'].map(key => (
+              <div key={key} className="p-4 text-sm leading-relaxed text-stone-800 transition-colors group-hover:bg-stone-100/40 dark:text-stone-200 dark:group-hover:bg-stone-800/40">
+                {/* ponytail: flat text array only; add rich metadata rendering when tradition variants diverge significantly */}
+                {era.traditions[key]?.join(', ') ?? '—'}
+              </div>
+            ))}
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+```
+→ skipped: virtualized scroller and dynamic drag-pan canvas.  
+→ add when: timeline expands beyond 150 historical eras.
+
+---
+
+### 2. Lineage View: Native CSS Semantic Branch Tree
+
+Eliminate DAG/ReactFlow dependencies. Render the patriarchal lineage using semantic lists and CSS pseudo-element connectors.
+
+```css
+/* app/lineage/tree.module.css */
+.tree, .tree ul { list-style: none; margin: 0; padding: 0 0 0 1.25rem; position: relative; }
+.tree li { margin: 0.5rem 0; position: relative; }
+.tree li::before {
+  content: "";
+  position: absolute;
+  top: 0.75rem;
+  left: -1rem;
+  width: 1rem;
+  border-top: 1px solid var(--border-color, #d6d3d1);
+}
+.tree li::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -1rem;
+  bottom: 0;
+  border-left: 1px solid var(--border-color, #d6d3d1);
+}
+.tree li:last-child::after { height: 0.75rem; }
+```
+
+```tsx
+// components/LineageNode.tsx
+import styles from './tree.module.css';
+
+export interface PersonNode { id: string; name: string; title?: string; children?: PersonNode[]; }
+
+export function LineageTree({ data }: { data: PersonNode }) {
+  return (
+    <ul className={styles.tree}>
+      <li>
+        <span className="inline-flex items-center gap-1.5 rounded-full border border-stone-200/80 bg-stone-50/50 px-3 py-1 font-serif text-sm tracking-tight text-stone-800 backdrop-blur-sm dark:border-stone-800 dark:bg-stone-900/50 dark:text-stone-200">
+          {data.name}
+          {data.title && <span className="font-sans text-[10px] text-stone-500 uppercase tracking-widest">{data.title}</span>}
+        </span>
+        {/* ponytail: standard recursive tree; add bipartite cross-links when matrilineal intersections are introduced */}
+        {data.children?.length ? data.children.map(child => <LineageTree key={child.id} data={child} />) : null}
+      </li>
+    </ul>
+  );
+}
+```
+→ skipped: heavy canvas layout engines (D3, Cytoscape, React Flow).  
+→ add when: multi-parent non-hierarchical network graphs are explicitly required.
+
+---
+
+### 3. Next.js Zero-Error Build: Typed Static Route Contracts
+
+Ensure route param resolution succeeds cleanly during dynamic pre-rendering (`next build`) on Next.js 14/15 without dynamic server fallback warnings.
+
+```tsx
+// app/figures/[slug]/page.tsx
+import { notFound } from 'next/navigation';
+
+const VALID_SLUGS = ['abraham', 'moses', 'jesus', 'muhammad'] as const;
+type Slug = (typeof VALID_SLUGS)[number];
+
+export function generateStaticParams(): Array<{ slug: Slug }> {
+  return VALID_SLUGS.map((slug) => ({ slug }));
+}
+
+export const dynamicParams = false; // ponytail: strict 404 on ungenerated routes; relax when CMS integration is active
+
+export default async function FigurePage({ params }: { params: Promise<{ slug: string }> }) {
+  const { slug } = await params;
+  if (!VALID_SLUGS.includes(slug as Slug)) notFound();
+
+  return (
+    <main className="mx-auto max-w-xl py-12 px-6">
+      <h1 className="font-serif text-2xl tracking-tight capitalize text-stone-900 dark:text-stone-100">{slug}</h1>
+    </main>
+  );
+}
+
+// Runnable self-check
+(() => {
+  const params = generateStaticParams();
+  console.assert(params.length === 4 && params[0].slug === 'abraham', 'Static generation contract violated');
+})();
+```
+→ skipped: dynamic runtime database fetches during build.  
+→ add when: data moves from local JSON/static stores to a remote CMS.
