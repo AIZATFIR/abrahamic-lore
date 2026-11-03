@@ -6762,3 +6762,121 @@ export function generateStaticParams(): Array<{ era: string }> {
 }
 ```
 `next.config.mjs` → skipped: ISR/Edge-middleware setup, add when user authentication or dynamic editorial mutation is required.
+
+
+### Cycle #112 Directive (2026-11-03 07:37)
+### 1. Native Multi-Track Comparative Timeline (Pure CSS Grid, Zero-JS sync)
+
+```tsx
+// components/ComparativeTimeline.tsx
+interface TimelineEpoch {
+  era: string;
+  judaism: string[];
+  christianity: string[];
+  islam: string[];
+}
+
+export function ComparativeTimeline({ epochs }: { epochs: TimelineEpoch[] }) {
+  return (
+    <div className="overflow-x-auto scroll-smooth pb-4 [scrollbar-width:thin]">
+      <div 
+        className="grid auto-cols-[minmax(260px,1fr)] grid-flow-col gap-px bg-stone-200/60 dark:bg-stone-800/60"
+        style={{ gridTemplateRows: 'auto repeat(3, minmax(80px, auto))' }}
+      >
+        {/* Header Row: Eras */}
+        {epochs.map((e) => (
+          <div key={e.era} className="bg-stone-50 p-3 text-xs font-medium tracking-wide text-stone-500 dark:bg-stone-900">
+            {e.era}
+          </div>
+        ))}
+        {/* Track: Judaism */}
+        {epochs.map((e) => (
+          <div key={`j-${e.era}`} className="bg-white p-3 text-sm text-stone-800 dark:bg-stone-950 dark:text-stone-200">
+            {e.judaism.join(', ')}
+          </div>
+        ))}
+        {/* Track: Christianity */}
+        {epochs.map((e) => (
+          <div key={`c-${e.era}`} className="bg-white p-3 text-sm text-stone-800 dark:bg-stone-950 dark:text-stone-200">
+            {e.christianity.join(', ')}
+          </div>
+        ))}
+        {/* Track: Islam */}
+        {epochs.map((e) => (
+          <div key={`i-${e.era}`} className="bg-white p-3 text-sm text-stone-800 dark:bg-stone-950 dark:text-stone-200">
+            {e.islam.join(', ')}
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+```
+skipped: Canvas/virtualized scroll listeners; add when epochs exceed 200 items.
+
+---
+
+### 2. Semantic Lineage Tree (Zero Graph Dependencies)
+
+```tsx
+// components/LineageTree.tsx
+export type LineageNode = {
+  id: string;
+  name: string;
+  traditions: ('J' | 'C' | 'I')[];
+  children?: LineageNode[];
+};
+
+export function LineageTree({ node }: { node: LineageNode }) {
+  // ponytail: recursive flex-tree caps out at 6 nesting levels cleanly on mobile
+  return (
+    <div className="flex flex-col items-center">
+      <div className="group relative rounded-md border border-stone-200 bg-stone-50/80 px-3 py-1.5 text-xs tracking-tight shadow-sm transition hover:border-stone-400 dark:border-stone-800 dark:bg-stone-900">
+        <span className="font-medium text-stone-900 dark:text-stone-100">{node.name}</span>
+        <span className="ml-1.5 font-mono text-[10px] text-stone-400">{node.traditions.join('')}</span>
+      </div>
+      {Boolean(node.children?.length) && (
+        <div className="flex border-t border-stone-200 pt-3 dark:border-stone-800">
+          {node.children!.map((child) => (
+            <div key={child.id} className="relative px-3 before:absolute before:-top-3 before:left-1/2 before:h-3 before:w-px before:bg-stone-200 dark:before:bg-stone-800">
+              <LineageTree node={child} />
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+```
+skipped: Pan/zoom viewport library; add when interactive node drag is explicitly required.
+
+---
+
+### 3. Next.js Zero-Error Build: Deterministic UTC Date Normalizer
+
+```typescript
+// lib/timeline-date.ts
+// Enforces zero SSR-client hydration mismatch across edge/server/client engines.
+const UTC_FORMATTER = new Intl.DateTimeFormat('en-US', {
+  year: 'numeric',
+  era: 'narrow',
+  timeZone: 'UTC',
+});
+
+export function formatLoreYear(year: number): string {
+  if (!Number.isFinite(year)) return '';
+  const date = new Date(Date.UTC(year, 0, 1));
+  date.setUTCFullYear(year);
+  return UTC_FORMATTER.format(date);
+}
+
+// Self-check
+function runSelfCheck() {
+  const bce = formatLoreYear(-1800);
+  const ce = formatLoreYear(622);
+  console.assert(bce.includes('1800'), `Expected BCE year formatting, got: ${bce}`);
+  console.assert(ce.includes('622'), `Expected CE year formatting, got: ${ce}`);
+}
+runSelfCheck();
+```
+skipped: Custom lunar/solar calendar conversion modules; add when astronomical precision is requested.
