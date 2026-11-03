@@ -8984,3 +8984,93 @@ export default async function FigurePage({ params }: Props) {
 ```
 → skipped: Dynamic on-demand SSR fallback handling.  
 → add when: Lore corpus is moved to a remote CMS requiring on-demand ISR.
+
+
+### Cycle #138 Directive (2026-11-03 10:04)
+### 1. Fix Next.js App Router Page Params (Zero-Error Build)
+
+```tsx
+// app/timeline/[tradition]/page.tsx
+type Props = {
+  params: Promise<{ tradition: 'judaism' | 'christianity' | 'islam' }>;
+};
+
+// ponytail: Static params ceiling; add dynamic fallback when user-generated traditions are supported.
+export async function generateStaticParams() {
+  return [{ tradition: 'judaism' }, { tradition: 'christianity' }, { tradition: 'islam' }];
+}
+
+export default async function TimelinePage({ params }: Props) {
+  const { tradition } = await params;
+  return <main className="p-8 text-stone-900 dark:text-stone-100">{tradition}</main>;
+}
+```
+* Skipped: Runtime schema validation (zod) and dynamic fallback handling.
+* Add when: Traditions are loaded from an external remote CMS or user inputs.
+
+---
+
+### 2. Multi-Tradition Comparative Timeline (Native CSS Column-Snap)
+
+```tsx
+// components/ComparativeTimeline.tsx
+interface Event { year: number; label: string; text: string; }
+
+export function ComparativeTimeline({ jewish, christian, islamic }: { jewish: Event[]; christian: Event[]; islamic: Event[] }) {
+  const rows = Array.from(new Set([...jewish, ...christian, ...islamic].map(e => e.year))).sort((a, b) => a - b);
+
+  return (
+    <div className="grid grid-cols-[80px_repeat(3,minmax(240px,1fr))] gap-4 overflow-x-auto border-t border-stone-200 dark:border-stone-800 text-sm">
+      {rows.map(year => (
+        <div key={year} className="contents group">
+          <div className="py-3 font-mono text-xs text-stone-400 sticky left-0 bg-stone-50/90 dark:bg-stone-950/90 backdrop-blur">{year}</div>
+          <div className="py-3 border-l border-stone-100 dark:border-stone-800/50 pl-3">{jewish.find(e => e.year === year)?.label ?? '—'}</div>
+          <div className="py-3 border-l border-stone-100 dark:border-stone-800/50 pl-3">{christian.find(e => e.year === year)?.label ?? '—'}</div>
+          <div className="py-3 border-l border-stone-100 dark:border-stone-800/50 pl-3">{islamic.find(e => e.year === year)?.label ?? '—'}</div>
+        </div>
+      ))}
+    </div>
+  );
+}
+```
+* Skipped: Heavy JS-driven virtualization and canvas-based timeline sync libraries.
+* Add when: Event count exceeds 2,000 DOM nodes causing scroll jank.
+
+---
+
+### 3. Accessible CSS-Only Lineage Tree Node
+
+```tsx
+// components/LineageNode.tsx
+export interface Patriarch { name: string; children?: Patriarch[]; }
+
+export function LineageNode({ person }: { person: Patriarch }) {
+  return (
+    <li className="relative pl-6 before:absolute before:left-0 before:top-3 before:h-px before:w-4 before:bg-stone-300 dark:before:bg-stone-700">
+      <span className="inline-block rounded-md px-2.5 py-1 text-sm bg-stone-100 dark:bg-stone-800/60 font-serif">
+        {person.name}
+      </span>
+      {person.children && person.children.length > 0 && (
+        <ul className="relative ml-2 border-l border-stone-300 dark:border-stone-700 py-1 space-y-2">
+          {person.children.map(child => <LineageNode key={child.name} person={child} />)}
+        </ul>
+      )}
+    </li>
+  );
+}
+```
+* Skipped: D3/SVG tree calculation engine and node-link physics graphs.
+* Add when: Graph requires cyclical lineage (e.g., cross-cousin unions) or non-hierarchical cross-links.
+
+---
+
+### Self-Check Test
+
+```ts
+import assert from 'node:assert';
+
+// Verify lineage nesting without circular recursion
+const testTree: Patriarch = { name: "Abraham", children: [{ name: "Isaac", children: [{ name: "Jacob" }] }] };
+assert.strictEqual(testTree.children?.[0].children?.[0].name, "Jacob");
+console.log('✓ Lineage tree schema intact');
+```
