@@ -8228,3 +8228,128 @@ export function generateStaticParams() {
 ```
 skipped: Heavy schema validation libraries (Zod/Yup).
 add when: Dataset is retrieved over the wire from an untrusted external CMS during build.
+
+
+### Cycle #130 Directive (2026-11-03 09:19)
+### 1. Comparative Timeline: Native CSS Grid Sync (Kill JS Scroll-Sync)
+
+Replace JS sync listeners with CSS Grid subgrid and snap points for the three traditions (Judaism, Christianity, Islam).
+
+```tsx
+// components/ComparativeTimeline.tsx
+interface Epoch {
+  era: string;
+  traditions: { faith: 'jewish' | 'christian' | 'islamic'; text: string }[];
+}
+
+export function ComparativeTimeline({ epochs }: { epochs: Epoch[] }) {
+  return (
+    <div className="overflow-x-auto pb-4 snap-x snap-mandatory">
+      <div className="grid grid-cols-[120px_repeat(3,minmax(260px,1fr))] gap-px bg-stone-200 dark:bg-stone-800 rounded-lg overflow-hidden border border-stone-200 dark:border-stone-800">
+        <div className="bg-stone-50 dark:bg-stone-900 p-3 text-xs font-mono text-stone-500 uppercase sticky left-0 z-10">Era</div>
+        <div className="bg-stone-50 dark:bg-stone-900 p-3 text-xs font-semibold text-stone-700 dark:text-stone-300">Judaism</div>
+        <div className="bg-stone-50 dark:bg-stone-900 p-3 text-xs font-semibold text-stone-700 dark:text-stone-300">Christianity</div>
+        <div className="bg-stone-50 dark:bg-stone-900 p-3 text-xs font-semibold text-stone-700 dark:text-stone-300">Islam</div>
+
+        {epochs.map((e) => (
+          <div key={e.era} className="contents snap-start">
+            {/* ponytail: flat grid cells assume 3 traditions per epoch. upgrade to subgrid if dynamic traditions are needed */}
+            <span className="bg-stone-50/90 dark:bg-stone-900/90 backdrop-blur-sm p-3 text-xs font-mono text-stone-400 sticky left-0 border-t border-stone-200/50 dark:border-stone-800/50">
+              {e.era}
+            </span>
+            {e.traditions.map((t) => (
+              <div key={t.faith} className="bg-white dark:bg-stone-950 p-3 text-sm text-stone-700 dark:text-stone-300 border-t border-stone-200/50 dark:border-stone-800/50 leading-relaxed">
+                {t.text}
+              </div>
+            ))}
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+```
+→ skipped: JS scroll events and canvas renders.  
+→ add when: Horizontal dragging physics or arbitrary inter-tradition cross-links are required.
+
+---
+
+### 2. Lineage View: Native CSS Tree Nodes (Drop D3 / Canvas)
+
+Zero-runtime, zen-warm lineage branches using semantic HTML and CSS borders.
+
+```tsx
+// components/LineageTree.tsx
+interface Figure {
+  name: string;
+  honorific?: string;
+  children?: Figure[];
+}
+
+export function LineageTree({ node }: { node: Figure }) {
+  return (
+    <li className="relative pl-6 pt-2 list-none">
+      {/* Connector lines */}
+      <div className="absolute left-0 top-5 w-4 h-px bg-stone-300 dark:bg-stone-700" />
+      <div className="absolute left-0 top-0 bottom-0 w-px bg-stone-300 dark:bg-stone-700 last:bottom-[calc(100%-1.25rem)]" />
+
+      <div className="inline-flex items-baseline gap-2 px-2.5 py-1 rounded bg-stone-100 dark:bg-stone-900 border border-stone-200/80 dark:border-stone-800">
+        <span className="text-sm font-medium text-stone-800 dark:text-stone-200">{node.name}</span>
+        {node.honorific && <span className="text-[10px] text-stone-400 font-serif italic">{node.honorific}</span>}
+      </div>
+
+      {node.children && node.children.length > 0 && (
+        <ul className="pl-2 border-l border-transparent">
+          {node.children.map((child) => (
+            <LineageTree key={child.name} node={child} />
+          ))}
+        </ul>
+      )}
+    </li>
+  );
+}
+```
+→ skipped: Layout coordinate math and graph engines.  
+→ add when: Lineage requires multi-parent (polygamous/consanguine) dual-branching graphs.
+
+---
+
+### 3. Production Build Lock: Next.js 15 Async Route Params Guard
+
+Fixes type mismatches and missing static exports preventing zero-error `next build`.
+
+```tsx
+// app/lore/[figure]/page.tsx
+import { notFound } from 'next/navigation';
+
+export const dynamicParams = false;
+
+// Assert self-check during build
+const DATA: Record<string, { title: string }> = {
+  abraham: { title: 'Abraham / Ibrahim' },
+  moses: { title: 'Moses / Musa' },
+};
+
+export function generateStaticParams() {
+  return Object.keys(DATA).map((figure) => ({ figure }));
+}
+
+export default async function FigurePage({
+  params,
+}: {
+  params: Promise<{ figure: string }>;
+}) {
+  const { figure } = await params;
+  const entry = DATA[figure];
+
+  if (!entry) notFound();
+
+  return (
+    <article className="max-w-prose mx-auto py-12 px-4">
+      <h1 className="text-2xl font-serif text-stone-900 dark:text-stone-100 tracking-tight">{entry.title}</h1>
+    </article>
+  );
+}
+```
+→ skipped: Remote CMS runtime validations.  
+→ add when: Lore data is sourced from an external API or dynamic database instead of local records.
