@@ -9621,3 +9621,81 @@ next build
 ```
 skipped: Edge middleware, dynamic SSR fallback wrappers, complex image loaders.  
 add when: Lineage search needs authenticated personalization or dynamic route indexing.
+
+
+### Cycle #145 Directive (2026-11-03 10:44)
+### 1. Build Hardening (`next.config.mjs`)
+
+```javascript
+/** @type {import('next').NextConfig} */
+const nextConfig = {
+  output: 'standalone',
+  reactStrictMode: true,
+  typescript: { ignoreBuildErrors: false },
+  eslint: { ignoreDuringBuilds: false },
+  experimental: { typedRoutes: true }
+};
+
+export default nextConfig;
+```
+`next.config.mjs` → skipped: runtime bundle analyzers, add when chunks exceed 200kb.
+
+---
+
+### 2. Comparative Sync Timeline (`ComparativeTimeline.tsx`)
+
+```tsx
+type EraEvent = { id: string; year: string; title: string; tradition: 'judaism' | 'christianity' | 'islam' };
+
+export function ComparativeTimeline({ events }: { events: EraEvent[] }) {
+  // ponytail: static column tracks; upgrade to scroll-driven SVG bezier curves if interactive cross-linking is required
+  return (
+    <div className="grid grid-cols-3 gap-4 border-l border-amber-900/10 dark:border-amber-100/10">
+      {(['judaism', 'christianity', 'islam'] as const).map((faith) => (
+        <section key={faith} className="space-y-4">
+          <header className="sticky top-0 bg-stone-50/90 dark:bg-stone-950/90 backdrop-blur py-2 text-xs font-serif uppercase tracking-widest text-amber-950/60 dark:text-amber-200/60 border-b border-amber-900/10">
+            {faith}
+          </header>
+          <ol className="space-y-3">
+            {events.filter(e => e.tradition === faith).map(e => (
+              <li key={e.id} className="p-3 rounded-lg border border-stone-200/60 dark:border-stone-800 bg-white/40 dark:bg-stone-900/40">
+                <time className="text-[10px] font-mono opacity-50 block">{e.year}</time>
+                <span className="text-sm font-medium">{e.title}</span>
+              </li>
+            ))}
+          </ol>
+        </section>
+      ))}
+    </div>
+  );
+}
+```
+`ComparativeTimeline.tsx` → skipped: dynamic canvas rendering, add when tracking >50 concurrent intersecting events.
+
+---
+
+### 3. Native Lineage Hierarchy (`LineageNode.tsx`)
+
+```tsx
+interface Person { name: string; title?: string; children?: Person[]; }
+
+export function LineageNode({ person }: { person: Person }) {
+  // ponytail: CSS pseudo-lines cover tree depth; replace with dagre layout if multi-parent cycles are introduced
+  return (
+    <li className="relative pl-6 before:absolute before:left-0 before:top-3 before:w-4 before:h-px before:bg-amber-800/20">
+      <div className="inline-flex items-baseline gap-2 py-1">
+        <span className="font-serif font-medium text-stone-900 dark:text-stone-100">{person.name}</span>
+        {person.title && <span className="text-xs text-amber-900/50 dark:text-amber-200/50 font-serif italic">({person.title})</span>}
+      </div>
+      {person.children && person.children.length > 0 && (
+        <ul className="relative ml-2 border-l border-amber-800/20 space-y-1">
+          {person.children.map((c) => (
+            <LineageNode key={c.name} person={c} />
+          ))}
+        </ul>
+      )}
+    </li>
+  );
+}
+```
+`LineageNode.tsx` → skipped: heavy graph engines (ReactFlow/D3), add when rendering bi-directional graph cycles.
