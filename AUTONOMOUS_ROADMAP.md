@@ -7872,3 +7872,102 @@ export function LineageNode({ node }: { node: Person }) {
 }
 ```
 skipped: D3/Cytoscape interactive node dragging; add when dynamic custom lineage editing is required.
+
+
+### Cycle #126 Directive (2026-11-03 08:57)
+### 1. Lineage Tree: Pure CSS Semantic Hierarchy (Eliminate D3/Tree Libs)
+
+Replace graph/canvas libraries with semantic nested lists and native CSS pseudo-element connectors for clean, zero-dep tree rendering.
+
+```tsx
+// components/LineageNode.tsx
+type Node = { name: string; era?: string; children?: Node[] };
+
+export function LineageNode({ node }: { node: Node }) {
+  // ponytail: recursion ceiling 10 levels; flatten if biblical lineages exceed call stack
+  return (
+    <li className="relative pl-6 before:absolute before:left-0 before:top-3 before:h-px before:w-4 before:bg-stone-300 dark:before:bg-stone-700">
+      <div className="inline-flex items-baseline gap-2 py-1 text-sm">
+        <span className="font-serif font-medium text-stone-900 dark:text-stone-100">{node.name}</span>
+        {node.era && <span className="font-mono text-xs text-stone-600 dark:text-stone-300">{node.era}</span>}
+      </div>
+      {node.children && node.children.length > 0 && (
+        <ul className="relative ml-2 border-l border-stone-300 dark:border-stone-700">
+          {node.children.map((child) => (
+            <LineageNode key={child.name} node={child} />
+          ))}
+        </ul>
+      )}
+    </li>
+  );
+}
+```
+→ skipped: Pan/zoom canvas, collision detection, interactive folding  
+→ add when: Lineage depth exceeds viewport height without scroll  
+
+---
+
+### 2. Comparative Timeline: 3-Tradition Sticky Epoch Grid
+
+Align Jewish, Christian, and Islamic traditions synchronously without table libs or complex layout calculators.
+
+```tsx
+// components/ComparativeTimeline.tsx
+interface EpochEvent {
+  era: string;
+  traditions: { judaic?: string; christian?: string; islamic?: string };
+}
+
+export function ComparativeTimeline({ events }: { events: EpochEvent[] }) {
+  return (
+    <div className="grid grid-cols-[80px_1fr_1fr_1fr] border-t border-stone-200 dark:border-stone-800 text-xs">
+      <div className="sticky top-0 z-10 grid grid-cols-subgrid col-span-4 bg-stone-50/90 py-2 font-mono uppercase tracking-wider text-stone-600 dark:bg-stone-950/90 dark:text-stone-300 backdrop-blur border-b border-stone-200 dark:border-stone-800">
+        <span>Era</span><span>Judaism</span><span>Christianity</span><span>Islam</span>
+      </div>
+      {events.map((e, idx) => (
+        <div key={idx} className="grid grid-cols-subgrid col-span-4 py-3 border-b border-stone-100 dark:border-stone-900 font-serif">
+          <span className="font-mono text-stone-600 dark:text-stone-300">{e.era}</span>
+          <span className="pr-4 text-stone-800 dark:text-stone-200">{e.traditions.judaic ?? '—'}</span>
+          <span className="pr-4 text-stone-800 dark:text-stone-200">{e.traditions.christian ?? '—'}</span>
+          <span className="pr-4 text-stone-800 dark:text-stone-200">{e.traditions.islamic ?? '—'}</span>
+        </div>
+      ))}
+    </div>
+  );
+}
+```
+→ skipped: JS-based horizontal sync-scrolling and timeline zoom scales  
+→ add when: Sub-year/day chronologies are mapped across non-uniform calendars  
+
+---
+
+### 3. Build Hardening: Guard Static Params for `next build`
+
+Ensure strict zero-error builds by forbidding dynamic fallbacks and verifying record slugs statically.
+
+```tsx
+// app/lore/[slug]/page.tsx
+import { notFound } from 'next/navigation';
+import { LORE_DATA } from '@/data/lore';
+
+export const dynamicParams = false; // Prevents runtime 500s on ungenerated routes
+
+export function generateStaticParams() {
+  return Object.keys(LORE_DATA).map((slug) => ({ slug }));
+}
+
+export default async function LorePage({ params }: { params: Promise<{ slug: string }> }) {
+  const { slug } = await params;
+  const entry = LORE_DATA[slug];
+  if (!entry) notFound();
+
+  return <article className="prose prose-stone mx-auto py-12 dark:prose-invert">{/* Content */}</article>;
+}
+
+// Self-check: Run at build time
+if (process.env.NODE_ENV !== 'production') {
+  console.assert(Object.keys(LORE_DATA).length > 0, 'LORE_DATA cannot be empty.');
+}
+```
+→ skipped: Heavy schema parsers (e.g., Zod) on static JSON  
+→ add when: Data source migrates from hardcoded records to a headless CMS or user submissions
