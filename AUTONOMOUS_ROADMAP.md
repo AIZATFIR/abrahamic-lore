@@ -8584,3 +8584,99 @@ assert.strictEqual(TRADITION_COL['islam'], 'col-start-4', 'Islam track must pin 
 assert.strictEqual(TRADITION_COL['judaism'], 'col-start-2', 'Judaism track must pin to column 2');
 console.log('✔ Timeline grid assertions passed.');
 ```
+
+
+### Cycle #134 Directive (2026-11-03 09:42)
+### 1. Comparative Timeline: Zero-JS Alignment (CSS Subgrid)
+
+```tsx
+// components/timeline/ComparativeTimeline.tsx
+interface EraRow {
+  period: string;
+  judaism: string;
+  christianity: string;
+  islam: string;
+}
+
+export function ComparativeTimeline({ rows }: { rows: EraRow[] }) {
+  return (
+    <div className="grid grid-cols-[100px_repeat(3,1fr)] gap-x-6 gap-y-3 font-serif">
+      <div className="col-span-4 grid grid-cols-subgrid sticky top-0 bg-stone-50/90 dark:bg-stone-950/90 py-2 border-b border-stone-200 dark:border-stone-800 text-xs font-mono uppercase tracking-wider text-stone-500 backdrop-blur-sm z-10">
+        <span>Era</span>
+        <span>Judaism</span>
+        <span>Christianity</span>
+        <span>Islam</span>
+      </div>
+      {rows.map((r) => (
+        // ponytail: Subgrid locks heights cross-tradition. Upgrade to virtualized list if rows > 200.
+        <div key={r.period} className="col-span-4 grid grid-cols-subgrid py-2 border-b border-stone-100 dark:border-stone-900 text-sm">
+          <span className="font-mono text-xs text-stone-400">{r.period}</span>
+          <div className="text-stone-800 dark:text-stone-200">{r.judaism || '—'}</div>
+          <div className="text-stone-800 dark:text-stone-200">{r.christianity || '—'}</div>
+          <div className="text-stone-800 dark:text-stone-200">{r.islam || '—'}</div>
+        </div>
+      ))}
+    </div>
+  );
+}
+```
+skipped: IntersectionObservers and synchronized scroll listener JS.  
+add when: Independent horizontal scrolling per column is explicitly demanded.
+
+---
+
+### 2. Lineage View: Native Tree Connector (Zero D3 / Canvas)
+
+```tsx
+// components/lineage/LineageTree.tsx
+export type LineageNode = { id: string; name: string; title?: string; branches?: LineageNode[] };
+
+export function LineageBranch({ node }: { node: LineageNode }) {
+  return (
+    <li className="relative pl-5 before:absolute before:left-0 before:top-3 before:h-full before:w-px before:bg-stone-300 dark:before:bg-stone-800 last:before:hidden">
+      <div className="flex items-center gap-2 group">
+        <span className="absolute left-[-2px] top-2.5 h-1.5 w-1.5 rounded-full bg-stone-400 group-hover:scale-125 transition-transform" />
+        <span className="font-serif text-sm text-stone-900 dark:text-stone-100">{node.name}</span>
+        {node.title && <span className="font-mono text-[11px] text-stone-400">({node.title})</span>}
+      </div>
+      {node.branches && node.branches.length > 0 && (
+        <ul className="ml-2 mt-2 space-y-2">
+          {node.branches.map((child) => (
+            <LineageBranch key={child.id} node={child} />
+          ))}
+        </ul>
+      )}
+    </li>
+  );
+}
+```
+skipped: Canvas/SVG coordinates and layout engines (D3-hierarchy/React-Flow).  
+add when: Non-hierarchical intersecting mesh relationships (cross-marriages) are introduced.
+
+---
+
+### 3. Production Build Hardening: Static Next.js Route Contract
+
+```tsx
+// app/lore/[figure]/page.tsx
+import { notFound } from 'next/navigation';
+
+// Enforce strict SSG and fail build on dynamic resolution mismatch
+export const dynamicParams = false;
+
+const CANONICAL_FIGURES = ['abraham', 'moses', 'david', 'jesus', 'muhammad'] as const;
+
+export function generateStaticParams() {
+  return CANONICAL_FIGURES.map((figure) => ({ figure }));
+}
+
+// Next.js 15: params must be treated as Promise
+export default async function FigurePage({ params }: { params: Promise<{ figure: string }> }) {
+  const { figure } = await params;
+  if (!CANONICAL_FIGURES.includes(figure as typeof CANONICAL_FIGURES[number])) notFound();
+
+  return <main className="max-w-2xl mx-auto py-12 px-4 font-serif">{figure}</main>;
+}
+```
+skipped: SSR data loaders and middleware route rewrites.  
+add when: Figure entities require user-contributed runtime mutations or DB auth gates.
