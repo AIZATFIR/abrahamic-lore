@@ -7971,3 +7971,76 @@ if (process.env.NODE_ENV !== 'production') {
 ```
 → skipped: Heavy schema parsers (e.g., Zod) on static JSON  
 → add when: Data source migrates from hardcoded records to a headless CMS or user submissions
+
+
+### Cycle #127 Directive (2026-11-03 09:02)
+### 1. Pure CSS Lineage Tree (Zero-Lib Layout)
+
+```tsx
+// components/LineageNode.tsx
+export function LineageNode({ name, title, children }: { name: string; title?: string; children?: React.ReactNode }) {
+  // ponytail: pure CSS DOM tree; upgrade to d3/svg only if horizontal breadths cause overflow wrapping
+  return (
+    <li className="relative flex flex-col items-center pt-6 before:absolute before:top-0 before:h-6 before:w-px before:bg-stone-300 dark:before:bg-stone-700">
+      <div className="rounded-lg border border-stone-200/80 bg-stone-50/80 px-3 py-1.5 text-center shadow-xs backdrop-blur-xs dark:border-stone-800 dark:bg-stone-900/80">
+        <p className="text-xs font-semibold tracking-tight text-stone-900 dark:text-stone-100">{name}</p>
+        {title && <p className="text-[10px] text-stone-500 dark:text-stone-400">{title}</p>}
+      </div>
+      {children && <ul className="flex gap-4 pt-2">{children}</ul>}
+    </li>
+  );
+}
+```
+skipped: Pan/zoom canvas & React Flow runtime.  
+add when: Lineage breadth exceeds screen viewport without native scrolling.
+
+---
+
+### 2. Comparative Sync Timeline (CSS Grid + Sticky Time Rail)
+
+```tsx
+// components/TimelineRow.tsx
+interface TimelineEntry { era: string; jud: string; chr: string; isl: string }
+
+export function TimelineRow({ era, jud, chr, isl }: TimelineEntry) {
+  // ponytail: fixed 4-col native CSS grid replaces JS scroll sync listeners
+  return (
+    <div className="grid grid-cols-[72px_repeat(3,minmax(0,1fr))] items-start gap-4 border-b border-stone-200/50 py-3.5 text-xs text-stone-700 dark:border-stone-800/60 dark:text-stone-300">
+      <time className="sticky top-12 font-mono text-[11px] tabular-nums text-stone-400">{era}</time>
+      <div className="border-l border-amber-500/20 pl-3">{jud || '—'}</div>
+      <div className="border-l border-rose-500/20 pl-3">{chr || '—'}</div>
+      <div className="border-l border-emerald-500/20 pl-3">{isl || '—'}</div>
+    </div>
+  );
+}
+```
+skipped: Canvas virtualization & bidirectional JS wheel-event sync.  
+add when: Dataset exceeds 150 parallel epoch intervals.
+
+---
+
+### 3. Production Build Lock & Static Verification
+
+```javascript
+// next.config.mjs
+/** @type {import('next').NextConfig} */
+const nextConfig = {
+  output: 'export',
+  trailingSlash: true,
+  typescript: { ignoreBuildErrors: false },
+  eslint: { ignoreDuringBuilds: false },
+  images: { unoptimized: true }, // ponytail: required for static export
+};
+export default nextConfig;
+```
+
+```json
+// package.json (scripts update)
+{
+  "scripts": {
+    "build": "tsc --noEmit && next build && node -e \"assert(require('fs').existsSync('out/index.html'), 'Build artifact missing')\""
+  }
+}
+```
+skipped: Remote CI test runner & E2E smoke tests.  
+add when: External contributors submit PRs via CI.
