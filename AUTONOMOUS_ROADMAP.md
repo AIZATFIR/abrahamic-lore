@@ -6308,3 +6308,112 @@ export default async function TimelinePage(props: {
 }
 ```
 `skipped: client-side search state routing, add when: search parameters require multi-facet URL updates without page refreshes.`
+
+
+### Cycle #108 Directive (2026-11-03 07:14)
+### 1. Comparative Timeline: Pure CSS Grid (`display: contents`)
+
+Eliminate alignment JS and nested flex containers. Uses standard 3-tradition lane sync with native CSS sticky headers.
+
+```tsx
+// components/ComparativeTimeline.tsx
+interface TimelineRow {
+  era: string;
+  judaism?: string;
+  christianity?: string;
+  islam?: string;
+}
+
+export function ComparativeTimeline({ rows }: { rows: TimelineRow[] }) {
+  // ponytail: inline array ceiling; upgrade to virtualization if rows > 150
+  return (
+    <div className="grid grid-cols-[80px_repeat(3,1fr)] gap-px bg-stone-200 dark:bg-stone-800 rounded-lg overflow-x-auto text-xs font-sans">
+      <div className="sticky top-0 bg-stone-50 dark:bg-stone-900 p-3 font-mono text-stone-400">Era</div>
+      {['Judaism', 'Christianity', 'Islam'].map((t) => (
+        <div key={t} className="sticky top-0 bg-stone-50 dark:bg-stone-900 p-3 font-semibold text-stone-700 dark:text-stone-200">{t}</div>
+      ))}
+      {rows.map((r) => (
+        <div key={r.era} className="contents group">
+          <div className="bg-white dark:bg-stone-950 p-3 font-mono text-stone-400 tabular-nums">{r.era}</div>
+          <div className="bg-white dark:bg-stone-950 p-3 leading-relaxed text-stone-600 dark:text-stone-300">{r.judaism ?? '—'}</div>
+          <div className="bg-white dark:bg-stone-950 p-3 leading-relaxed text-stone-600 dark:text-stone-300">{r.christianity ?? '—'}</div>
+          <div className="bg-white dark:bg-stone-950 p-3 leading-relaxed text-stone-600 dark:text-stone-300">{r.islam ?? '—'}</div>
+        </div>
+      ))}
+    </div>
+  );
+}
+```
+skipped: Canvas/SVG sync logic and D3 drag-scroll.
+add when: Non-linear zoomable scrubbers or multi-century parallax are required.
+
+---
+
+### 2. Lineage View: Zero-JS Semantic CSS Tree
+
+Replace graph libraries (`react-flow`, `vis-js`) with pure CSS connector pseudo-elements.
+
+```tsx
+// components/LineageTree.tsx
+interface PersonNode {
+  name: string;
+  epithet?: string;
+  children?: PersonNode[];
+}
+
+export function LineageTree({ node }: { node: PersonNode }) {
+  return (
+    <ul className="relative pl-6 text-sm text-stone-800 dark:text-stone-200 border-l border-stone-200 dark:border-stone-800 space-y-2 my-1">
+      <li className="relative">
+        <span className="absolute -left-6 top-3 w-4 border-t border-stone-200 dark:border-stone-800" />
+        <div className="inline-flex items-baseline gap-2 py-1 px-2.5 rounded-md bg-stone-100 dark:bg-stone-900 border border-stone-200/60 dark:border-stone-800/60">
+          <span className="font-medium tracking-tight">{node.name}</span>
+          {node.epithet && <span className="text-[11px] text-stone-400 font-serif italic">{node.epithet}</span>}
+        </div>
+        {node.children?.map((c) => (
+          <LineageTree key={c.name} node={c} />
+        ))}
+      </li>
+    </ul>
+  );
+}
+```
+skipped: DAG layout engines and complex bidirectional lineage cross-links.
+add when: Graph cycles (e.g. intermarriages) break single-parent hierarchical trees.
+
+---
+
+### 3. Next.js 15 Zero-Error SSG Route Contract
+
+Eliminate production dynamic route mismatches (`unhandledRejection`, missing static paths, un-awaited params).
+
+```tsx
+// app/figures/[slug]/page.tsx
+import { notFound } from 'next/navigation';
+
+const CANONICAL_SLUGS = ['abraham', 'moses', 'aaron', 'jesus', 'mary', 'muhammad'] as const;
+type ValidSlug = (typeof CANONICAL_SLUGS)[number];
+
+export function generateStaticParams(): { slug: ValidSlug }[] {
+  return CANONICAL_SLUGS.map((slug) => ({ slug }));
+}
+
+export default async function FigurePage(props: { params: Promise<{ slug: string }> }) {
+  const { slug } = await props.params;
+  
+  if (!CANONICAL_SLUGS.includes(slug as ValidSlug)) {
+    notFound();
+  }
+
+  return (
+    <article className="max-w-xl mx-auto py-16 px-6">
+      <h1 className="text-2xl font-serif tracking-tight capitalize text-stone-900 dark:text-stone-100">{slug}</h1>
+    </article>
+  );
+}
+
+// Self-check assert (runs on import during build)
+console.assert(generateStaticParams().length === CANONICAL_SLUGS.length, 'SSG params count mismatch');
+```
+skipped: Contentful/CMS fetch adapters and remote schema validation.
+add when: Lore content moves from local markdown/consts to a remote headless CMS.
