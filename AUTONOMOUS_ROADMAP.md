@@ -7574,3 +7574,106 @@ export default async function FigurePage({ params }: { params: Promise<{ slug: s
 console.assert(generateStaticParams().length > 0, "generateStaticParams returned empty paths array");
 ```
 `app/figures/[slug]/page.tsx` → skipped: ISR revalidation/dynamic loading, add when database transitions from static file to external CMS.
+
+
+### Cycle #121 Directive (2026-11-03 08:28)
+### 1. Native Horizontal Scroll-Snap Timeline (Replaces JS Scrollers)
+
+```tsx
+// components/ComparativeTimeline.tsx
+interface TimelineEvent {
+  year: string;
+  tradition: 'Judaism' | 'Christianity' | 'Islam';
+  title: string;
+}
+
+export function ComparativeTimeline({ events }: { events: TimelineEvent[] }) {
+  // ponytail: Flat array ceiling; upgrade to nested era groups when event count > 50.
+  return (
+    <div className="flex gap-6 overflow-x-auto pb-6 pt-2 snap-x snap-mandatory scroll-smooth focus-visible:outline-none [scrollbar-width:thin]">
+      {events.map((e, i) => (
+        <article
+          key={i}
+          className="snap-start shrink-0 w-72 rounded-2xl border border-stone-200/80 bg-stone-50/50 p-5 backdrop-blur-sm transition-all hover:border-stone-300 dark:border-stone-800 dark:bg-stone-900/40"
+        >
+          <div className="flex items-center justify-between text-xs font-mono text-stone-500 mb-2">
+            <span>{e.year}</span>
+            <span className="uppercase tracking-wider text-[10px]">{e.tradition}</span>
+          </div>
+          <h4 className="text-sm font-medium text-stone-900 dark:text-stone-100">{e.title}</h4>
+        </article>
+      ))}
+    </div>
+  );
+}
+```
+→ skipped: Drag-to-scroll gesture listeners and virtualization.  
+→ add when: Dataset exceeds 50 items and causes DOM lag on mobile.
+
+---
+
+### 2. Pure CSS Lineage Tree Connectors (No SVG/Canvas/D3)
+
+```tsx
+// components/LineageTree.tsx
+interface Figure {
+  id: string;
+  name: string;
+  children?: Figure[];
+}
+
+export function LineageTree({ figure }: { figure: Figure }) {
+  // ponytail: Single-parent tree; upgrade to directed acyclic graph (DAG) when modeling cross-matrilineal ties.
+  return (
+    <div className="flex flex-col items-center">
+      <div className="px-4 py-2 rounded-xl border border-stone-200 bg-white/70 text-sm font-medium shadow-sm backdrop-blur dark:border-stone-800 dark:bg-stone-900">
+        {figure.name}
+      </div>
+      {figure.children && figure.children.length > 0 && (
+        <div className="relative flex pt-6 before:absolute before:top-0 before:left-1/2 before:h-6 before:w-px before:-translate-x-1/2 before:bg-stone-300 dark:before:bg-stone-700">
+          {figure.children.map((child) => (
+            <div
+              key={child.id}
+              className="relative px-3 before:absolute before:top-0 before:left-0 before:right-0 before:h-px before:bg-stone-300 first:before:left-1/2 last:before:right-1/2 dark:before:bg-stone-700"
+            >
+              <div className="absolute top-0 left-1/2 h-6 w-px -translate-x-1/2 bg-stone-300 dark:bg-stone-700" />
+              <div className="pt-6">
+                <LineageTree figure={child} />
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+```
+→ skipped: Pan/zoom canvas abstractions and dynamic bezier link paths.  
+→ add when: Nodes overlap or require dynamic bidirectional lineage.
+
+---
+
+### 3. Build-Safe Static Guard for Next.js
+
+```tsx
+// app/lore/[figureId]/page.tsx
+import { notFound } from 'next/navigation';
+
+const VALID_FIGURES = ['abraham', 'moses', 'jesus', 'muhammad'] as const;
+type FigureId = (typeof VALID_FIGURES)[number];
+
+export function generateStaticParams(): Array<{ figureId: FigureId }> {
+  return VALID_FIGURES.map((figureId) => ({ figureId }));
+}
+
+export const dynamicParams = false; // Prevents runtime 500s during static output export
+
+export default async function Page({ params }: { params: Promise<{ figureId: string }> }) {
+  const { figureId } = await params;
+  if (!VALID_FIGURES.includes(figureId as FigureId)) notFound();
+
+  return <main className="max-w-xl mx-auto py-12 px-4 capitalize">{figureId}</main>;
+}
+```
+→ skipped: Runtime DB lookups and remote content fetchers.  
+→ add when: Migrating figure data from static registries to an external headless CMS.
