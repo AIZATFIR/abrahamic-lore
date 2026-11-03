@@ -9529,3 +9529,95 @@ export default async function FigurePage({ params }: Props) {
 ```
 * Skipped: Dynamic fallback handling and server-side DB querying.
 * Add when: Figures are loaded from an external headless CMS at request time.
+
+
+### Cycle #144 Directive (2026-11-03 10:39)
+### 1. Comparative Timeline: Pure CSS Synchronized Grid
+
+```tsx
+// components/ComparativeTimeline.tsx
+interface TimelineRow {
+  era: string;
+  jewish: string;
+  christian: string;
+  islamic: string;
+}
+
+export function ComparativeTimeline({ rows }: { rows: TimelineRow[] }) {
+  // ponytail: static multi-column; upgrade to horizontal subgrid virtualization if entries > 300.
+  return (
+    <div className="grid grid-cols-[5rem_repeat(3,minmax(0,1fr))] gap-x-6 border-l border-stone-200/60 dark:border-stone-800">
+      {rows.map(({ era, jewish, christian, islamic }) => (
+        <div key={era} className="contents group">
+          <span className="sticky top-6 self-start text-xs font-mono text-stone-400 py-3">{era}</span>
+          {[jewish, christian, islamic].map((text, i) => (
+            <div key={i} className="py-3 px-3 text-sm leading-relaxed border-t border-stone-100 dark:border-stone-900 group-hover:bg-stone-50/40 dark:group-hover:bg-stone-900/20 transition-colors">
+              {text || '—'}
+            </div>
+          ))}
+        </div>
+      ))}
+    </div>
+  );
+}
+```
+skipped: Timeline JS scroll engines, column synchronization listeners, canvas drawing.  
+add when: Users require dynamic runtime epoch scale-warping or multi-lane dragging.
+
+---
+
+### 2. Lineage View: Native Semantic Connector Tree
+
+```tsx
+// components/LineageNode.tsx
+interface PersonNode {
+  name: string;
+  traditionName?: string;
+  children?: PersonNode[];
+}
+
+export function LineageTree({ node }: { node: PersonNode }) {
+  // ponytail: recursive HTML lists; switch to SVG layout if non-linear graph loops (cousin marriages) appear.
+  return (
+    <li className="relative pl-6 before:absolute before:left-0 before:top-3.5 before:w-4 before:h-px before:bg-stone-300 dark:before:bg-stone-700">
+      <div className="inline-flex items-baseline gap-2 py-1 text-sm">
+        <span className="font-serif font-medium text-stone-900 dark:text-stone-100">{node.name}</span>
+        {node.traditionName && <span className="text-xs text-stone-400 font-sans">({node.traditionName})</span>}
+      </div>
+      {node.children && node.children.length > 0 && (
+        <ul className="relative ml-2 border-l border-stone-200 dark:border-stone-800">
+          {node.children.map((child) => (
+            <LineageTree key={child.name} node={child} />
+          ))}
+        </ul>
+      )}
+    </li>
+  );
+}
+```
+skipped: React Flow/D3 dependencies, graph layout calculations, complex bezier paths.  
+add when: Pedigrees require multi-parent bidirectional DAG resolution.
+
+---
+
+### 3. Next.js Zero-Error Build Lock
+
+```js
+// next.config.mjs
+/** @type {import('next').NextConfig} */
+const nextConfig = {
+  reactStrictMode: true,
+  typedRoutes: true,
+  // ponytail: static pre-render ceiling; change to standalone when dynamic multi-tenant routes exist.
+  output: 'export',
+  images: { unoptimized: true },
+};
+
+export default nextConfig;
+```
+```bash
+# Verify build gate
+next build
+```
+skipped: Edge middleware, dynamic SSR fallback wrappers, complex image loaders.  
+add when: Lineage search needs authenticated personalization or dynamic route indexing.
