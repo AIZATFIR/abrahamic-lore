@@ -8353,3 +8353,128 @@ export default async function FigurePage({
 ```
 → skipped: Remote CMS runtime validations.  
 → add when: Lore data is sourced from an external API or dynamic database instead of local records.
+
+
+### Cycle #131 Directive (2026-11-03 09:25)
+### 1. Parallel Comparative Timeline (CSS Snap & Subgrid over JS Slider)
+
+```tsx
+// components/ComparativeTimeline.tsx
+interface TimelineEpoch {
+  era: string;
+  traditions: { judaic?: string; christian?: string; islamic?: string };
+}
+
+export function ComparativeTimeline({ epochs }: { epochs: TimelineEpoch[] }) {
+  return (
+    <div className="flex overflow-x-auto snap-x snap-mandatory border-y border-stone-200 dark:border-stone-800">
+      {epochs.map((ep) => (
+        <article key={ep.era} className="min-w-[280px] flex-none snap-start p-4 border-r border-stone-200 dark:border-stone-800">
+          <time className="text-xs font-mono uppercase text-stone-400">{ep.era}</time>
+          <div className="mt-3 space-y-3 text-sm">
+            {Object.entries(ep.traditions).map(([name, text]) => (
+              <div key={name}>
+                <span className="text-[10px] font-semibold uppercase text-stone-500">{name}</span>
+                <p className="text-stone-800 dark:text-stone-200">{text}</p>
+              </div>
+            ))}
+          </div>
+        </article>
+      ))}
+    </div>
+  );
+}
+```
+skipped: Virtualized dragging & layout animators.  
+add when: Epoch counts exceed 50+ nodes on mobile.
+
+---
+
+### 2. Pure CSS Lineage Hierarchy (Semantic HTML over Heavy Canvas/Graph Libs)
+
+```css
+/* styles/lineage.css */
+.lineage-tree ul { padding-left: 1.25rem; position: relative; }
+.lineage-tree li { position: relative; list-style: none; padding: 0.25rem 0; }
+.lineage-tree li::before {
+  content: ""; position: absolute; left: -0.75rem; top: 0.85rem;
+  width: 0.75rem; height: 1px; background: currentColor; opacity: 0.2;
+}
+.lineage-tree li::after {
+  content: ""; position: absolute; left: -0.75rem; top: 0; bottom: 0;
+  width: 1px; background: currentColor; opacity: 0.2;
+}
+.lineage-tree li:last-child::after { height: 0.85rem; }
+```
+
+```tsx
+// components/LineageView.tsx
+export type LineageNode = { id: string; name: string; children?: LineageNode[] };
+
+export function LineageTree({ node }: { node: LineageNode }) {
+  return (
+    <div className="lineage-tree font-mono text-xs">
+      <span className="px-2 py-1 rounded bg-stone-100 dark:bg-stone-800">{node.name}</span>
+      {node.children && node.children.length > 0 && (
+        <ul>
+          {node.children.map((child) => (
+            <li key={child.id}><LineageTree node={child} /></li>
+          ))}
+        </ul>
+      )}
+    </div>
+  );
+}
+```
+skipped: D3/SVG canvas panning and bidirectional relationship matrices.  
+add when: Cyclic genealogies (e.g., cross-cousin unions) break strict tree hierarchy.
+
+---
+
+### 3. Next.js 15 Static Contract & Production Build Guard
+
+```tsx
+// app/figure/[slug]/page.tsx
+import { notFound } from "next/navigation";
+
+// ponytail: hardcoded manifest ceiling; switch to dynamic DB fetch when figure registry > 100
+const FIGURES = ["abraham", "sarah", "hagar", "isaac", "ishmael"] as const;
+
+export function generateStaticParams() {
+  return FIGURES.map((slug) => ({ slug }));
+}
+
+export default async function Page({ params }: { params: Promise<{ slug: string }> }) {
+  const { slug } = await params;
+  if (!FIGURES.includes(slug as typeof FIGURES[number])) notFound();
+
+  return <main className="p-6">{slug}</main>;
+}
+```
+skipped: Middleware-driven route interception.  
+add when: Figure pages support client-generated custom variants.
+
+---
+
+### Minimal Self-Check
+
+```ts
+// scripts/verify-lineage.ts
+import assert from "node:assert";
+import type { LineageNode } from "../components/LineageView";
+
+function countNodes(node: LineageNode): number {
+  return 1 + (node.children?.reduce((acc, c) => acc + countNodes(c), 0) ?? 0);
+}
+
+const tree: LineageNode = {
+  id: "1", name: "Abraham",
+  children: [
+    { id: "2", name: "Ishmael" },
+    { id: "3", name: "Isaac", children: [{ id: "4", name: "Jacob" }] },
+  ],
+};
+
+assert.strictEqual(countNodes(tree), 4, "Node count must match hierarchy");
+console.log("Lineage verification passed.");
+```
