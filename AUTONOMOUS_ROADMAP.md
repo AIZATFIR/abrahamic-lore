@@ -9800,3 +9800,122 @@ assert.strictEqual(formatEpochSafe(622), '622 CE');
 ```
 * Skipped: Complex temporal/date formatting libraries (`date-fns`, `dayjs`).
 * Add when: Astronomical / multi-calendar conversions (Hebrew/Hijri astronomical lunations) are required.
+
+
+### Cycle #147 Directive (2026-11-03 10:55)
+### 1. Comparative Timeline: Sticky 3-Column Native CSS Grid
+Replace complex JS scroll-sync/timeline libs with native CSS Grid and sticky period anchors across Jewish, Christian, and Islamic traditions.
+
+```tsx
+// components/ComparativeTimeline.tsx
+interface TimelineEpoch {
+  era: string;
+  judaism: string;
+  christianity: string;
+  islam: string;
+}
+
+export function ComparativeTimeline({ epochs }: { epochs: TimelineEpoch[] }) {
+  return (
+    <div className="grid grid-cols-[120px_repeat(3,1fr)] gap-4 text-sm">
+      <div className="font-semibold text-stone-400">Era</div>
+      <div className="font-semibold text-amber-700 dark:text-amber-400">Judaism</div>
+      <div className="font-semibold text-blue-700 dark:text-blue-400">Christianity</div>
+      <div className="font-semibold text-emerald-700 dark:text-emerald-400">Islam</div>
+
+      {epochs.map((ep) => (
+        <div key={ep.era} className="contents group">
+          <div className="sticky top-0 self-start py-3 font-mono text-xs text-stone-500 bg-background">
+            {ep.era}
+          </div>
+          <div className="p-3 rounded-lg border border-stone-200/60 dark:border-stone-800 bg-stone-50/40 dark:bg-stone-900/40">
+            {ep.judaism}
+          </div>
+          <div className="p-3 rounded-lg border border-stone-200/60 dark:border-stone-800 bg-stone-50/40 dark:bg-stone-900/40">
+            {ep.christianity}
+          </div>
+          <div className="p-3 rounded-lg border border-stone-200/60 dark:border-stone-800 bg-stone-50/40 dark:bg-stone-900/40">
+            {ep.islam}
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+}
+// ponytail: Flat grid ceiling; add dynamic epoch collapse when dataset exceeds 50 epochs.
+```
+*   `skipped:` Canvas renderers, scroll-sync hooks, dynamic column virtualizers.
+*   `add when:` Dataset exceeds 100+ epochs requiring DOM node recycling.
+
+---
+
+### 2. Lineage View: Semantic Tree with Native CSS Branch Lines
+Replace heavy graph packages (react-flow, D3) with accessible semantic nested lists and pure CSS borders.
+
+```tsx
+// components/LineageTree.tsx
+interface FigureNode {
+  name: string;
+  desc?: string;
+  children?: FigureNode[];
+}
+
+export function LineageTree({ node }: { node: FigureNode }) {
+  return (
+    <ul className="pl-6 border-l border-stone-300 dark:border-stone-700 space-y-3 my-2">
+      <li className="relative">
+        <span className="absolute -left-6 top-3 w-6 border-t border-stone-300 dark:border-stone-700" />
+        <div className="inline-block p-2 rounded border border-stone-200 dark:border-stone-800 bg-white dark:bg-stone-900 shadow-sm text-xs">
+          <span className="font-medium text-stone-900 dark:text-stone-100">{node.name}</span>
+          {node.desc && <span className="ml-2 text-stone-400">{node.desc}</span>}
+        </div>
+        {node.children?.map((child) => (
+          <LineageTree key={child.name} node={child} />
+        ))}
+      </li>
+    </ul>
+  );
+}
+// ponytail: Single-line descendant tree; upgrade to SVG canvas when bi-directional/inter-marrying links are needed.
+```
+*   `skipped:` Heavy canvas/graph engines (react-flow, D3, ELK).
+*   `add when:` Lineages have non-hierarchical, multi-parent horizontal cross-links.
+
+---
+
+### 3. Build Guardrail: Strict Zero-Error Static Route Validator
+A pre-build assert script to catch undefined dynamic slugs, broken cross-references, and ensure error-free `next build`.
+
+```js
+// scripts/assert-build-data.mjs
+import assert from 'node:assert/strict';
+import data from '../data/lore.json' assert { type: 'json' };
+
+// 1. Slugs are unique and URL-safe
+const slugs = new Set();
+for (const entry of data) {
+  assert.ok(entry.slug, `Missing slug for ${entry.id}`);
+  assert.match(entry.slug, /^[a-z0-9-]+$/, `Invalid slug format: ${entry.slug}`);
+  assert.ok(!slugs.has(entry.slug), `Duplicate slug: ${entry.slug}`);
+  slugs.add(entry.slug);
+
+  // 2. Validate cross-tradition references exist
+  entry.relatedSlugs?.forEach((rel) => {
+    assert.ok(data.some(d => d.slug === rel), `Broken reference: ${rel} in ${entry.slug}`);
+  });
+}
+
+console.log(`✓ Lore dataset valid: ${slugs.size} static paths verified.`);
+```
+
+Update `package.json`:
+```json
+{
+  "scripts": {
+    "prebuild": "node scripts/assert-build-data.mjs",
+    "build": "next build"
+  }
+}
+```
+*   `skipped:` Zod runtime schema generation and custom CI linters.
+*   `add when:` Lore data is ingested dynamically from CMS/remote API rather than local JSON/MDX.
