@@ -7771,3 +7771,104 @@ console.log(`✓ Lore data valid (${figures.length} slugs)`);
 ```
 → skipped: CMS fetch layers, Zod schemas, runtime client validation.  
 → add when: figure data moves from checked-in JSON to a remote editable DB.
+
+
+### Cycle #125 Directive (2026-11-03 08:51)
+### 1. Build Verification: Zero-Error Prerender Assertions
+
+Run strict link validation during `next build` to catch orphan lineage parents and corrupted epoch IDs before SSG prerender fails.
+
+```js
+// scripts/validate-lore.mjs
+import assert from "node:assert/strict";
+import loreData from "../data/lore.json" with { type: "json" };
+
+const { figures, events } = loreData;
+const figureIds = new Set(figures.map((f) => f.id));
+
+figures.forEach((f) => {
+  if (f.parentId) {
+    assert(figureIds.has(f.parentId), `Figure "${f.id}" has nonexistent parentId "${f.parentId}"`);
+  }
+});
+
+events.forEach((e) => {
+  assert(e.traditions?.judaism || e.traditions?.christianity || e.traditions?.islam, `Event "${e.id}" lacks tradition mapping`);
+});
+
+console.log("✓ Lore data integrity verified.");
+```
+`package.json` addition: `"build": "node scripts/validate-lore.mjs && next build"`
+
+skipped: Zod/schema library; add when lore data is sourced via runtime user submissions.
+
+---
+
+### 2. Comparative Timeline: Native Multi-Tradition Grid
+
+Eliminate JS sync calculations. Use CSS Grid row-locking for cross-tradition comparative epochs.
+
+```tsx
+// components/ComparativeTimeline.tsx
+interface TimelineRow {
+  era: string;
+  judaism?: string;
+  christianity?: string;
+  islam?: string;
+}
+
+export function ComparativeTimeline({ rows }: { rows: TimelineRow[] }) {
+  return (
+    <section className="grid grid-cols-[100px_repeat(3,1fr)] gap-4 border-t border-stone-200/60 dark:border-stone-800/60 py-6 text-sm">
+      <div className="font-mono text-xs text-stone-400 uppercase tracking-widest sticky top-4">Era</div>
+      <div className="font-serif font-medium text-amber-950 dark:text-amber-100">Judaism</div>
+      <div className="font-serif font-medium text-amber-950 dark:text-amber-100">Christianity</div>
+      <div className="font-serif font-medium text-amber-950 dark:text-amber-100">Islam</div>
+
+      {rows.map((row) => (
+        <div key={row.era} className="contents group">
+          <span className="font-mono text-xs text-stone-400 py-3 group-hover:text-amber-600 transition-colors">{row.era}</span>
+          <p className="p-3 rounded-lg bg-stone-50 dark:bg-stone-900/40 text-stone-700 dark:text-stone-300">{row.judaism || "—"}</p>
+          <p className="p-3 rounded-lg bg-stone-50 dark:bg-stone-900/40 text-stone-700 dark:text-stone-300">{row.christianity || "—"}</p>
+          <p className="p-3 rounded-lg bg-stone-50 dark:bg-stone-900/40 text-stone-700 dark:text-stone-300">{row.islam || "—"}</p>
+        </div>
+      ))}
+    </section>
+  );
+}
+```
+skipped: Virtualized list and canvas layout engines; add when rendering >1,000 parallel records.
+
+---
+
+### 3. Lineage View: Zero-JS Semantic Tree
+
+Render Abrahamic genealogies using native semantic tree structures styled via CSS pseudo-elements, avoiding canvas and graph-library dependencies.
+
+```tsx
+// components/LineageNode.tsx
+interface Person {
+  id: string;
+  name: string;
+  children?: Person[];
+}
+
+export function LineageNode({ node }: { node: Person }) {
+  return (
+    <li className="relative pl-6 before:absolute before:left-0 before:top-3 before:h-px before:w-4 before:bg-stone-300 dark:before:bg-stone-700">
+      <span className="inline-block px-3 py-1 my-1 rounded-md text-sm font-serif bg-amber-50/50 dark:bg-amber-950/20 text-stone-800 dark:text-stone-200 border border-stone-200/50 dark:border-stone-800">
+        {node.name}
+      </span>
+      {node.children && node.children.length > 0 && (
+        <ul className="relative ml-2 pl-2 border-l border-stone-300 dark:border-stone-700">
+          {/* ponytail: recursion limit at render, upgrade to flat index map if depth > 30 */}
+          {node.children.map((child) => (
+            <LineageNode key={child.id} node={child} />
+          ))}
+        </ul>
+      )}
+    </li>
+  );
+}
+```
+skipped: D3/Cytoscape interactive node dragging; add when dynamic custom lineage editing is required.
