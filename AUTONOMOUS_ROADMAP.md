@@ -7468,3 +7468,109 @@ export default async function Page({ params }: { params: Promise<{ slug: string 
 }
 ```
 `app/figures/[slug]/page.tsx` → skipped: dynamic DB fetching and ISR, add when figures are fetched from a headless CMS or external API.
+
+
+### Cycle #120 Directive (2026-11-03 08:22)
+### 1. Pure CSS Lineage Tree (Zero-dep ancestral tree)
+
+Replace heavy graph/canvas libraries (e.g., React Flow, D3) with semantic HTML and hairline borders.
+
+```tsx
+// components/LineageTree.tsx
+type Figure = { name: string; era?: string; children?: Figure[] };
+
+export function LineageNode({ figure }: { figure: Figure }) {
+  // ponytail: recursive tree without virtualization; upgrade to canvas/virtual list if lineage exceeds 200 visible nodes.
+  return (
+    <li className="relative pl-6 pt-2 list-none before:absolute before:left-0 before:top-4 before:w-4 before:border-t before:border-stone-300 dark:before:border-stone-700">
+      <div className="inline-flex items-baseline gap-2 rounded-md border border-stone-200/80 bg-stone-50/50 px-2.5 py-1 text-xs dark:border-stone-800 dark:bg-stone-900/50">
+        <span className="font-medium text-stone-900 dark:text-stone-100">{figure.name}</span>
+        {figure.era && <span className="font-mono text-[10px] text-stone-400">{figure.era}</span>}
+      </div>
+      {figure.children && figure.children.length > 0 && (
+        <ul className="relative ml-2 border-l border-stone-300 pl-2 dark:border-stone-700">
+          {figure.children.map((child) => (
+            <LineageNode key={child.name} figure={child} />
+          ))}
+        </ul>
+      )}
+    </li>
+  );
+}
+```
+`LineageNode.tsx` → skipped: pan/zoom and dynamic node folding, add when user explicitly zooms into dense patriarchy branches (>5 generations).
+
+---
+
+### 2. Comparative Epoch Grid (Native CSS Sync)
+
+Synchronize Jewish, Christian, and Islamic narratives along a shared epoch axis without scroll listeners or synchronized JS offsets.
+
+```tsx
+// components/ComparativeTimeline.tsx
+interface EpochRow {
+  epoch: string;
+  jewish: string;
+  christian: string;
+  islamic: string;
+}
+
+export function ComparativeTimeline({ eras }: { eras: EpochRow[] }) {
+  return (
+    <div className="w-full overflow-x-auto border-t border-stone-200 dark:border-stone-800">
+      <div className="grid min-w-[640px] grid-cols-[100px_repeat(3,1fr)] divide-x divide-stone-200 text-xs dark:divide-stone-800">
+        <div className="sticky top-0 bg-stone-50/90 p-2 font-mono font-medium backdrop-blur dark:bg-stone-950/90">Era</div>
+        <div className="sticky top-0 bg-stone-50/90 p-2 font-serif text-stone-600 backdrop-blur dark:bg-stone-950/90 dark:text-stone-400">Judaism</div>
+        <div className="sticky top-0 bg-stone-50/90 p-2 font-serif text-stone-600 backdrop-blur dark:bg-stone-950/90 dark:text-stone-400">Christianity</div>
+        <div className="sticky top-0 bg-stone-50/90 p-2 font-serif text-stone-600 backdrop-blur dark:bg-stone-950/90 dark:text-stone-400">Islam</div>
+
+        {eras.map((row) => (
+          <div key={row.epoch} className="contents divide-y divide-stone-100 dark:divide-stone-900">
+            <span className="p-2 font-mono text-[11px] text-stone-400">{row.epoch}</span>
+            <div className="p-2 text-stone-800 dark:text-stone-200">{row.jewish}</div>
+            <div className="p-2 text-stone-800 dark:text-stone-200">{row.christian}</div>
+            <div className="p-2 text-stone-800 dark:text-stone-200">{row.islamic}</div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+```
+`ComparativeTimeline.tsx` → skipped: bidirectional timeline scrubbing, add when interactive historical scrub-slider is requested.
+
+---
+
+### 3. Strict Deterministic Builds Guard (`dynamicParams = false`)
+
+Catch bad static slugs and unhandled routes at `next build` time instead of breaking at runtime with 404/500 cascades.
+
+```tsx
+// app/figures/[slug]/page.tsx
+import { notFound } from "next/navigation";
+import { FIGURES } from "@/data/figures"; // Single-source source of truth array
+
+export const dynamicParams = false; // ponytail: hard-fail on unknown route; switch to true if sourcing remote headless CMS.
+
+export function generateStaticParams() {
+  return Object.keys(FIGURES).map((slug) => ({ slug }));
+}
+
+export default async function FigurePage({ params }: { params: Promise<{ slug: string }> }) {
+  const { slug } = await params;
+  const data = FIGURES[slug as keyof typeof FIGURES];
+
+  if (!data) notFound();
+
+  return (
+    <article className="mx-auto max-w-prose py-8">
+      <h1 className="text-xl font-medium tracking-tight text-stone-900 dark:text-stone-100">{data.title}</h1>
+      <p className="mt-4 leading-relaxed text-stone-600 dark:text-stone-400">{data.summary}</p>
+    </article>
+  );
+}
+
+// Self-check guard
+console.assert(generateStaticParams().length > 0, "generateStaticParams returned empty paths array");
+```
+`app/figures/[slug]/page.tsx` → skipped: ISR revalidation/dynamic loading, add when database transitions from static file to external CMS.
