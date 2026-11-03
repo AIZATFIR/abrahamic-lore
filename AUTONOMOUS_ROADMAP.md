@@ -6648,3 +6648,117 @@ export default async function FigurePage({ params }: PageProps) {
 ```
 → skipped: Dynamic SSR fallbacks and runtime revalidation headers.  
 → add when: Figures are loaded from an external live-edited headless CMS instead of local static sets.
+
+
+### Cycle #111 Directive (2026-11-03 07:31)
+### 1. Pure CSS Lineage Tree (Zero D3 / SVG Bloat)
+
+```css
+/* app/lineage/tree.module.css */
+.tree, .tree ul {
+  display: flex;
+  justify-content: center;
+  position: relative;
+  padding: 1.25rem 0 0 0;
+  margin: 0;
+}
+.tree li {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+  padding: 1.25rem 0.5rem 0 0.5rem;
+  list-style-type: none;
+}
+.tree li::before, .tree li::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 50%;
+  border-top: 1px solid #d6d3d1;
+  width: 50%;
+  height: 1.25rem;
+}
+.tree li::after {
+  right: auto;
+  left: 50%;
+  border-left: 1px solid #d6d3d1;
+}
+.tree li:only-child::after, .tree li:only-child::before { display: none; }
+.tree li:only-child { padding-top: 0; }
+.tree li:first-child::before, .tree li:last-child::after { border: none; }
+.tree li:last-child::before { border-right: 1px solid #d6d3d1; border-radius: 0 4px 0 0; }
+.tree li:first-child::after { border-radius: 4px 0 0 0; }
+.tree ul::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 50%;
+  border-left: 1px solid #d6d3d1;
+  height: 1.25rem;
+  transform: translateX(-50%);
+}
+```
+`tree.module.css` → skipped: Canvas/D3 zoom-pan canvas, add when lineage exceeds 6 generations depth.
+
+---
+
+### 2. Synced Tri-Faith Comparative Timeline
+
+```tsx
+// components/ComparativeTimeline.tsx
+interface Epoch {
+  era: string;
+  judaism: string;
+  christianity: string;
+  islam: string;
+}
+
+export function ComparativeTimeline({ epochs }: { epochs: Epoch[] }) {
+  // ponytail: flat display:contents avoids JS height sync; switch to virtualizer at >200 epochs
+  return (
+    <div className="grid grid-cols-[80px_repeat(3,1fr)] gap-x-4 gap-y-3 font-serif text-sm selection:bg-stone-200">
+      <div className="contents text-[10px] uppercase tracking-widest text-stone-400 font-sans border-b border-stone-200">
+        <span>Era</span><span>Judaism</span><span>Christianity</span><span>Islam</span>
+      </div>
+      {epochs.map((e) => (
+        <div key={e.era} className="contents group">
+          <span className="font-mono text-xs text-stone-400 sticky top-4 self-start">{e.era}</span>
+          <div className="p-3 bg-stone-50 border border-stone-200/60 rounded-sm">{e.judaism}</div>
+          <div className="p-3 bg-stone-50 border border-stone-200/60 rounded-sm">{e.christianity}</div>
+          <div className="p-3 bg-stone-50 border border-stone-200/60 rounded-sm">{e.islam}</div>
+        </div>
+      ))}
+    </div>
+  );
+}
+```
+`ComparativeTimeline.tsx` → skipped: JS-driven masonry/row-height calculators, add when individual epoch cells need inline expand/collapse states.
+
+---
+
+### 3. Next.js Static Export Hardener
+
+```javascript
+// next.config.mjs
+/** @type {import('next').NextConfig} */
+const nextConfig = {
+  output: 'export',
+  reactStrictMode: true,
+  trailingSlash: true,
+  typescript: { ignoreBuildErrors: false },
+  eslint: { ignoreDuringBuilds: false },
+  images: { unoptimized: true }, // ponytail: static-export ceiling; remove if deployed to Node/Vercel server runtime
+};
+
+export default nextConfig;
+```
+
+```typescript
+// Self-check: app/timeline/[era]/page.tsx
+export function generateStaticParams(): Array<{ era: string }> {
+  // Enforces 100% parameter coverage at build-time; prevents 404s on SSG
+  return ['patriarchal', 'exodus', 'monarchy', 'second-temple', 'late-antiquity'].map((era) => ({ era }));
+}
+```
+`next.config.mjs` → skipped: ISR/Edge-middleware setup, add when user authentication or dynamic editorial mutation is required.
