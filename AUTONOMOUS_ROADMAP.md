@@ -6082,3 +6082,114 @@ export default async function FigurePage({
 ```
 `skipped: Dynamic on-demand SSR fallback handlers.`  
 `add when: Lore content is edited via live CMS without triggering a GitHub deployment build.`
+
+
+### Cycle #106 Directive (2026-11-03 07:03)
+### 1. Pure CSS Lineage Tree Connectors (No D3/Canvas)
+
+Replace canvas/graph dependencies with native semantic DOM and CSS pseudo-connectors.
+
+```tsx
+// components/LineageNode.tsx
+interface Figure {
+  id: string;
+  name: string;
+  children?: Figure[];
+}
+
+export function LineageNode({ figure }: { figure: Figure }) {
+  // ponytail: recursion depth uncapped; add max-depth cutoff if genealogical cycles exist
+  return (
+    <li className="relative pl-6 before:absolute before:left-0 before:top-3 before:h-px before:w-4 before:bg-stone-300 dark:before:bg-stone-700">
+      <span className="inline-block rounded-md border border-stone-200 bg-stone-50/50 px-2.5 py-1 text-xs font-serif tracking-wide text-stone-900 backdrop-blur-sm dark:border-stone-800 dark:bg-stone-900/50 dark:text-stone-100">
+        {figure.name}
+      </span>
+      {figure.children && figure.children.length > 0 && (
+        <ul className="relative ml-2 border-l border-stone-300 pl-2 dark:border-stone-700">
+          {figure.children.map((child) => (
+            <LineageNode key={child.id} figure={child} />
+          ))}
+        </ul>
+      )}
+    </li>
+  );
+}
+```
+→ skipped: Pan/zoom canvas, interactive layout engines (React Flow/D3).  
+→ add when: Lineage graph requires bidirectional parentage or exceeds 500 interactive nodes.
+
+---
+
+### 2. Multi-Tradition Timeline via Sticky Subgrid (Zero-JS Sync)
+
+Synchronize Jewish, Christian, and Islamic narratives with native sticky tracks and CSS grid instead of scroll-listener state.
+
+```tsx
+// components/ComparativeTimeline.tsx
+interface EraEvent {
+  era: string;
+  judaism?: string;
+  christianity?: string;
+  islam?: string;
+}
+
+export function ComparativeTimeline({ events }: { events: EraEvent[] }) {
+  return (
+    <div className="grid grid-cols-[8rem_1fr_1fr_1fr] gap-x-4 gap-y-6 overflow-x-auto text-sm">
+      <div className="sticky top-0 z-10 col-span-4 grid grid-cols-subgrid border-b border-stone-200 bg-stone-50/80 pb-2 font-serif backdrop-blur dark:border-stone-800 dark:bg-stone-950/80">
+        <span className="text-stone-400">Era</span>
+        <span className="text-amber-900 dark:text-amber-200">Judaism</span>
+        <span className="text-sky-900 dark:text-sky-200">Christianity</span>
+        <span className="text-emerald-900 dark:text-emerald-200">Islam</span>
+      </div>
+      {events.map((e, idx) => (
+        <div key={idx} className="col-span-4 grid grid-cols-subgrid items-baseline border-b border-stone-100 py-2 dark:border-stone-900">
+          <span className="text-xs font-mono text-stone-400">{e.era}</span>
+          <p className="text-stone-700 dark:text-stone-300">{e.judaism ?? '—'}</p>
+          <p className="text-stone-700 dark:text-stone-300">{e.christianity ?? '—'}</p>
+          <p className="text-stone-700 dark:text-stone-300">{e.islam ?? '—'}</p>
+        </div>
+      ))}
+    </div>
+  );
+}
+```
+→ skipped: IntersectionObserver syncing, dynamic column collapsing, event collision algorithms.  
+→ add when: Horizontal space on mobile forces single-column accordion viewports.
+
+---
+
+### 3. Build-Time Static Guarantee (`next.config.ts`)
+
+Enforce strict static route typing and prevent runtime fallback bailouts during `next build`.
+
+```ts
+// next.config.ts
+import type { NextConfig } from 'next';
+
+const nextConfig: NextConfig = {
+  output: 'export',
+  trailingSlash: true,
+  typescript: {
+    // Fail build immediately if types break contract
+    ignoreBuildErrors: false,
+  },
+  eslint: {
+    ignoreDuringBuilds: false,
+  },
+};
+
+export default nextConfig;
+```
+
+```tsx
+// app/figures/[slug]/page.tsx
+export const dynamic = 'error'; // Halts build if dynamic data fetches slip into static generation
+
+export async function generateStaticParams() {
+  const figures = await import('@/data/lore.json').then((m) => m.figures);
+  return figures.map((f: { slug: string }) => ({ slug: f.slug }));
+}
+```
+→ skipped: Incremental Static Regeneration (ISR) and Edge middleware.  
+→ add when: Lore content moves from local repository/JSON to a live CMS API.
