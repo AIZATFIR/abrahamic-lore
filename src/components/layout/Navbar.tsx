@@ -30,6 +30,7 @@ export default function Navbar({ tradition, onChangeTradition }: NavbarProps) {
         <nav className="hidden items-center gap-6 text-sm text-stone-600 sm:flex">
           <Link href="/explore" className="hover:text-stone-900 transition-colors">Explore</Link>
           <Link href="/traditions" className="hover:text-stone-900 transition-colors">Traditions</Link>
+          <Link href="/timeline" className="hover:text-stone-900 transition-colors">Timeline</Link>
           <Link href="/topics" className="hover:text-stone-900 transition-colors">Topics</Link>
           <Link href="/search" className="hover:text-stone-900 transition-colors">Search</Link>
         </nav>
@@ -91,6 +92,7 @@ export default function Navbar({ tradition, onChangeTradition }: NavbarProps) {
           <div className="flex flex-col gap-3 text-sm text-stone-600">
             <Link href="/explore" onClick={() => setMenuOpen(false)}>Explore</Link>
             <Link href="/traditions" onClick={() => setMenuOpen(false)}>Traditions</Link>
+            <Link href="/timeline" onClick={() => setMenuOpen(false)}>Timeline</Link>
             <Link href="/topics" onClick={() => setMenuOpen(false)}>Topics</Link>
             <Link href="/search" onClick={() => setMenuOpen(false)}>Search</Link>
             {tradition && (
