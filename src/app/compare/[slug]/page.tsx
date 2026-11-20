@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import Link from 'next/link'
 import { COMPARISON_ENTITIES } from '@/data/abrahamic_entities'
 import CompareInteractiveView from '@/components/compare/CompareInteractiveView'
+import Icon from '@/components/ui/Icon'
 
 export async function generateMetadata({
   params,
@@ -37,7 +38,7 @@ export default async function ComparePage({
     return (
       <main className="mx-auto max-w-5xl px-4 py-16 sm:px-6">
         <div className="text-center space-y-4">
-          <span className="text-4xl">⚖️</span>
+          <Icon name="scales" className="mx-auto h-10 w-10 text-stone-500" />
           <h1 className="text-2xl font-bold text-stone-900">Comparison Not Found</h1>
           <p className="text-stone-600 max-w-md mx-auto text-sm">
             We couldn’t find an analytical comparison for &ldquo;{slug}&rdquo;. Explore our available cross-tradition studies below:

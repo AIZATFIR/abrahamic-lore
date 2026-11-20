@@ -2,6 +2,7 @@ import Link from 'next/link'
 import Navbar from '@/components/layout/Navbar'
 import Footer from '@/components/layout/Footer'
 import { COMPARISON_ENTITIES } from '@/data/abrahamic_entities'
+import Icon from '@/components/ui/Icon'
 
 export const metadata = {
   title: 'Abrahamic Traditions | Comparative Study',
@@ -14,30 +15,30 @@ export default function TraditionsPage() {
   const traditions = [
     {
       id: 'judaism',
-      title: 'Judaism (Yahudiyyah)',
+      title: 'Judaism',
       subtitle: 'The Covenant & The Torah',
       badgeColor: 'bg-blue-100 text-blue-800 border-blue-200',
-      icon: '✡️',
+      icon: 'star-of-david' as const,
       summary: 'Centered upon the eternal Brit (Covenant) forged at Sinai, the mitzvot (commandments), and the preservation of divine law through the Tanakh and Talmud.',
       coreScripture: 'Tanakh (Torah, Nevi\'im, Ketuvim)',
       keyConcept: 'Halakha, Chessed, Tikkun Olam',
     },
     {
       id: 'christianity',
-      title: 'Christianity (Masihiyyah)',
+      title: 'Christianity',
       subtitle: 'Grace, Incarnation & The Gospel',
       badgeColor: 'bg-purple-100 text-purple-800 border-purple-200',
-      icon: '✝️',
+      icon: 'cross' as const,
       summary: 'Centered upon the life, death, and resurrection of Jesus of Nazareth (Yeshua / Christ), the incarnation of the Word, and salvation through faith and divine grace.',
       coreScripture: 'The Holy Bible (Old & New Testaments)',
       keyConcept: 'Grace (Charis), Trinity / Logos, Agape',
     },
     {
       id: 'islam',
-      title: 'Islam (Al-Islam)',
+      title: 'Islam',
       subtitle: 'Tawhid & Final Revelation',
       badgeColor: 'bg-emerald-100 text-emerald-800 border-emerald-200',
-      icon: '☪️',
+      icon: 'crescent' as const,
       summary: 'Centered upon pure primordial monotheism (Tawhid), submission to the uncreated Word revealed to Prophet Muhammad ﷺ, and the continuous prophetic line.',
       coreScripture: 'Al-Qur\'an Al-Karim & Sunnah',
       keyConcept: 'Tawhid, Risalah, Akhirah',
@@ -70,7 +71,7 @@ export default function TraditionsPage() {
             >
               <div className="space-y-4">
                 <div className="flex items-center justify-between">
-                  <span className="text-3xl">{trad.icon}</span>
+                  <Icon name={trad.icon} className="h-8 w-8 text-stone-700" />
                   <span className={`px-2.5 py-0.5 rounded-full text-xs font-semibold border ${trad.badgeColor}`}>
                     {trad.subtitle}
                   </span>

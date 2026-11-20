@@ -44,11 +44,15 @@ src/
     index.ts            # Shared types
 ```
 
+## Icons
+
+No emojis are used in the UI. All pictograms are custom SVGs in `public/assets/icons/`, rendered with `<Icon name="..." />` from `src/components/ui/Icon.tsx`. See [ICONS.md](ICONS.md) for the catalogue and the rules every contributor/agent must follow when editing icons.
+
 ## Phase plan
 
 | Phase | Scope |
 |---|---|
-| 1 ✅ | Homepage, onboarding, personalization, guest preferences |
+| 1 (done) | Homepage, onboarding, personalization, guest preferences |
 | 2 | Supabase Auth, user profiles, preference persistence |
 | 3 | Entity pages, compare, timeline, full reader |
 | 4 | Meilisearch integration, knowledge graph, learning journeys |

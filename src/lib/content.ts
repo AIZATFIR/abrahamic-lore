@@ -1,4 +1,4 @@
-import type { Tradition } from '@/types'
+import type { Tradition, TopicCard } from '@/types'
 
 export const TRADITION_LABELS: Record<string, string> = {
   islam: 'Islam',
@@ -48,13 +48,13 @@ export function getHeroContent(tradition: Tradition | null) {
   return HERO_CONTENT[tradition] ?? HERO_CONTENT.default
 }
 
-export const TOPIC_CARDS = [
+export const TOPIC_CARDS: TopicCard[] = [
   {
     id: 'sacred-texts',
     title: 'Sacred Texts',
     description: 'The scriptures at the heart of each tradition — their origins, structure, and significance.',
     category: 'Foundations',
-    icon: '📖',
+    icon: 'book',
     slug: 'sacred-texts',
   },
   {
@@ -62,7 +62,7 @@ export const TOPIC_CARDS = [
     title: 'Prophets & Figures',
     description: 'The messengers, leaders, and individuals whose lives shaped religious history.',
     category: 'People',
-    icon: '🕊️',
+    icon: 'dove',
     slug: 'prophets-figures',
   },
   {
@@ -70,7 +70,7 @@ export const TOPIC_CARDS = [
     title: 'Creation & Origins',
     description: 'How each tradition understands the beginning of the world and humanity.',
     category: 'Theology',
-    icon: '🌅',
+    icon: 'sunrise',
     slug: 'creation-origins',
   },
   {
@@ -78,7 +78,7 @@ export const TOPIC_CARDS = [
     title: 'Religious History',
     description: 'The historical development of Abrahamic faiths from ancient times to today.',
     category: 'History',
-    icon: '🏛️',
+    icon: 'columns',
     slug: 'religious-history',
   },
   {
@@ -86,7 +86,7 @@ export const TOPIC_CARDS = [
     title: 'Theology & Beliefs',
     description: 'Core doctrines, concepts of God, and the theological ideas that define each tradition.',
     category: 'Theology',
-    icon: '✡️',
+    icon: 'star-of-david',
     slug: 'theology-beliefs',
   },
   {
@@ -94,7 +94,7 @@ export const TOPIC_CARDS = [
     title: 'Traditions & Practices',
     description: 'The rituals, observances, and practices that give religious life its rhythm.',
     category: 'Practice',
-    icon: '🕌',
+    icon: 'mosque',
     slug: 'traditions-practices',
   },
   {
@@ -102,7 +102,7 @@ export const TOPIC_CARDS = [
     title: 'Sacred Places',
     description: 'The holy cities, temples, mosques, and sites that anchor religious geography.',
     category: 'Geography',
-    icon: '🕍',
+    icon: 'synagogue',
     slug: 'sacred-places',
   },
   {
@@ -110,7 +110,7 @@ export const TOPIC_CARDS = [
     title: 'Stories & Narratives',
     description: 'The foundational stories told across traditions — their meanings and their differences.',
     category: 'Narrative',
-    icon: '📜',
+    icon: 'scroll',
     slug: 'stories-narratives',
   },
   {
@@ -118,7 +118,7 @@ export const TOPIC_CARDS = [
     title: 'Differences & Shared Themes',
     description: 'What connects the traditions, what sets them apart, and why the distinctions matter.',
     category: 'Comparative',
-    icon: '🔗',
+    icon: 'link',
     slug: 'shared-themes',
   },
 ]

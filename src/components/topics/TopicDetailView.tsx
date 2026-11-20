@@ -2,12 +2,13 @@
 
 import { useState } from 'react'
 import Link from 'next/link'
+import Icon, { type IconName } from '@/components/ui/Icon'
 import type { TopicDetail, ComparisonEntity } from '@/data/abrahamic_entities'
 
 interface TopicDetailViewProps {
   topic: TopicDetail
   relatedComparisons: ComparisonEntity[]
-  otherTopics: { slug: string; title: string; category: string; icon: string }[]
+  otherTopics: { slug: string; title: string; category: string; icon: IconName }[]
 }
 
 const TRADITION_STYLE = {
@@ -16,7 +17,7 @@ const TRADITION_STYLE = {
     badge: 'bg-blue-50 text-blue-700 border-blue-200',
     border: 'border-blue-100',
     headerBg: 'bg-blue-50/50',
-    icon: '✡️',
+    icon: 'star-of-david' as IconName,
     title: 'Jewish Perspective & Halakhic Context',
   },
   christianity: {
@@ -24,7 +25,7 @@ const TRADITION_STYLE = {
     badge: 'bg-amber-50 text-amber-800 border-amber-200',
     border: 'border-amber-100',
     headerBg: 'bg-amber-50/50',
-    icon: '✝️',
+    icon: 'cross' as IconName,
     title: 'Christian Perspective & Christological Lens',
   },
   islam: {
@@ -32,7 +33,7 @@ const TRADITION_STYLE = {
     badge: 'bg-emerald-50 text-emerald-700 border-emerald-200',
     border: 'border-emerald-100',
     headerBg: 'bg-emerald-50/50',
-    icon: '☪️',
+    icon: 'crescent' as IconName,
     title: 'Islamic Perspective & Tawhidic Lens',
   },
 }
@@ -64,7 +65,7 @@ export default function TopicDetailView({
 
         <div className="mt-6 rounded-2xl bg-stone-50 border border-stone-200/80 p-5">
           <div className="flex items-start gap-3">
-            <span className="text-lg">⚖️</span>
+            <Icon name="scales" className="mt-0.5 h-5 w-5 text-stone-600" />
             <div>
               <h3 className="text-xs font-semibold uppercase tracking-wide text-stone-600">
                 Comparative Takeaway
@@ -109,7 +110,7 @@ export default function TopicDetailView({
                   : 'text-stone-600 hover:text-stone-900'
               }`}
             >
-              ✡ Judaism
+              <span className="inline-flex items-center gap-1.5"><Icon name="star-of-david" className="h-3.5 w-3.5" />Judaism</span>
             </button>
             <button
               onClick={() => setActiveTradition('christianity')}
@@ -119,7 +120,7 @@ export default function TopicDetailView({
                   : 'text-stone-600 hover:text-stone-900'
               }`}
             >
-              ✝ Christianity
+              <span className="inline-flex items-center gap-1.5"><Icon name="cross" className="h-3.5 w-3.5" />Christianity</span>
             </button>
             <button
               onClick={() => setActiveTradition('islam')}
@@ -129,7 +130,7 @@ export default function TopicDetailView({
                   : 'text-stone-600 hover:text-stone-900'
               }`}
             >
-              ☪ Islam
+              <span className="inline-flex items-center gap-1.5"><Icon name="crescent" className="h-3.5 w-3.5" />Islam</span>
             </button>
           </div>
         </div>
@@ -145,7 +146,7 @@ export default function TopicDetailView({
               >
                 <div className={`p-5 sm:p-6 border-b border-stone-100 ${style.headerBg} flex items-center justify-between`}>
                   <div className="flex items-center gap-3">
-                    <span className="text-2xl">{style.icon}</span>
+                    <Icon name={style.icon} className="h-6 w-6 text-stone-700" />
                     <div>
                       <h3 className="text-base font-semibold text-stone-900">
                         {style.name}
@@ -176,7 +177,7 @@ export default function TopicDetailView({
                       <ul className="mt-2 space-y-1 text-xs text-stone-700">
                         {persp.keyTexts.map((txt, i) => (
                           <li key={i} className="flex items-center gap-2">
-                            <span className="text-stone-400">📜</span>
+                            <Icon name="scroll" className="h-3.5 w-3.5 text-stone-400" />
                             <span>{txt}</span>
                           </li>
                         ))}
@@ -263,7 +264,7 @@ export default function TopicDetailView({
                 href={`/topics/${t.slug}`}
                 className="group rounded-xl border border-stone-200 bg-white p-3.5 hover:border-stone-400 hover:shadow-xs transition-all"
               >
-                <span className="text-xl">{t.icon}</span>
+                <Icon name={t.icon} className="h-5 w-5 text-stone-700" />
                 <h3 className="mt-2 text-xs font-semibold text-stone-900 group-hover:text-stone-700 line-clamp-1">
                   {t.title}
                 </h3>

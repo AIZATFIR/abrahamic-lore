@@ -2,6 +2,7 @@ import Link from 'next/link'
 import Navbar from '@/components/layout/Navbar'
 import Footer from '@/components/layout/Footer'
 import { TOPIC_DETAILS } from '@/data/abrahamic_entities'
+import Icon from '@/components/ui/Icon'
 
 export const metadata = {
   title: 'All Topics | Abrahamic Lore',
@@ -50,7 +51,7 @@ export default function TopicsIndexPage() {
                     className="rounded-2xl border border-stone-200 bg-white p-5 shadow-xs hover:border-stone-400 hover:shadow-sm transition-all flex flex-col justify-between"
                   >
                     <div>
-                      <div className="text-2xl mb-2">{topic.icon}</div>
+                      <Icon name={topic.icon} className="h-6 w-6 mb-2 text-stone-700" />
                       <h3 className="font-bold text-stone-900 text-base">{topic.title}</h3>
                       <p className="mt-1 text-xs text-stone-600 line-clamp-3 leading-relaxed">
                         {topic.summary}

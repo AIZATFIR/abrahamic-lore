@@ -6,10 +6,11 @@ import Navbar from '@/components/layout/Navbar'
 import Footer from '@/components/layout/Footer'
 import { usePreferences } from '@/hooks/usePreferences'
 import { TOPIC_CARDS, FEATURED_COMPARISONS } from '@/lib/content'
+import Icon from '@/components/ui/Icon'
 
 const ALL_RESULTS = [
   ...TOPIC_CARDS.map((c) => ({ ...c, type: 'topic' as const })),
-  ...FEATURED_COMPARISONS.map((c) => ({ ...c, type: 'compare' as const, icon: '🔗', category: 'Comparative' })),
+  ...FEATURED_COMPARISONS.map((c) => ({ ...c, type: 'compare' as const, icon: 'link' as const, category: 'Comparative' })),
 ]
 
 export default function SearchPage() {
@@ -65,7 +66,7 @@ export default function SearchPage() {
                   href={r.type === 'topic' ? `/topics/${r.slug}` : `/compare/${r.slug}`}
                   className="group flex items-start gap-4 rounded-2xl border border-stone-200 bg-white p-5 hover:border-stone-400 hover:shadow-sm transition-all"
                 >
-                  <span className="text-2xl">{r.icon}</span>
+                  <Icon name={r.icon} className="h-6 w-6 text-stone-700" />
                   <div>
                     <p className="text-xs text-stone-400">{r.category}</p>
                     <h2 className="text-sm font-semibold text-stone-900 group-hover:text-stone-700">

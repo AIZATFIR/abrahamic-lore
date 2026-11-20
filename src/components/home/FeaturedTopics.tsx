@@ -1,5 +1,6 @@
 import Link from 'next/link'
 import { TOPIC_CARDS } from '@/lib/content'
+import Icon from '@/components/ui/Icon'
 
 export default function FeaturedTopics() {
   return (
@@ -18,7 +19,7 @@ export default function FeaturedTopics() {
               className="group rounded-2xl border border-stone-200 bg-white p-5 transition-all hover:border-stone-400 hover:shadow-sm"
             >
               <div className="flex items-start gap-3">
-                <span className="text-2xl">{card.icon}</span>
+                <Icon name={card.icon} className="h-6 w-6 text-stone-700" />
                 <div className="min-w-0">
                   <p className="text-xs font-medium uppercase tracking-wider text-stone-400">
                     {card.category}

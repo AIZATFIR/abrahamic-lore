@@ -1,3 +1,5 @@
+import type { IconName } from '@/components/ui/Icon'
+
 export type Tradition = 'islam' | 'christianity' | 'judaism' | 'other' | 'multiple' | 'educational' | 'undisclosed'
 
 export interface UserPreferences {
@@ -22,7 +24,7 @@ export interface TopicCard {
   description: string
   category: string
   tradition?: Tradition
-  icon: string
+  icon: IconName
   slug: string
 }
 

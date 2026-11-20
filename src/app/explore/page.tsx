@@ -2,6 +2,7 @@ import Link from 'next/link'
 import { COMPARISON_ENTITIES, TOPIC_DETAILS } from '@/data/abrahamic_entities'
 import Navbar from '@/components/layout/Navbar'
 import Footer from '@/components/layout/Footer'
+import Icon from '@/components/ui/Icon'
 
 export const metadata = {
   title: 'Explore Sacred Lineages & Comparisons | Abrahamic Lore',
@@ -93,7 +94,7 @@ export default function ExplorePage() {
                 className="rounded-xl border border-stone-200 bg-white p-5 hover:border-stone-400 hover:shadow-xs transition-all flex flex-col justify-between"
               >
                 <div>
-                  <div className="text-2xl mb-2">{t.icon}</div>
+                  <Icon name={t.icon} className="h-6 w-6 mb-2 text-stone-700" />
                   <h3 className="text-base font-bold text-stone-900">{t.title}</h3>
                   <p className="mt-1 text-xs text-stone-600 line-clamp-2 leading-relaxed">
                     {t.summary}

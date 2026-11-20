@@ -1,6 +1,7 @@
 import Link from 'next/link'
 import { TOPIC_CARDS } from '@/lib/content'
 import type { Tradition } from '@/types'
+import Icon from '@/components/ui/Icon'
 
 interface RecommendedProps {
   tradition: Tradition | null
@@ -41,7 +42,7 @@ export default function RecommendedForYou({ tradition }: RecommendedProps) {
               href={`/topics/${card.slug}`}
               className="group rounded-2xl border border-stone-200 bg-white p-5 transition-all hover:border-stone-400 hover:shadow-sm"
             >
-              <span className="text-3xl">{card.icon}</span>
+              <Icon name={card.icon} className="h-8 w-8 text-stone-700" />
               <h3 className="mt-3 text-sm font-semibold text-stone-900 group-hover:text-stone-700">
                 {card.title}
               </h3>

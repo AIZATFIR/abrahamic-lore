@@ -1,3 +1,5 @@
+import type { IconName } from '@/components/ui/Icon'
+
 export interface TraditionPerspective {
   name: string
   titleOrHonorific?: string
@@ -32,7 +34,7 @@ export interface TopicDetail {
   slug: string
   title: string
   category: string
-  icon: string
+  icon: IconName
   summary: string
   historicalOverview: string
   perspectives: {
@@ -515,7 +517,7 @@ export const TOPIC_DETAILS: Record<string, TopicDetail> = {
     slug: 'sacred-texts',
     title: 'Sacred Texts & Scriptures',
     category: 'Foundations',
-    icon: '📖',
+    icon: 'book',
     summary: 'The scriptures at the heart of Judaism, Christianity, and Islam — their origins, transmission, authority, and theological roles.',
     historicalOverview: 'From the stone inscriptions and parchment scrolls of the ancient Levant to the koine Greek codices of the early Christian church and the oral rhythmic Arabic recitation standardized in 7th century Medina, scripture defines Abrahamic civilization.',
     perspectives: [
@@ -549,7 +551,7 @@ export const TOPIC_DETAILS: Record<string, TopicDetail> = {
     slug: 'prophets-figures',
     title: 'Prophets & Founding Figures',
     category: 'People',
-    icon: '🕊️',
+    icon: 'dove',
     summary: 'The messengers, spiritual pioneers, and moral leaders who communicated the Divine Will across millennia.',
     historicalOverview: 'Spanning nomadic tribes in Mesopotamia to royal courts in Egypt and Jerusalem, and finally the trade routes of Arabia, prophets formed the vanguard of ethical monotheism.',
     perspectives: [
@@ -583,7 +585,7 @@ export const TOPIC_DETAILS: Record<string, TopicDetail> = {
     slug: 'theology-beliefs',
     title: 'Theology & Concepts of the Divine',
     category: 'Theology',
-    icon: '✡️',
+    icon: 'star-of-david',
     summary: 'Core doctrines, understanding the nature of God, divine oneness, grace, and redemption.',
     historicalOverview: 'How monotheism transitioned from ancient tribal loyalty to rigorous philosophical formulation in dialogue with Greek philosophy, Christian scholasticism, and Islamic Kalam.',
     perspectives: [
@@ -617,7 +619,7 @@ export const TOPIC_DETAILS: Record<string, TopicDetail> = {
     slug: 'creation-origins',
     title: 'Creation & Origins',
     category: 'Theology',
-    icon: '🌅',
+    icon: 'sunrise',
     summary: 'Cosmology, divine order, the origin of humanity, and the relationship between nature and Creator.',
     historicalOverview: 'Biblical and Quranic accounts established a worldview that cosmos is neither random nor divine itself, but an ordered creation of a sovereign God.',
     perspectives: [
@@ -651,7 +653,7 @@ export const TOPIC_DETAILS: Record<string, TopicDetail> = {
     slug: 'religious-history',
     title: 'Religious History & Civilizations',
     category: 'History',
-    icon: '🏛️',
+    icon: 'columns',
     summary: 'The historical development, migrations, empires, and cultural flowering of the Abrahamic faiths.',
     historicalOverview: 'Tracing the journey from Ancient Mesopotamia, the kingdoms of Israel and Judah, Roman persecution and imperial adoption, through Islamic caliphates to the modern era.',
     perspectives: [
@@ -685,7 +687,7 @@ export const TOPIC_DETAILS: Record<string, TopicDetail> = {
     slug: 'traditions-practices',
     title: 'Traditions & Practices',
     category: 'Practice',
-    icon: '🕌',
+    icon: 'mosque',
     summary: 'Daily prayers, fasts, dietary laws, festivals, and rites of passage that anchor faith into physical life.',
     historicalOverview: 'Abrahamic faith is deeply incarnate in daily rhythm: sacred time (Shabbat, Sunday, Jumu’ah), sacred food, charity, and rites of solidarity.',
     perspectives: [
@@ -719,7 +721,7 @@ export const TOPIC_DETAILS: Record<string, TopicDetail> = {
     slug: 'sacred-places',
     title: 'Sacred Places & Geographies',
     category: 'Geography',
-    icon: '🕍',
+    icon: 'synagogue',
     summary: 'The holy cities, sanctuaries, and shrines that anchor Abrahamic religious memory and pilgrimage.',
     historicalOverview: 'Sacred geography links heaven and earth: Mount Moriah, Mount Sinai, the Jordan River, Rome, and the valley of Mecca have drawn millions of pilgrims across centuries.',
     perspectives: [
@@ -753,7 +755,7 @@ export const TOPIC_DETAILS: Record<string, TopicDetail> = {
     slug: 'stories-narratives',
     title: 'Stories & Narratives',
     category: 'Narrative',
-    icon: '📜',
+    icon: 'scroll',
     summary: 'The great dramatic narratives shared across scriptures: Noah’s Ark, Joseph and his brothers, Exodus, and Jonah.',
     historicalOverview: 'Narratives serve as the primary carrier of moral meaning and existential truth across Hebrew, Christian, and Islamic cultures.',
     perspectives: [
@@ -787,7 +789,7 @@ export const TOPIC_DETAILS: Record<string, TopicDetail> = {
     slug: 'shared-themes',
     title: 'Differences & Shared Themes',
     category: 'Comparative',
-    icon: '🔗',
+    icon: 'link',
     summary: 'An analytical overview of what unites Judaism, Christianity, and Islam, and where theological paths diverge.',
     historicalOverview: 'Centuries of polemics and scholarly dialogue have highlighted common ethical monotheistic foundations alongside distinct theological paradigms.',
     perspectives: [
@@ -821,7 +823,7 @@ export const TOPIC_DETAILS: Record<string, TopicDetail> = {
     slug: 'who-is-abraham',
     title: 'Who Is Abraham?',
     category: 'Foundations',
-    icon: '🕊️',
+    icon: 'dove',
     summary: 'The founding patriarch who rejected idolatry, entered into a covenant with the Creator, and became the father of nations.',
     historicalOverview: 'Journeying from Ur in Mesopotamia through Haran, Canaan, and Egypt, Abraham’s walk of faith is the foundational archetype for Judaism, Christianity, and Islam.',
     perspectives: [
@@ -855,7 +857,7 @@ export const TOPIC_DETAILS: Record<string, TopicDetail> = {
     slug: 'three-books',
     title: 'Three Sacred Books',
     category: 'Foundations',
-    icon: '📖',
+    icon: 'book',
     summary: 'A primer on the Torah, Bible, and Quran — how they were composed, preserved, and revered.',
     historicalOverview: 'The evolution of scripture across three millennia: parchment scrolls kept in arks, codices bound in monasteries, and melodic recitation preserved by memory and standardized text.',
     perspectives: [
@@ -889,7 +891,7 @@ export const TOPIC_DETAILS: Record<string, TopicDetail> = {
     slug: 'abrahamic-timeline',
     title: 'An Abrahamic Timeline',
     category: 'History',
-    icon: '🏛️',
+    icon: 'columns',
     summary: 'From Abraham to Muhammad: the sequential chronology of revelation, kingdoms, exiles, and foundations.',
     historicalOverview: 'A sweeping panorama: Bronze Age patriarchal wandering (c. 1800 BCE), Exodus and Sinai (c. 13th c. BCE), Davidic Kingdom (c. 1000 BCE), Babylonian Exile (586 BCE), Second Temple & Jesus (1st c. CE), and the Hijrah of Muhammad (622 CE).',
     perspectives: [
@@ -923,7 +925,7 @@ export const TOPIC_DETAILS: Record<string, TopicDetail> = {
     slug: 'shared-stories',
     title: 'Stories Told in All Three',
     category: 'Narrative',
-    icon: '📜',
+    icon: 'scroll',
     summary: 'Comparative analysis of universal episodes: The Flood of Noah, the Sacrifice, the Exodus, and the Queen of Sheba.',
     historicalOverview: 'Common narrative memories circulating in the ancient Semitic cradle, reinterpreted to address the theological questions of each community.',
     perspectives: [

@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import Link from 'next/link'
+import Icon, { type IconName } from '@/components/ui/Icon'
 import type { ComparisonEntity } from '@/data/abrahamic_entities'
 
 interface CompareInteractiveViewProps {
@@ -18,7 +19,7 @@ const TRADITION_CONFIG: Record<
     badgeBg: string
     badgeText: string
     activeBorder: string
-    icon: string
+    icon: IconName
     accentColor: string
   }
 > = {
@@ -27,7 +28,7 @@ const TRADITION_CONFIG: Record<
     badgeBg: 'bg-blue-50',
     badgeText: 'text-blue-700',
     activeBorder: 'border-blue-500',
-    icon: '✡️',
+    icon: 'star-of-david',
     accentColor: 'text-blue-800',
   },
   christianity: {
@@ -35,7 +36,7 @@ const TRADITION_CONFIG: Record<
     badgeBg: 'bg-amber-50',
     badgeText: 'text-amber-800',
     activeBorder: 'border-amber-500',
-    icon: '✝️',
+    icon: 'cross',
     accentColor: 'text-amber-900',
   },
   islam: {
@@ -43,7 +44,7 @@ const TRADITION_CONFIG: Record<
     badgeBg: 'bg-emerald-50',
     badgeText: 'text-emerald-700',
     activeBorder: 'border-emerald-500',
-    icon: '☪️',
+    icon: 'crescent',
     accentColor: 'text-emerald-800',
   },
 }
@@ -164,7 +165,7 @@ export default function CompareInteractiveView({
                   }`}
                   title={active ? `Hide ${cfg.name}` : `Show ${cfg.name}`}
                 >
-                  <span>{cfg.icon}</span>
+                  <Icon name={cfg.icon} className="h-4 w-4" />
                   <span>{cfg.name}</span>
                 </button>
               )
@@ -196,7 +197,7 @@ export default function CompareInteractiveView({
                 >
                   <div className="flex items-center justify-between border-b border-stone-100 pb-4">
                     <div className="flex items-center gap-2">
-                      <span className="text-xl">{cfg.icon}</span>
+                      <Icon name={cfg.icon} className="h-5 w-5 text-stone-700" />
                       <h2 className="text-sm font-semibold tracking-wide text-stone-900">
                         {cfg.name}
                       </h2>
@@ -264,7 +265,7 @@ export default function CompareInteractiveView({
                   className="rounded-2xl border border-stone-200 bg-white p-6 sm:p-8"
                 >
                   <div className="flex items-center gap-3">
-                    <span className="text-2xl">{cfg.icon}</span>
+                    <Icon name={cfg.icon} className="h-6 w-6 text-stone-700" />
                     <div>
                       <div className="flex items-center gap-2">
                         <h2 className="text-lg font-semibold text-stone-900">{cfg.name} Perspective</h2>
@@ -342,7 +343,7 @@ export default function CompareInteractiveView({
             {/* Common Ground */}
             <section className="rounded-2xl border border-emerald-200 bg-emerald-50/40 p-6 sm:p-7">
               <div className="flex items-center gap-2 text-emerald-800">
-                <span className="text-xl">🤝</span>
+                <Icon name="handshake" className="h-5 w-5" />
                 <h2 className="text-base font-semibold">Points of Convergence (Shared Ground)</h2>
               </div>
               <p className="mt-1 text-xs text-emerald-700/80">
@@ -352,7 +353,7 @@ export default function CompareInteractiveView({
                 {entity.convergencePoints.map((pt, i) => (
                   <li key={i} className="flex items-start gap-3 text-xs text-stone-800 leading-relaxed">
                     <span className="inline-flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-emerald-100 text-emerald-800 font-bold text-[10px] mt-0.5">
-                      ✓
+                      <Icon name="check" className="h-3 w-3" />
                     </span>
                     <span>{highlightMatches(pt, filterQuery)}</span>
                   </li>
@@ -363,7 +364,7 @@ export default function CompareInteractiveView({
             {/* Distinct Perspectives */}
             <section className="rounded-2xl border border-amber-200 bg-amber-50/40 p-6 sm:p-7">
               <div className="flex items-center gap-2 text-amber-900">
-                <span className="text-xl">⚡</span>
+                <Icon name="lightning" className="h-5 w-5" />
                 <h2 className="text-base font-semibold">Points of Divergence (Distinct Emphases)</h2>
               </div>
               <p className="mt-1 text-xs text-amber-800/80">
