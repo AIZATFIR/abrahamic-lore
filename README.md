@@ -52,3 +52,5 @@ src/
 | 2 | Supabase Auth, user profiles, preference persistence |
 | 3 | Entity pages, compare, timeline, full reader |
 | 4 | Meilisearch integration, knowledge graph, learning journeys |
+
+Built by yours truly... ilovemygh
