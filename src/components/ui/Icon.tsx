@@ -21,6 +21,7 @@ export const ICON_NAMES = [
   'handshake',
   'lightning',
   'check',
+  'x',
 ] as const
 
 export type IconName = (typeof ICON_NAMES)[number]

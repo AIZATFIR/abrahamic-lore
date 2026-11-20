@@ -73,6 +73,7 @@ import Icon from '@/components/ui/Icon'
 | <img src="public/assets/icons/handshake.svg" width="24"> | `handshake.svg` | Two hands meeting from the left and right sleeves and clasping in the middle, fingers drawn as short rounded loops. | 🤝 Handshake | "Points of Convergence (Shared Ground)" heading on compare pages. |
 | <img src="public/assets/icons/lightning.svg" width="24"> | `lightning.svg` | An outlined zig-zag lightning bolt pointing down-left. | ⚡ High Voltage | "Points of Divergence (Distinct Emphases)" heading on compare pages. |
 | <img src="public/assets/icons/check.svg" width="24"> | `check.svg` | A single tick mark: a short down-stroke into a long up-stroke. | Not an emoji — replaces the text check-mark glyph `✓` (U+2713) | Bullet badges in the convergence list on compare pages. |
+| <img src="public/assets/icons/x.svg" width="24"> | `x.svg` | An outlined diagonal cross with two intersecting lines. | Not an emoji — replaces the text cross glyph `✕` (U+2715) | Clear filter/search button in Compare view (`CompareInteractiveView.tsx`). |
 
 ---
 
@@ -80,4 +81,5 @@ import Icon from '@/components/ui/Icon'
 
 | Date | Agent / author | Change |
 |---|---|---|
+| 2026-11-20 | Antigravity (Gemini 3.8 Flash) | Added `x.svg`, updated `IconName` and `CompareInteractiveView.tsx` to replace `✕` glyph with `<Icon name="x" />`. |
 | 2026-11-20 | Antigravity (Claude Opus 5.5) | Created the icon system: 15 SVGs in `public/assets/icons/`, `Icon` component, replaced every emoji in `src/` (and the `✓` glyph) with icons, typed icon fields as `IconName`. |

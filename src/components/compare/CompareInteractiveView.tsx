@@ -142,9 +142,10 @@ export default function CompareInteractiveView({
             {filterQuery && (
               <button
                 onClick={() => setFilterQuery('')}
-                className="absolute right-2.5 top-1/2 -translate-y-1/2 text-xs text-stone-400 hover:text-stone-600"
+                className="absolute right-2.5 top-1/2 -translate-y-1/2 text-stone-400 hover:text-stone-600 flex items-center justify-center"
+                aria-label="Clear filter"
               >
-                ✕
+                <Icon name="x" className="h-3 w-3" />
               </button>
             )}
           </div>
